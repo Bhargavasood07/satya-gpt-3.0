@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Cpu, Server, Terminal, RefreshCw, ArrowUpCircle } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, Terminal, RefreshCw, ArrowUpCircle, ScanLine } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -25,9 +25,7 @@ import { secureStorage } from './utils/securityGuard';
 // Views
 import AnalyticsView from './components/views/AnalyticsView';
 
-// Notifications
-import NotificationContainer from './components/notifications/NotificationContainer';
-import { useNotifications } from './context/NotificationContext';
+// Context
 import { useChildMode } from './context/ChildModeContext';
 
 // Feed
@@ -42,7 +40,6 @@ import { useSimulatedFeed } from './hooks/useSimulatedFeed';
 
 export default function App() {
   const { t } = useTranslation();
-  const { addNotification } = useNotifications();
   const { isChildMode } = useChildMode();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -57,7 +54,7 @@ export default function App() {
   });
 
   const { events, metrics, selectedEvent, setSelectedEvent, addManualEvent } =
-    useSimulatedFeed(addNotification, t);
+    useSimulatedFeed(null, t);
 
   const handleToggleChat = useCallback(() => {
     setIsChatOpen((prev) => !prev);
@@ -164,23 +161,10 @@ export default function App() {
           : ['VirusTotal v3 Clean Rating', 'Official Domain Certificate Verified'],
       });
 
+      // Opens deep dive detailed drawer directly without intrusive toast popups
       setSelectedEvent(newEvt);
-
-      if (isSuspicious) {
-        addNotification(
-          'threat',
-          isChildMode ? t('notifications.childBlockTitle') : t('notifications.threatTitle'),
-          verdictReason
-        );
-      } else {
-        addNotification(
-          'safe',
-          t('notifications.safeTitle'),
-          t('notifications.urlSafe')
-        );
-      }
     },
-    [addManualEvent, addNotification, isChildMode, t]
+    [addManualEvent, isChildMode, t, setSelectedEvent]
   );
 
   return (
@@ -188,16 +172,13 @@ export default function App() {
       {/* Top Bar (Founder secret triggers active) */}
       <TopBar onToggleChat={handleToggleChat} onToggleHelp={handleToggleHelp} onOpenAdmin={handleOpenAdmin} />
 
-      {/* Floating Notifications */}
-      <NotificationContainer />
-
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop/Tablet Sidebar */}
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onToggleChat={handleToggleChat} onOpenAdmin={handleOpenAdmin} />
 
-        {/* Main Workspace Content */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 pb-20 md:pb-5">
+        {/* Main Workspace Content (Responsive mobile text sizing) */}
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 pb-24 md:pb-6 text-xs sm:text-sm">
           {/* New Version Auto-Update Banner */}
           {hasNewVersion && (
             <div className="bg-cyan-950/60 border border-cyan-400/60 p-3 rounded-xl flex items-center justify-between font-mono text-xs text-cyan-200 shadow-lg animate-pulse">
@@ -218,7 +199,7 @@ export default function App() {
           {/* User Onboarding Guide Banner */}
           {showHelpGuide && <UserOnboardingBanner />}
 
-          {/* Brutalist Command Subheader & Active Vulnerability Ticker */}
+          {/* Command Subheader & Active Vulnerability Ticker */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#131B2E] border border-[#1E2D4A] p-3.5 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#0B0F19] border border-[#27395C] flex items-center justify-center text-[var(--accent)] font-mono font-bold text-xs shrink-0">
@@ -226,13 +207,13 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-xs md:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v3.5.0-PROD</span>
+                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v3.5.0</span>
                   <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono font-bold flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                    STABLE & AUTO-UPDATING
+                    STABLE & SECURE
                   </span>
                 </div>
-                <span className="text-[11px] font-mono text-[var(--text-muted)]">
+                <span className="text-[10px] sm:text-[11px] font-mono text-[var(--text-muted)]">
                   Active View: {activeTab.toUpperCase()} • VirusTotal v3 & KAVACH AI Active
                 </span>
               </div>
@@ -269,19 +250,38 @@ export default function App() {
 
           {/* Render Active Tab Content */}
           {activeTab === 'dashboard' && (
-            <div className="space-y-4">
+            <div className="space-y-5">
+              {/* 1st POSITION: Metrics Bar */}
               <MetricsBar
                 metrics={metrics}
                 onCardClick={(type) => setActiveMetricModal(type)}
                 isFounderSession={isFounderSession}
               />
+
+              {/* 2nd POSITION: SATYA AI Dedicated Threat Scanner Hub */}
+              <div className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#131B2E] space-y-3">
+                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <ScanLine size={18} className="text-[var(--accent)]" />
+                    <h2 className="text-xs sm:text-sm font-bold font-mono text-[var(--text-primary)] uppercase">
+                      SATYA AI Threat Scanner & Instant Verification
+                    </h2>
+                  </div>
+                  <span className="text-[10px] font-mono text-[var(--accent)] bg-[#0B0F19] px-2 py-0.5 rounded border border-[#1E2D4A]">
+                    92-ENGINE VIRUSTOTAL CHECK
+                  </span>
+                </div>
+                <ScannerPanel onScanResult={handleScanResult} />
+              </div>
+
+              {/* 3rd POSITION: Incident Audit Logs & Real-Time Stream */}
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 <div className="xl:col-span-2 space-y-4">
                   <div className="cyber-card rounded-xl overflow-hidden border border-[#27395C] bg-[#131B2E]">
                     <div className="p-3.5 border-b border-[#1E2D4A] bg-[#0B0F19] flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Terminal size={16} className="text-[var(--accent)]" />
-                        <h2 className="text-xs font-bold font-mono tracking-wider text-[var(--text-primary)] uppercase">
+                        <h2 className="text-xs sm:text-sm font-bold font-mono tracking-wider text-[var(--text-primary)] uppercase">
                           Incident Audit Logs & Real-Time Stream
                         </h2>
                       </div>
@@ -295,10 +295,9 @@ export default function App() {
                       onSelectEvent={setSelectedEvent}
                     />
                   </div>
-                  <AttackPathGraph selectedEvent={selectedEvent} />
                 </div>
                 <div className="xl:col-span-1">
-                  <ScannerPanel onScanResult={handleScanResult} />
+                  <AttackPathGraph selectedEvent={selectedEvent} />
                 </div>
               </div>
             </div>

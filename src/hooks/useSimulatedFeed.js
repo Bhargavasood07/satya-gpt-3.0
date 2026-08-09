@@ -12,38 +12,12 @@ export function useSimulatedFeed(addNotification, t) {
     setMetrics(getMetricsSnapshot(events));
   }, [events]);
 
-  // Auto-generate new events (capped at max 50 for zero memory bloat)
+  // Auto-generate new stream events (capped at max 50 for zero memory bloat)
   useEffect(() => {
     const generateNew = () => {
       const event = generateEvent();
       setEvents(prev => [event, ...prev].slice(0, 50));
-
-      // Fire notification
-      if (addNotification) {
-        if (event.verdict === 'fake') {
-          const threatMessages = [
-            t ? t('notifications.phishingDetected') : 'Phishing Attempt Detected',
-            t ? t('notifications.malwareDetected') : 'Malware Signature Found',
-            t ? t('notifications.qrMalicious') : 'Malicious QR Payload Detected',
-          ];
-          addNotification(
-            'threat',
-            t ? t('notifications.threatTitle') : 'Threat Alert',
-            threatMessages[Math.floor(Math.random() * threatMessages.length)]
-          );
-        } else if (Math.random() > 0.8) { // Notify on ~20% of safe events
-          const safeMessages = [
-            t ? t('notifications.urlSafe') : 'URL Verified Safe',
-            t ? t('notifications.qrSafe') : 'QR Code Verified Clean',
-            t ? t('notifications.scanComplete') : 'Scan Complete',
-          ];
-          addNotification(
-            'safe',
-            t ? t('notifications.safeTitle') : 'Safe Event Detected',
-            safeMessages[Math.floor(Math.random() * safeMessages.length)]
-          );
-        }
-      }
+      // Automatic popup notifications are disabled so user view remains 100% clean and clear
     };
 
     // Schedule next stream update (4s interval)
@@ -59,7 +33,7 @@ export function useSimulatedFeed(addNotification, t) {
     return () => {
       if (intervalRef.current) clearTimeout(intervalRef.current);
     };
-  }, [addNotification, t]);
+  }, []);
 
   const addManualEvent = useCallback((overrides = {}) => {
     const event = { ...generateEvent(), ...overrides };
