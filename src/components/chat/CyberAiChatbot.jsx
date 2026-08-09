@@ -79,15 +79,15 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
 
   return (
     <>
-      {/* Floating Action Button at Bottom-Right */}
-      <div className="fixed bottom-5 right-5 z-50">
+      {/* Floating Action Button at Bottom-Right (Positioned above mobile navigation bar) */}
+      <div className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50">
         <button
           onClick={onToggle}
-          className="relative group p-3 bg-[#131B2E] border border-[#27395C] hover:border-[var(--accent)] text-[var(--text-primary)] rounded-xl shadow-xl transition-all hover:scale-105 flex items-center gap-2 font-mono font-bold text-xs"
+          className="relative group px-3.5 py-2.5 bg-[#131B2E] border border-[#27395C] hover:border-[var(--accent)] text-[var(--text-primary)] rounded-xl shadow-2xl transition-all hover:scale-105 flex items-center gap-2 font-mono font-bold text-xs"
         >
-          <Bot size={20} className="text-[var(--accent)] animate-pulse" />
-          <span className="hidden sm:inline">KAVACH AI</span>
-          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full" />
+          <Bot size={18} className="text-[var(--accent)] animate-pulse" />
+          <span>KAVACH AI</span>
+          <span className="w-2 h-2 bg-emerald-400 rounded-full animate-ping" />
         </button>
       </div>
 
@@ -98,7 +98,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[440px] h-[600px] bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden"
+            className="fixed bottom-32 right-3 sm:right-6 w-[92vw] sm:w-[420px] h-[540px] sm:h-[580px] bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header with Model Selector */}
             <div className="p-3 bg-[#0B0F19] border-b border-[#1E2D4A] flex items-center justify-between font-mono">

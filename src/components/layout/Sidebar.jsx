@@ -1,16 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, Rss, BarChart3, Baby, Bot, Lock } from 'lucide-react';
+import { LayoutDashboard, ScanLine, Rss, BarChart3, Baby, Lock } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
-export default function Sidebar({ activeTab, onTabChange, onToggleChat, onOpenAdmin }) {
+export default function Sidebar({ activeTab, onTabChange, onOpenAdmin }) {
   const { t } = useTranslation();
   const { isChildMode, toggleChildMode } = useChildMode();
 
   const navItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: t('nav.dashboard', 'Dashboard') },
     { id: 'scanner', icon: ScanLine, label: t('nav.scanner', 'AI Scanner') },
-    { id: 'kavachAi', icon: Bot, action: onToggleChat, label: 'KAVACH AI' },
     { id: 'feeds', icon: Rss, label: t('nav.feeds', 'Intel Feeds') },
     { id: 'childSafety', icon: Baby, action: toggleChildMode, isToggle: true, label: t('nav.childSafety', 'Child Guard') },
     { id: 'analytics', icon: BarChart3, label: t('nav.analytics', 'Analytics') },

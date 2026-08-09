@@ -1,7 +1,7 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, Terminal, RefreshCw, ArrowUpCircle, ScanLine } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, Terminal, RefreshCw, ArrowUpCircle, ScanLine, Rss, Info } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -48,6 +48,8 @@ export default function App() {
   const [hasNewVersion, setHasNewVersion] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   
+  const mainScrollRef = useRef(null);
+
   // Founder Active Session Check
   const [isFounderSession, setIsFounderSession] = useState(() => {
     return secureStorage.getItem('admin_session_active') || false;
@@ -67,6 +69,13 @@ export default function App() {
   const handleOpenAdmin = useCallback(() => {
     setIsAdminOpen(true);
   }, []);
+
+  // Auto-scroll main view to top whenever active tab changes
+  useEffect(() => {
+    if (mainScrollRef.current) {
+      mainScrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [activeTab]);
 
   // Update founder session state whenever Admin Vault closes/opens
   useEffect(() => {
@@ -175,10 +184,10 @@ export default function App() {
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop/Tablet Sidebar */}
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onToggleChat={handleToggleChat} onOpenAdmin={handleOpenAdmin} />
+        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} />
 
-        {/* Main Workspace Content (Responsive mobile text sizing) */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 pb-24 md:pb-6 text-xs sm:text-sm">
+        {/* Main Workspace Content (Auto-scrolling container) */}
+        <main ref={mainScrollRef} className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 pb-28 md:pb-6 text-xs sm:text-sm">
           {/* New Version Auto-Update Banner */}
           {hasNewVersion && (
             <div className="bg-cyan-950/60 border border-cyan-400/60 p-3 rounded-xl flex items-center justify-between font-mono text-xs text-cyan-200 shadow-lg animate-pulse">
@@ -235,14 +244,17 @@ export default function App() {
             </div>
           </div>
 
-          {/* Child Safety Active Banner */}
+          {/* Child Guard Active Explanation Banner */}
           {isChildMode && (
-            <div className="bg-[#131B2E] border border-amber-500/40 p-3 rounded-xl flex items-center justify-between text-xs text-amber-200 font-mono">
-              <div className="flex items-center gap-2">
-                <Baby size={16} className="text-amber-400" />
-                <span>{t('childMode.activeBanner')}</span>
+            <div className="bg-[#131B2E] border border-amber-500/40 p-3.5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-amber-200 font-mono shadow-md">
+              <div className="flex items-center gap-2.5">
+                <Baby size={18} className="text-amber-400 shrink-0" />
+                <div>
+                  <div className="font-bold text-amber-300">Child Guard Protection Active</div>
+                  <div className="text-[10px] text-amber-200/80">Automatically blocks adult links, gaming scams (Free Robux traps), and unverified money requests for family safety.</div>
+                </div>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded text-amber-300">
+              <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded text-amber-300 w-fit shrink-0">
                 CHILD GUARD ACTIVE
               </span>
             </div>
@@ -305,21 +317,30 @@ export default function App() {
 
           {activeTab === 'scanner' && (
             <div className="max-w-4xl mx-auto space-y-4">
-              <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl">
-                <h2 className="text-sm font-bold text-[var(--text-primary)] font-mono uppercase">
+              <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl font-mono">
+                <h2 className="text-sm font-bold text-[var(--text-primary)] uppercase">
                   SATYA AI Dedicated Threat Scanner Hub
                 </h2>
-                <p className="text-xs text-[var(--text-muted)]">Scan links, messages, camera feeds, and QR codes with VirusTotal v3 verification</p>
+                <p className="text-xs text-[var(--text-muted)] mt-1">Scan links, messages, camera feeds, and QR codes with VirusTotal v3 verification</p>
               </div>
               <ScannerPanel onScanResult={handleScanResult} />
             </div>
           )}
 
           {activeTab === 'feeds' && (
-            <div className="space-y-4">
+            <div className="space-y-4 font-mono">
+              {/* Intel Feeds Feature Explanation Banner */}
+              <div className="bg-[#131B2E] border border-cyan-500/40 p-3.5 rounded-xl flex items-center gap-3 text-xs text-cyan-200 shadow-md">
+                <Info size={20} className="text-cyan-400 shrink-0" />
+                <div>
+                  <div className="font-bold text-cyan-300">Intel Feeds — Global Threat Intelligence Archive</div>
+                  <div className="text-[11px] text-cyan-200/80 mt-0.5">This feed logs every live phishing link, scam SMS, and malicious payload blocked by our 92-engine VirusTotal security network in real-time.</div>
+                </div>
+              </div>
+
               <div className="cyber-card rounded-xl overflow-hidden border border-[#27395C] bg-[#131B2E]">
                 <div className="p-3.5 border-b border-[#1E2D4A] bg-[#0B0F19] flex items-center justify-between">
-                  <h2 className="text-xs font-bold font-mono tracking-wider text-[var(--text-primary)] uppercase">
+                  <h2 className="text-xs sm:text-sm font-bold font-mono tracking-wider text-[var(--text-primary)] uppercase">
                     Full Threat Intelligence Stream Archive
                   </h2>
                   <span className="text-[10px] font-mono text-[var(--text-muted)] bg-[#131B2E] px-2 py-0.5 rounded border border-[#1E2D4A]">
@@ -375,7 +396,7 @@ export default function App() {
         </AnimatePresence>
 
         {/* Mobile & Tablet Bottom Touch Bar */}
-        <MobileNav activeTab={activeTab} onTabChange={setActiveTab} onToggleChat={handleToggleChat} onOpenAdmin={handleOpenAdmin} />
+        <MobileNav activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} />
 
         {/* KAVACH AI Cybersecurity Assistant Chatbot */}
         <CyberAiChatbot isOpen={isChatOpen} onToggle={handleToggleChat} />

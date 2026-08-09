@@ -1,16 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, Bot, Rss, Lock, Baby } from 'lucide-react';
+import { LayoutDashboard, ScanLine, Rss, Lock, Baby } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
-export default function MobileNav({ activeTab, onTabChange, onToggleChat, onOpenAdmin }) {
+export default function MobileNav({ activeTab, onTabChange, onOpenAdmin }) {
   const { t } = useTranslation();
   const { isChildMode, toggleChildMode } = useChildMode();
 
   const mobileNavItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { id: 'scanner', icon: ScanLine, label: 'Scanner' },
-    { id: 'kavachAi', icon: Bot, action: onToggleChat, label: 'KAVACH AI' },
     { id: 'feeds', icon: Rss, label: 'Feeds' },
     { id: 'childSafety', icon: Baby, action: toggleChildMode, isToggle: true, label: 'Guard' },
     { id: 'adminVault', icon: Lock, action: onOpenAdmin, label: 'Admin' },
@@ -32,7 +31,7 @@ export default function MobileNav({ activeTab, onTabChange, onToggleChat, onOpen
                 onTabChange(item.id);
               }
             }}
-            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-lg transition-all font-mono ${
+            className={`flex flex-col items-center justify-center py-1 px-3 rounded-lg transition-all font-mono ${
               isActive
                 ? item.isToggle
                   ? 'text-amber-400 bg-amber-500/10'
@@ -40,7 +39,7 @@ export default function MobileNav({ activeTab, onTabChange, onToggleChat, onOpen
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
-            <Icon size={20} className={item.id === 'kavachAi' ? 'animate-pulse' : ''} />
+            <Icon size={20} />
             <span className="text-[9px] font-bold mt-0.5">{item.label}</span>
           </button>
         );
