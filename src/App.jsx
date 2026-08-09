@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, Terminal, RefreshCw, ArrowUpCircle, ScanLine, Lock, ShieldAlert } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, ShieldAlert } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -30,9 +30,7 @@ import { useChildMode } from './context/ChildModeContext';
 
 // Feed
 import MetricsBar from './components/feed/MetricsBar';
-import LiveFeedTable from './components/feed/LiveFeedTable';
 import DeepDivePanel from './components/feed/DeepDivePanel';
-import AttackPathGraph from './components/feed/AttackPathGraph';
 import MetricDetailModal from './components/feed/MetricDetailModal';
 
 // Hooks & Data
@@ -286,81 +284,51 @@ export default function App() {
                 <ScannerPanel onScanResult={handleScanResult} />
               </div>
 
-              {/* 3rd POSITION: Incident Audit Stream — RESTRICTED ONLY TO FOUNDER */}
-              {isFounderSession ? (
-                /* Unlocked ONLY for Founder active session */
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                  <div className="xl:col-span-2 space-y-4">
-                    <div className="cyber-card rounded-xl overflow-hidden border border-[#27395C] bg-[#131B2E]">
-                      <div className="p-3.5 border-b border-[#1E2D4A] bg-[#0B0F19] flex items-center justify-between font-mono">
-                        <div className="flex items-center gap-2">
-                          <Terminal size={16} className="text-[var(--accent)]" />
-                          <h2 className="text-xs sm:text-sm font-bold tracking-wider text-[var(--text-primary)] uppercase">
-                            Incident Audit Logs & Real-Time Stream (Founder Session)
-                          </h2>
-                        </div>
-                        <span className="text-[10px] font-mono text-[var(--accent)] bg-[#131B2E] px-2 py-0.5 rounded border border-[#1E2D4A]">
-                          FOUNDER UNLOCKED
-                        </span>
-                      </div>
-                      <LiveFeedTable
-                        events={events}
-                        selectedEvent={selectedEvent}
-                        onSelectEvent={setSelectedEvent}
-                      />
+              {/* 3rd POSITION: Public AI Threat Safeguard Card (Raw Incident Audit Table 100% Removed from Public view) */}
+              <div className="cyber-card p-5 rounded-xl border border-[#27395C] bg-[#131B2E] space-y-3 font-mono">
+                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                      <ShieldCheck size={18} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA AI Protection Network Active</h3>
+                      <p className="text-[10px] sm:text-[11px] text-[var(--text-muted)]">Real-time threat engine safeguarding your browsing & messages</p>
                     </div>
                   </div>
-                  <div className="xl:col-span-1">
-                    <AttackPathGraph selectedEvent={selectedEvent} />
+
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#0B0F19] border border-[#1E2D4A] rounded-lg text-[10px] text-amber-400 font-bold">
+                    <Lock size={12} />
+                    <span>PRIVATE THREAT VAULT</span>
                   </div>
                 </div>
-              ) : (
-                /* Public Security Protection Card for regular visitors */
-                <div className="cyber-card p-5 rounded-xl border border-[#27395C] bg-[#131B2E] space-y-3 font-mono">
-                  <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-                        <ShieldCheck size={18} />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA AI Protection Network Active</h3>
-                        <p className="text-[10px] sm:text-[11px] text-[var(--text-muted)]">Real-time threat engine safeguarding your browsing & messages</p>
-                      </div>
-                    </div>
 
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#0B0F19] border border-[#1E2D4A] rounded-lg text-[10px] text-amber-400 font-bold">
-                      <Lock size={12} />
-                      <span>PRIVATE AUDIT LOGS</span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[var(--text-secondary)] pt-1">
+                  <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
+                    <div className="font-bold text-emerald-400 flex items-center gap-1">
+                      <ShieldCheck size={14} />
+                      <span>92 Engine Shield</span>
                     </div>
+                    <p className="text-[10px] text-[var(--text-muted)]">Automatic VirusTotal v3 threat scoring on all scanned inputs.</p>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[var(--text-secondary)] pt-1">
-                    <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
-                      <div className="font-bold text-emerald-400 flex items-center gap-1">
-                        <ShieldCheck size={14} />
-                        <span>92 Engine Shield</span>
-                      </div>
-                      <p className="text-[10px] text-[var(--text-muted)]">Automatic VirusTotal v3 threat scoring on all scanned inputs.</p>
+                  <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
+                    <div className="font-bold text-[var(--accent)] flex items-center gap-1">
+                      <Server size={14} />
+                      <span>KAVACH Neural Engine</span>
                     </div>
+                    <p className="text-[10px] text-[var(--text-muted)]">Instant AI threat explanations in plain Indian language.</p>
+                  </div>
 
-                    <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
-                      <div className="font-bold text-[var(--accent)] flex items-center gap-1">
-                        <Server size={14} />
-                        <span>KAVACH Neural Engine</span>
-                      </div>
-                      <p className="text-[10px] text-[var(--text-muted)]">Instant AI threat explanations in plain Indian language.</p>
+                  <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
+                    <div className="font-bold text-amber-400 flex items-center gap-1">
+                      <Baby size={14} />
+                      <span>Family Protection</span>
                     </div>
-
-                    <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
-                      <div className="font-bold text-amber-400 flex items-center gap-1">
-                        <Baby size={14} />
-                        <span>Family Protection</span>
-                      </div>
-                      <p className="text-[10px] text-[var(--text-muted)]">Child Guard blocks adult scams & fake game coin traps.</p>
-                    </div>
+                    <p className="text-[10px] text-[var(--text-muted)]">Child Guard blocks adult scams & fake game coin traps.</p>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           )}
 
