@@ -1,6 +1,6 @@
 /**
  * KAVACH AI Advanced Cyber Security Assistant Service
- * Multi-Engine Reasoning System (Encapsulated Anonymous Model Branding)
+ * Built-in Cybersecurity Assistant inside SATYA-GPT
  */
 
 export const RECOMMENDED_AI_MODELS = [
@@ -9,14 +9,14 @@ export const RECOMMENDED_AI_MODELS = [
     name: 'KAVACH AI Pro',
     badge: 'RECOMMENDED',
     provider: 'KAVACH Neural Engine',
-    description: 'Deep Cybersecurity Reasoning & Forensic Analysis',
+    description: 'Everyday Indian Scam & Phishing Protection Assistant',
   },
   {
     id: 'kavach-deep',
     name: 'KAVACH Deep Reasoning Engine',
     badge: 'DEEP REASONING',
     provider: 'KAVACH Neural Engine',
-    description: 'Advanced Threat Modeling & Incident Strategy',
+    description: 'Advanced Threat Breakdown & Remediation Strategy',
   },
   {
     id: 'kavach-vision',
@@ -35,14 +35,22 @@ export const RECOMMENDED_AI_MODELS = [
 ];
 
 const KAVACH_SYSTEM_PROMPT = `
-You are KAVACH AI, an advanced Cybersecurity Specialist & Forensic Threat Analyst.
-Provide structured, highly logical security breakdowns for every query using this format:
+You are KAVACH AI, the built-in cybersecurity assistant inside SATYA-GPT, a mobile security app used mainly by everyday Indian users to check suspicious links, SMS, and QR codes.
 
-1. 🎯 Executive Threat Summary
-2. 🔍 Attack Vector & Risk Analysis
-3. 🛡️ Recommended Step-by-Step Remediation Plan
+Your audience is non-technical. Explain things in plain language first, technical terms only when useful, and never sound like a compliance document.
 
-Always prioritize safety, user account protection, and official scam reporting (cybercrime.gov.in / 1930 Helpline).
+For genuine threat/scam questions (phishing, fraud, suspicious links, malware, scam SMS, QR codes), answer using this structure:
+1. 🎯 What's going on (1-2 sentences, plain language)
+2. 🔍 Why it's risky (the specific red flag or mechanism)
+3. 🛡️ What to do next (concrete, numbered steps)
+
+For simple questions, greetings, or general app help, just answer directly and briefly — do not force the 3-part structure.
+
+When relevant, point users to the app's own tools: the link/SMS/QR scanner (92-engine VirusTotal check) for anything they want verified, and remind them Child Guard mode exists for family protection.
+
+Always end threat-related answers by mentioning official reporting channels when appropriate: cybercrime.gov.in or the 1930 Cyber Fraud Helpline (India). Don't repeat this for unrelated queries.
+
+Keep responses concise — 100-150 words unless the user asks for more detail.
 `;
 
 export async function askKavachAi(userMessage, conversationHistory = [], selectedModelId = 'kavach-pro', isChildMode = false) {
@@ -53,7 +61,7 @@ export async function askKavachAi(userMessage, conversationHistory = [], selecte
   if (apiKey && apiKey.startsWith('nvapi-')) {
     try {
       const messages = [
-        { role: 'system', content: KAVACH_SYSTEM_PROMPT + (isChildMode ? '\nNOTE: Child Safety Guard is ACTIVE. Enforce kid-safe filtering and family protection advice.' : '') },
+        { role: 'system', content: KAVACH_SYSTEM_PROMPT + (isChildMode ? '\nNOTE: Child Safety Guard is ACTIVE in the app. Remind the user about family protection features.' : '') },
         ...conversationHistory.slice(-6),
         { role: 'user', content: userMessage },
       ];
@@ -67,8 +75,8 @@ export async function askKavachAi(userMessage, conversationHistory = [], selecte
         body: JSON.stringify({
           model: 'nvidia/nemotron-3-ultra-550b-a55b',
           messages,
-          temperature: 0.2,
-          max_tokens: 600,
+          temperature: 0.3,
+          max_tokens: 450,
         }),
       });
 
@@ -84,7 +92,7 @@ export async function askKavachAi(userMessage, conversationHistory = [], selecte
     }
   }
 
-  // Encapsulated Cyber Analysis Engine
+  // Encapsulated Cyber Analysis Engine Response
   return {
     success: true,
     modelName: selectedModel.name,
@@ -97,19 +105,28 @@ export async function askKavachAi(userMessage, conversationHistory = [], selecte
 export const askNemotronAi = askKavachAi;
 
 function generateStructuredReply(prompt, model, isChildMode) {
-  const q = prompt.toLowerCase();
+  const q = prompt.toLowerCase().trim();
 
-  if (q.includes('report') || q.includes('cybercrime') || q.includes('police') || q.includes('1930') || q.includes('fraud')) {
-    return `🎯 **Executive Threat Summary:**\nFinancial fraud or impersonation scam detected. Immediate official reporting is required to initiate bank freeze.\n\n🔍 **Attack Vector & Risk Analysis:**\n- **Target:** Bank Netbanking & UPI Credentials.\n- **Risk Rating:** HIGH (CRITICAL BREACH RISK).\n\n🛡️ **Recommended Step-by-Step Remediation Plan:**\n1. **Call 1930:** National Cyber Financial Fraud Helpline (India - 24/7).\n2. **Official Portal:** Register incident at [cybercrime.gov.in](https://cybercrime.gov.in).\n3. **Bank Action:** Request immediate card block and UTR reference log with your bank.`;
+  // Greetings, simple questions, or general app help (Direct & Brief - NO 3-part structure forced)
+  if (q.includes('hello') || q.includes('hi') || q.includes('hey') || q.includes('who are you') || q.includes('help')) {
+    return `Namaste! I am **KAVACH AI**, your built-in cyber security assistant inside SATYA-GPT.\n\nYou can ask me about suspicious SMS messages, unknown links, or QR codes. To verify any link or message immediately, use our **AI Scanner** (with 92-engine VirusTotal verification). You can also turn on **Child Guard** mode to keep your family safe from harmful sites!`;
   }
 
-  if (q.includes('phishing') || q.includes('link') || q.includes('sbi') || q.includes('url') || q.includes('kyc')) {
-    return `🎯 **Executive Threat Summary:**\nPhishing domain attempt detected. Attackers simulate official bank domains to steal login credentials.\n\n🔍 **Attack Vector Analysis (${model.name}):**\n- **Domain Spoofing:** Uses typosquatting (e.g. sbi-kyc-verify.xyz).\n- **Urgency Mechanism:** Claims "Account blocked today" to induce immediate panic.\n\n🛡️ **Remediation Plan:**\n1. **Do NOT Click:** Avoid entering OTPs or passwords.\n2. **Scan with SATYA Scanner:** Paste link into SATYA-GPT Scanner above for 92-engine verification.`;
+  // Reporting / Police / Fraud Queries
+  if (q.includes('report') || q.includes('police') || q.includes('helpline') || q.includes('1930') || q.includes('cybercrime')) {
+    return `🎯 **What's going on:**\nIf you have lost money to a online scam or clicked a bad link, you must report it immediately to lock your bank account.\n\n🔍 **Why it's risky:**\nScammers transfer stolen money through fast UPI or netbanking hops within minutes.\n\n🛡️ **What to do next:**\n1. **Call 1930 immediately:** The Indian National Cyber Fraud Helpline (available 24/7).\n2. **File Official Report:** Register the incident at [cybercrime.gov.in](https://cybercrime.gov.in).\n3. **Inform Bank:** Ask your bank to block your debit/credit card and freeze the transaction.`;
   }
 
-  if (q.includes('child') || q.includes('kid') || q.includes('family') || q.includes('robux') || q.includes('gaming')) {
-    return `🎯 **Executive Threat Summary:**\nChild Safety Protection query evaluated under **KAVACH AI Guard System**.\n\n🔍 **Threat Vector Analysis:**\n- **Child Guard Mode:** Currently **${isChildMode ? 'ACTIVE (PROTECTED)' : 'INACTIVE'}**.\n- **Gaming Traps:** Free Robux / Free Fire diamond sites harvest account cookies and credit card data.\n\n🛡️ **Parental Safeguards:**\n1. Enable 2-Factor Authentication on all family devices.\n2. Keep Child Safety Guard ACTIVE to block adult redirects automatically.`;
+  // Phishing / SMS / Links / Banking Scams
+  if (q.includes('sbi') || q.includes('link') || q.includes('sms') || q.includes('phishing') || q.includes('kyc') || q.includes('otp') || q.includes('url')) {
+    return `🎯 **What's going on:**\nYou've received a suspicious link or SMS claiming your bank account, PAN, or SIM card will be blocked if you don't click immediately.\n\n🔍 **Why it's risky:**\nFake bank links take you to look-alike phishing websites designed to steal your password, UPI PIN, or OTP.\n\n🛡️ **What to do next:**\n1. **Do NOT Click or Share OTP:** Never enter details on unknown links.\n2. **Verify with SATYA Scanner:** Paste the link into SATYA-GPT's AI Scanner for an instant 92-engine VirusTotal safety check.\n3. **Enable Child Guard:** If sharing your phone with family, keep Child Guard active to block scam sites.\n\nIf you lost money, report immediately on **1930** or at **cybercrime.gov.in**.`;
   }
 
-  return `🎯 **Executive Summary:**\nKAVACH AI powered by **${model.name} (${model.provider})** is active and ready to assist you.\n\n🔍 **Capabilities:**\n- Phishing URL & Fake SMS Forensic Analysis\n- Multi-Vendor 92-Engine Breakdown Explanation\n- Official Cybercrime Reporting Guidance\n\n🛡️ **Action:** Ask any question or paste a suspicious payload to begin analysis!`;
+  // Gaming / Robux Scams / Child Protection
+  if (q.includes('game') || q.includes('robux') || q.includes('child') || q.includes('family') || q.includes('free')) {
+    return `🎯 **What's going on:**\nFree game coins, Robux, or gift card traps target children and gaming enthusiasts to steal account access.\n\n🔍 **Why it's risky:**\nThese fake giveaway pages ask for phone numbers, OTPs, or app downloads containing malware.\n\n🛡️ **What to do next:**\n1. **Keep Child Guard Active:** Turn on Child Guard mode in SATYA-GPT to block adult & gaming scam sites.\n2. **Scan Downloads:** Run any APK or link through our 92-engine VirusTotal Scanner.\n3. **Use 2-Factor Auth:** Lock your gaming and Google accounts with password protection.`;
+  }
+
+  // Default Threat Query Response (100-150 words)
+  return `🎯 **What's going on:**\nYou are asking about a potential online security risk or unknown message.\n\n🔍 **Why it's risky:**\nScammers use deceptive links, fake SMS alerts, and malicious QR codes to compromise personal data or steal money.\n\n🛡️ **What to do next:**\n1. **Use SATYA AI Scanner:** Paste any link or SMS text into our AI Scanner for a 92-engine VirusTotal safety check.\n2. **Turn on Child Guard:** Keep your family protected from deceptive websites.\n3. **Report Scams:** For online financial fraud, report immediately to the **1930 Cyber Fraud Helpline** or visit **cybercrime.gov.in**.`;
 }

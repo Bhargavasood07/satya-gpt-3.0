@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Send, X, Sparkles, Shield, Cpu, RefreshCw, ChevronDown, Check } from 'lucide-react';
+import { Bot, Send, X, Sparkles, Shield, RefreshCw, ChevronDown, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { askKavachAi, RECOMMENDED_AI_MODELS } from '../../services/nemotronChatService';
 import { useChildMode } from '../../context/ChildModeContext';
@@ -14,7 +14,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
     {
       id: 1,
       sender: 'bot',
-      text: 'Hello! I am **KAVACH AI**, your Cybersecurity Assistant. Select your preferred KAVACH AI Model engine above and ask me anything about phishing, scams, or online protection!',
+      text: 'Namaste! I am **KAVACH AI**, your personal cybersecurity assistant inside SATYA-GPT.\n\nAsk me about any suspicious SMS, fake bank link, or unknown QR code in plain language!',
       modelName: 'KAVACH AI Pro',
       timestamp: new Date(),
     },
@@ -26,10 +26,10 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
   const activeModel = RECOMMENDED_AI_MODELS.find(m => m.id === selectedModelId) || RECOMMENDED_AI_MODELS[0];
 
   const quickPrompts = [
-    'How to report SMS scam to cybercrime.gov.in?',
-    'What are top red flags of phishing links?',
-    'How does Child Guard protect my family?',
-    'Explain multi-vendor 92-engine threat score',
+    'I received a fake SBI KYC SMS, what to do?',
+    'How to report scam on 1930 Helpline?',
+    'How does Child Guard keep my family safe?',
+    'Is this link safe to click?',
   ];
 
   const scrollToBottom = () => {
@@ -101,7 +101,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
             className="fixed bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[440px] h-[600px] bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header with Model Selector */}
-            <div className="p-3 bg-[#0B0F19] border-b border-[#1E2D4A] flex items-center justify-between">
+            <div className="p-3 bg-[#0B0F19] border-b border-[#1E2D4A] flex items-center justify-between font-mono">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded bg-[#131B2E] border border-[var(--accent)] flex items-center justify-center text-[var(--accent)] shrink-0">
                   <Bot size={16} />
@@ -128,7 +128,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                   {/* Dropdown Menu */}
                   {showModelDropdown && (
                     <div className="absolute top-full left-0 mt-1 w-64 bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 p-1.5 space-y-1 font-mono">
-                      <div className="text-[10px] text-[var(--text-muted)] px-2 py-1 border-b border-[#1E2D4A]">KAVACH AI SECURITY ENGINES</div>
+                      <div className="text-[10px] text-[var(--text-muted)] px-2 py-1 border-b border-[#1E2D4A]">KAVACH AI ENGINES</div>
                       {RECOMMENDED_AI_MODELS.map((m) => (
                         <button
                           key={m.id}
@@ -162,7 +162,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                       {
                         id: Date.now(),
                         sender: 'bot',
-                        text: `Chat reset. I am KAVACH AI powered by **${activeModel.name}**. How can I assist you?`,
+                        text: `Namaste! I am KAVACH AI powered by **${activeModel.name}**. How can I assist you?`,
                         modelName: activeModel.name,
                         timestamp: new Date(),
                       },
@@ -227,7 +227,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
               {isTyping && (
                 <div className="flex items-center gap-2 p-2.5 bg-[#131B2E] border border-[#27395C] rounded-lg w-fit text-xs text-[var(--text-muted)] font-mono animate-pulse">
                   <Shield size={14} className="text-[var(--accent)]" />
-                  <span>KAVACH ({activeModel.name}) is reasoning...</span>
+                  <span>KAVACH ({activeModel.name}) is analyzing threat...</span>
                 </div>
               )}
               <div ref={messagesEndRef} />

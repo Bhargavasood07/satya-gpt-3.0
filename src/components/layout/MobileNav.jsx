@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, Bot, Rss, Settings, Baby } from 'lucide-react';
+import { LayoutDashboard, ScanLine, Bot, Rss, Lock, Baby } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
-export default function MobileNav({ activeTab, onTabChange, onToggleChat }) {
+export default function MobileNav({ activeTab, onTabChange, onToggleChat, onOpenAdmin }) {
   const { t } = useTranslation();
   const { isChildMode, toggleChildMode } = useChildMode();
 
@@ -13,11 +13,11 @@ export default function MobileNav({ activeTab, onTabChange, onToggleChat }) {
     { id: 'kavachAi', icon: Bot, action: onToggleChat, label: 'KAVACH AI' },
     { id: 'feeds', icon: Rss, label: 'Feeds' },
     { id: 'childSafety', icon: Baby, action: toggleChildMode, isToggle: true, label: 'Guard' },
-    { id: 'settings', icon: Settings, label: 'Settings' },
+    { id: 'adminVault', icon: Lock, action: onOpenAdmin, label: 'Admin' },
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#131B2E] border-t border-[#27395C] z-40 px-2 flex items-center justify-around shadow-2xl">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#131B2E] border-t border-[#27395C] z-40 px-2 flex items-center justify-around shadow-2xl font-mono">
       {mobileNavItems.map((item) => {
         const Icon = item.icon;
         const isActive = activeTab === item.id || (item.isToggle && isChildMode);

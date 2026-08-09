@@ -20,10 +20,10 @@ import AdminPanelModal from './components/admin/AdminPanelModal';
 // Onboarding Guide & Auto Updater
 import UserOnboardingBanner from './components/common/UserOnboardingBanner';
 import { initAutoUpdater, reloadToLatestVersion } from './utils/autoUpdater';
+import { secureStorage } from './utils/securityGuard';
 
 // Views
 import AnalyticsView from './components/views/AnalyticsView';
-import SystemSettingsView from './components/views/SystemSettingsView';
 
 // Notifications
 import NotificationContainer from './components/notifications/NotificationContainer';
@@ -50,6 +50,11 @@ export default function App() {
   const [activeMetricModal, setActiveMetricModal] = useState(null);
   const [hasNewVersion, setHasNewVersion] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  
+  // Founder Active Session Check
+  const [isFounderSession, setIsFounderSession] = useState(() => {
+    return secureStorage.getItem('admin_session_active') || false;
+  });
 
   const { events, metrics, selectedEvent, setSelectedEvent, addManualEvent } =
     useSimulatedFeed(addNotification, t);
@@ -65,6 +70,11 @@ export default function App() {
   const handleOpenAdmin = useCallback(() => {
     setIsAdminOpen(true);
   }, []);
+
+  // Update founder session state whenever Admin Vault closes/opens
+  useEffect(() => {
+    setIsFounderSession(secureStorage.getItem('admin_session_active') || false);
+  }, [isAdminOpen]);
 
   // Initialize Auto-Updater Background Check
   useEffect(() => {
@@ -184,7 +194,7 @@ export default function App() {
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop/Tablet Sidebar */}
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onToggleChat={handleToggleChat} />
+        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onToggleChat={handleToggleChat} onOpenAdmin={handleOpenAdmin} />
 
         {/* Main Workspace Content */}
         <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 pb-20 md:pb-5">
@@ -260,7 +270,11 @@ export default function App() {
           {/* Render Active Tab Content */}
           {activeTab === 'dashboard' && (
             <div className="space-y-4">
-              <MetricsBar metrics={metrics} onCardClick={(type) => setActiveMetricModal(type)} />
+              <MetricsBar
+                metrics={metrics}
+                onCardClick={(type) => setActiveMetricModal(type)}
+                isFounderSession={isFounderSession}
+              />
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 <div className="xl:col-span-2 space-y-4">
                   <div className="cyber-card rounded-xl overflow-hidden border border-[#27395C] bg-[#131B2E]">
@@ -325,10 +339,6 @@ export default function App() {
           {activeTab === 'analytics' && (
             <AnalyticsView metrics={metrics} events={events} />
           )}
-
-          {activeTab === 'settings' && (
-            <SystemSettingsView events={events} />
-          )}
         </main>
 
         {/* Deep Dive Panel Overlay */}
@@ -343,7 +353,7 @@ export default function App() {
 
         {/* Metric Detail Modal Overlay */}
         <AnimatePresence>
-          {activeMetricModal && (
+          {activeMetricModal && isFounderSession && (
             <MetricDetailModal
               modalType={activeMetricModal}
               onClose={() => setActiveMetricModal(null)}
@@ -366,7 +376,7 @@ export default function App() {
         </AnimatePresence>
 
         {/* Mobile & Tablet Bottom Touch Bar */}
-        <MobileNav activeTab={activeTab} onTabChange={setActiveTab} onToggleChat={handleToggleChat} />
+        <MobileNav activeTab={activeTab} onTabChange={setActiveTab} onToggleChat={handleToggleChat} onOpenAdmin={handleOpenAdmin} />
 
         {/* KAVACH AI Cybersecurity Assistant Chatbot */}
         <CyberAiChatbot isOpen={isChatOpen} onToggle={handleToggleChat} />

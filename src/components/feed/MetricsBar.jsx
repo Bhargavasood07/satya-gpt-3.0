@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Shield, ShieldAlert, ShieldCheck, Baby, ChevronRight } from 'lucide-react';
+import { Shield, ShieldAlert, ShieldCheck, Baby } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
+import { secureStorage } from '../../utils/securityGuard';
 
 const CountUp = ({ end, duration = 1500, format = (v) => v }) => {
   const [count, setCount] = useState(0);
@@ -29,7 +30,7 @@ const CountUp = ({ end, duration = 1500, format = (v) => v }) => {
   return <>{format(count)}</>;
 };
 
-const MetricsBar = ({ metrics, onCardClick }) => {
+const MetricsBar = ({ metrics, onCardClick, isFounderSession = false }) => {
   const { t } = useTranslation();
   const { isChildMode } = useChildMode();
   const { totalScans = 1442, threatsBlocked = 99, systemIntegrity = 99.4, childBlocks = 47 } = metrics || {};
@@ -47,6 +48,13 @@ const MetricsBar = ({ metrics, onCardClick }) => {
     visible: { opacity: 1, y: 0 }
   };
 
+  const handleCardClick = (type) => {
+    // Only allow click action if active Founder Admin session
+    if (isFounderSession && onCardClick) {
+      onCardClick(type);
+    }
+  };
+
   return (
     <motion.div 
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-2"
@@ -55,92 +63,68 @@ const MetricsBar = ({ metrics, onCardClick }) => {
       animate="visible"
     >
       {/* Card 1: Total Scans */}
-      <motion.button
-        type="button"
-        onClick={() => onCardClick && onCardClick('totalScans')}
+      <motion.div
         variants={itemVariants}
-        className="cyber-card p-5 relative overflow-hidden flex flex-col items-center justify-center border-b-2 border-b-[var(--accent)] bg-[var(--bg-card)] rounded-xl border border-[var(--border-card)] hover:border-[var(--accent)] cursor-pointer transition-all hover:scale-[1.02] text-left group"
+        onClick={() => handleCardClick('totalScans')}
+        className={`cyber-card p-5 relative overflow-hidden flex flex-col items-center justify-center border-b-2 border-b-[var(--accent)] bg-[var(--bg-card)] rounded-xl border border-[var(--border-card)] text-center transition-all ${
+          isFounderSession ? 'hover:border-[var(--accent)] cursor-pointer hover:scale-[1.02]' : 'cursor-default'
+        }`}
       >
-        <div className="flex items-center justify-between w-full mb-1">
-          <Shield className="text-[var(--accent)]" size={22} />
-          <span className="text-[10px] font-mono text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
-            <span>DETAILS</span>
-            <ChevronRight size={12} />
-          </span>
-        </div>
+        <Shield className="text-[var(--accent)] mb-2" size={24} />
         <div className="text-[var(--text-muted)] text-xs mb-1 font-mono">{t('metrics.totalScans')}</div>
         <div className="text-3xl font-bold font-mono text-[var(--text-primary)]">
           <CountUp end={totalScans} format={(v) => v.toLocaleString()} />
         </div>
-        <div className="text-[10px] font-mono text-[var(--text-muted)] mt-1">Click to view VT v3 API Data</div>
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent opacity-40"></div>
-      </motion.button>
+      </motion.div>
 
       {/* Card 2: Threats Blocked */}
-      <motion.button
-        type="button"
-        onClick={() => onCardClick && onCardClick('threatsBlocked')}
+      <motion.div
         variants={itemVariants}
-        className="cyber-card p-5 relative overflow-hidden flex flex-col items-center justify-center border-b-2 border-b-[var(--threat)] bg-[var(--bg-card)] rounded-xl border border-[var(--border-card)] hover:border-rose-500 cursor-pointer transition-all hover:scale-[1.02] text-left group"
+        onClick={() => handleCardClick('threatsBlocked')}
+        className={`cyber-card p-5 relative overflow-hidden flex flex-col items-center justify-center border-b-2 border-b-[var(--threat)] bg-[var(--bg-card)] rounded-xl border border-[var(--border-card)] text-center transition-all ${
+          isFounderSession ? 'hover:border-rose-500 cursor-pointer hover:scale-[1.02]' : 'cursor-default'
+        }`}
       >
-        <div className="flex items-center justify-between w-full mb-1">
-          <ShieldAlert className="text-[var(--threat)]" size={22} />
-          <span className="text-[10px] font-mono text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
-            <span>AUDIT</span>
-            <ChevronRight size={12} />
-          </span>
-        </div>
+        <ShieldAlert className="text-[var(--threat)] mb-2" size={24} />
         <div className="text-[var(--text-muted)] text-xs mb-1 font-mono">{t('metrics.threatsBlocked')}</div>
         <div className="text-3xl font-bold font-mono text-[var(--threat)]">
           <CountUp end={threatsBlocked} format={(v) => v.toLocaleString()} />
         </div>
-        <div className="text-[10px] font-mono text-[var(--text-muted)] mt-1">Click to view Blocked Logs</div>
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[var(--threat)] to-transparent opacity-40"></div>
-      </motion.button>
+      </motion.div>
 
       {/* Card 3: Child Guard Blocks */}
-      <motion.button
-        type="button"
-        onClick={() => onCardClick && onCardClick('childBlocks')}
+      <motion.div
         variants={itemVariants}
-        className="cyber-card p-5 relative overflow-hidden flex flex-col items-center justify-center border-b-2 border-b-purple-500 bg-[var(--bg-card)] rounded-xl border border-[var(--border-card)] hover:border-purple-400 cursor-pointer transition-all hover:scale-[1.02] text-left group"
+        onClick={() => handleCardClick('childBlocks')}
+        className={`cyber-card p-5 relative overflow-hidden flex flex-col items-center justify-center border-b-2 border-b-purple-500 bg-[var(--bg-card)] rounded-xl border border-[var(--border-card)] text-center transition-all ${
+          isFounderSession ? 'hover:border-purple-400 cursor-pointer hover:scale-[1.02]' : 'cursor-default'
+        }`}
       >
-        <div className="flex items-center justify-between w-full mb-1">
-          <Baby className="text-purple-400" size={22} />
-          <span className="text-[10px] font-mono text-purple-300 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
-            <span>RULES</span>
-            <ChevronRight size={12} />
-          </span>
-        </div>
+        <Baby className="text-purple-400 mb-2" size={24} />
         <div className="text-[var(--text-muted)] text-xs mb-1 font-mono">{t('metrics.childBlocks')}</div>
         <div className="text-3xl font-bold font-mono text-purple-400">
           <CountUp end={childBlocks} format={(v) => v.toLocaleString()} />
         </div>
-        <div className="text-[10px] font-mono text-[var(--text-muted)] mt-1">Click to view Guard Filter</div>
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-40"></div>
-      </motion.button>
+      </motion.div>
 
       {/* Card 4: System Integrity */}
-      <motion.button
-        type="button"
-        onClick={() => onCardClick && onCardClick('systemIntegrity')}
+      <motion.div
         variants={itemVariants}
-        className="cyber-card p-5 relative overflow-hidden flex flex-col items-center justify-center border-b-2 border-b-[var(--safe)] bg-[var(--bg-card)] rounded-xl border border-[var(--border-card)] hover:border-emerald-400 cursor-pointer transition-all hover:scale-[1.02] text-left group"
+        onClick={() => handleCardClick('systemIntegrity')}
+        className={`cyber-card p-5 relative overflow-hidden flex flex-col items-center justify-center border-b-2 border-b-[var(--safe)] bg-[var(--bg-card)] rounded-xl border border-[var(--border-card)] text-center transition-all ${
+          isFounderSession ? 'hover:border-emerald-400 cursor-pointer hover:scale-[1.02]' : 'cursor-default'
+        }`}
       >
-        <div className="flex items-center justify-between w-full mb-1">
-          <ShieldCheck className="text-[var(--safe)]" size={22} />
-          <span className="text-[10px] font-mono text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
-            <span>DIAGNOSTICS</span>
-            <ChevronRight size={12} />
-          </span>
-        </div>
+        <ShieldCheck className="text-[var(--safe)] mb-2" size={24} />
         <div className="text-[var(--text-muted)] text-xs mb-1 font-mono">{t('metrics.systemIntegrity')}</div>
         <div className="text-3xl font-bold font-mono text-[var(--safe)]">
           <CountUp end={Math.floor(systemIntegrity)} format={(v) => `${v}%`} />
         </div>
-        <div className="text-[10px] font-mono text-[var(--text-muted)] mt-1">Click to view Backend Node Health</div>
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[var(--safe)] to-transparent opacity-40"></div>
-      </motion.button>
+      </motion.div>
     </motion.div>
   );
 };
