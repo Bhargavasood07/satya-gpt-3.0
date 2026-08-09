@@ -1,0 +1,147 @@
+{
+  "app": {
+    "title": "SATYA-GPT",
+    "subtitle": "AI Security Operations Center",
+    "status": "SATYA Node: Active",
+    "version": "v3.5.0",
+    "childShieldActive": "CHILD GUARD: ACTIVE",
+    "childShieldDisabled": "CHILD GUARD: OFF"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "scanner": "AI Scanner",
+    "feeds": "Intel Feeds",
+    "analytics": "Analytics",
+    "childSafety": "Child Guard",
+    "settings": "Settings"
+  },
+  "childMode": {
+    "title": "Child & Family Cyber Guard",
+    "subtitle": "Real-time AI shield against explicit redirects, predator scams, and fake giveaway traps",
+    "activeBanner": "🛡️ Child Safety Mode Active: Adult websites, gaming scams & money requests are strictly blocked.",
+    "toggleLabel": "Child Safety Mode",
+    "blockedAdult": "Adult Content Redirect Blocked",
+    "blockedScam": "Fake Giveaway / Robux Scam Blocked",
+    "blockedPhishing": "Phishing Money Request Blocked",
+    "kidFriendlyVerdict": "Family Safety Shield Verified"
+  },
+  "satyaGpt": {
+    "welcome": "Welcome to SATYA-GPT Protection",
+    "subtitle": "Your AI-powered shield against fake news, scams, and harmful content",
+    "quickExamples": "Try Quick Examples:",
+    "linkTab": "Link / URL",
+    "textTab": "Text / Message",
+    "cameraTab": "Live Camera",
+    "qrTab": "QR Analysis",
+    "inputPlaceholderUrl": "Paste any suspicious website link, URL or forward...",
+    "inputPlaceholderText": "Paste suspicious SMS, WhatsApp message, email, or money request...",
+    "checkNow": "Verify Content",
+    "sampleKycSms": "Fake SBI KYC SMS",
+    "sampleGamingScam": "Free Robux / Fire Giveaway",
+    "sampleSafeUrl": "Official Google.com",
+    "samplePhishingUrl": "Suspicious Login Page",
+    "redFlagsDetected": "Red Flags Detected:",
+    "aiExplanation": "SATYA AI Analysis:",
+    "safeToForward": "Safe to Forward / Share?",
+    "yesShare": "Yes, verified safe to share",
+    "noShare": "NO! Do not forward or click links",
+    "reportCyberCrime": "Report to CyberCrime.gov.in",
+    "factCheckRef": "Fact-Check References",
+    "whatToDo": "Recommended Action:"
+  },
+  "theme": {
+    "cyberSlate": "Cyber Slate",
+    "tacticalNavy": "Tactical Navy",
+    "toggle": "Toggle Theme"
+  },
+  "lang": {
+    "toggle": "हिन्दी",
+    "current": "EN"
+  },
+  "metrics": {
+    "totalScans": "Total Scans Today",
+    "threatsBlocked": "Threats Blocked",
+    "childBlocks": "Child Guard Blocks",
+    "systemIntegrity": "System Integrity",
+    "activeFeeds": "Active Feeds"
+  },
+  "scanner": {
+    "title": "SATYA AI Universal Scanner",
+    "cameraTab": "Camera Feed",
+    "qrTab": "QR Code",
+    "linkTab": "Link Check",
+    "textTab": "Text / SMS",
+    "startCamera": "Start Live Camera",
+    "stopCamera": "Stop Camera",
+    "scanQr": "Scan QR Code",
+    "dropQr": "Drop QR image here or click to upload",
+    "analyzing": "Analyzing payload...",
+    "extracting": "Extracting payload...",
+    "decoding": "Decoding QR matrix...",
+    "scanning": "Scanning for threats...",
+    "cameraActive": "Camera Active",
+    "cameraInactive": "Camera Inactive",
+    "noCamera": "No camera detected",
+    "permissionDenied": "Camera permission denied"
+  },
+  "feed": {
+    "title": "SATYA Intelligence Feed",
+    "liveStream": "Live Threat & Safety Stream",
+    "timestamp": "Timestamp",
+    "source": "Source",
+    "preview": "Payload Preview",
+    "verdict": "Verdict",
+    "confidence": "Confidence",
+    "action": "Action",
+    "noEvents": "No events recorded yet",
+    "newEvent": "New event detected"
+  },
+  "verdict": {
+    "real": "REAL",
+    "verified": "VERIFIED",
+    "fake": "FAKE",
+    "malicious": "MALICIOUS",
+    "suspicious": "SUSPICIOUS",
+    "safe": "SAFE",
+    "childSafe": "KID SAFE",
+    "unknown": "UNKNOWN"
+  },
+  "deepDive": {
+    "title": "Threat Analysis Details",
+    "summary": "Analysis Summary",
+    "riskScore": "Risk Score",
+    "indicators": "Threat Indicators",
+    "payload": "Full Payload",
+    "verdictReason": "Verdict Reasoning",
+    "markSafe": "Mark Safe",
+    "escalate": "Escalate",
+    "blockSource": "Block Source",
+    "close": "Close Panel",
+    "noSelection": "Select an event to view details"
+  },
+  "notifications": {
+    "safeTitle": "Content Verified Safe",
+    "threatTitle": "Threat Alert",
+    "childBlockTitle": "Child Guard Shield Alert",
+    "phishingDetected": "Phishing Attempt Detected",
+    "malwareDetected": "Malware Signature Found",
+    "urlSafe": "URL Verified Safe",
+    "qrSafe": "QR Code Verified Clean",
+    "qrMalicious": "Malicious QR Payload Detected",
+    "scanComplete": "Scan Complete",
+    "dismiss": "Dismiss"
+  },
+  "sources": {
+    "camera": "Camera",
+    "qr": "QR Code",
+    "link": "Link/URL",
+    "text": "SMS/Text",
+    "manual": "Manual",
+    "api": "API Feed"
+  },
+  "time": {
+    "justNow": "Just now",
+    "secondsAgo": "{{count}}s ago",
+    "minutesAgo": "{{count}}m ago"
+  }
+}

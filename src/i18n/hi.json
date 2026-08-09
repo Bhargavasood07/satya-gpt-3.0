@@ -1,0 +1,147 @@
+{
+  "app": {
+    "title": "SATYA-GPT",
+    "subtitle": "AI सुरक्षा संचालन केंद्र",
+    "status": "सत्या नोड: सक्रिय",
+    "version": "v3.5.0",
+    "childShieldActive": "बाल सुरक्षा: सक्रिय",
+    "childShieldDisabled": "बाल सुरक्षा: बंद"
+  },
+  "nav": {
+    "dashboard": "डैशबोर्ड",
+    "scanner": "AI स्कैनर",
+    "feeds": "इंटेल फीड",
+    "analytics": "विश्लेषण",
+    "childSafety": "बाल सुरक्षा",
+    "settings": "सेटिंग्स"
+  },
+  "childMode": {
+    "title": "बाल एवं परिवार साइबर सुरक्षा",
+    "subtitle": "वयस्क सामग्री रीडायरेक्ट, फेक गेमिंग ऑफर और धोखाधड़ी संदेशों से AI सुरक्षा",
+    "activeBanner": "🛡️ बाल सुरक्षा मोड सक्रिय: वयस्क वेबसाइट, गेमिंग स्कैम और पैसे के अनुरोध ब्लॉक किए गए हैं।",
+    "toggleLabel": "बाल सुरक्षा मोड",
+    "blockedAdult": "वयस्क सामग्री रीडायरेक्ट ब्लॉक किया गया",
+    "blockedScam": "फेक गिवअवे / गेमिंग स्कैम ब्लॉक किया गया",
+    "blockedPhishing": "फिशिंग पैसे का अनुरोध ब्लॉक किया गया",
+    "kidFriendlyVerdict": "पारिवारिक सुरक्षा शील्ड द्वारा सत्यापित"
+  },
+  "satyaGpt": {
+    "welcome": "SATYA-GPT सुरक्षा में आपका स्वागत है",
+    "subtitle": "फेक न्यूज, स्कैम और हानिकारक सामग्री से आपकी AI सुरक्षा",
+    "quickExamples": "त्वरित उदाहरण आजमाएं:",
+    "linkTab": "लिंक / URL",
+    "textTab": "टेक्स्ट / संदेश",
+    "cameraTab": "लाइव कैमरा",
+    "qrTab": "QR विश्लेषण",
+    "inputPlaceholderUrl": "कोई भी संदिग्ध वेबसाइट लिंक, URL या संदेश पेस्ट करें...",
+    "inputPlaceholderText": "संदिग्ध SMS, WhatsApp संदेश, ईमेल या पैसों का अनुरोध पेस्ट करें...",
+    "checkNow": "सामग्री वेरीफाई करें",
+    "sampleKycSms": "नकली SBI KYC संदेश",
+    "sampleGamingScam": "मुफ्त रोबक्स / फ्री फायर स्कैम",
+    "sampleSafeUrl": "आधिकारिक Google.com",
+    "samplePhishingUrl": "संदिग्ध लॉगिन पेज",
+    "redFlagsDetected": "पहचाने गए खतरे (लाल झंडे):",
+    "aiExplanation": "SATYA AI विश्लेषण:",
+    "safeToForward": "क्या फॉरवर्ड/साझा करना सुरक्षित है?",
+    "yesShare": "हां, साझा करने के लिए सुरक्षित है",
+    "noShare": "नहीं! इसे फॉरवर्ड न करें न ही लिंक खोलें",
+    "reportCyberCrime": "CyberCrime.gov.in पर रिपोर्ट करें",
+    "factCheckRef": "तथ्य-जांच संदर्भ",
+    "whatToDo": "अनुशंसित कार्रवाई:"
+  },
+  "theme": {
+    "cyberSlate": "साइबर स्लेट",
+    "tacticalNavy": "सामरिक नेवी",
+    "toggle": "थीम बदलें"
+  },
+  "lang": {
+    "toggle": "English",
+    "current": "HI"
+  },
+  "metrics": {
+    "totalScans": "आज के कुल स्कैन",
+    "threatsBlocked": "स्कैम ब्लॉक किए",
+    "childBlocks": "बाल सुरक्षा ब्लॉक",
+    "systemIntegrity": "सिस्टम अखंडता",
+    "activeFeeds": "सक्रिय फीड्स"
+  },
+  "scanner": {
+    "title": "SATYA AI यूनिवर्सल स्कैनर",
+    "cameraTab": "कैमरा फीड",
+    "qrTab": "QR कोड",
+    "linkTab": "लिंक जांच",
+    "textTab": "टेक्स्ट / SMS",
+    "startCamera": "लाइव कैमरा शुरू करें",
+    "stopCamera": "कैमरा बंद करें",
+    "scanQr": "QR कोड स्कैन करें",
+    "dropQr": "QR छवि यहाँ ड्राप करें या अपलोड करें",
+    "analyzing": "पेलोड का विश्लेषण हो रहा है...",
+    "extracting": "डेटा निकाला जा रहा है...",
+    "decoding": "QR मैट्रिक्स को डिकोड किया जा रहा है...",
+    "scanning": "खतरों की तलाश की जा रही है...",
+    "cameraActive": "कैमरा सक्रिय",
+    "cameraInactive": "कैमरा निष्क्रिय",
+    "noCamera": "कोई कैमरा नहीं मिला",
+    "permissionDenied": "कैमरा अनुमति अस्वीकृत"
+  },
+  "feed": {
+    "title": "SATYA इंटेलिजेंस फीड",
+    "liveStream": "लाइव खतरा और सुरक्षा स्ट्रीम",
+    "timestamp": "समय",
+    "source": "स्रोत",
+    "preview": "पेलोड पूर्वावलोकन",
+    "verdict": "परिणाम",
+    "confidence": "विश्वास दर",
+    "action": "कार्रवाई",
+    "noEvents": "अभी तक कोई घटना दर्ज नहीं की गई है",
+    "newEvent": "नई घटना का पता चला"
+  },
+  "verdict": {
+    "real": "असली",
+    "verified": "सत्यापित",
+    "fake": "नकली",
+    "malicious": "दुर्भावनापूर्ण",
+    "suspicious": "संदिग्ध",
+    "safe": "सुरक्षित",
+    "childSafe": "बच्चों के लिए सुरक्षित",
+    "unknown": "अज्ञात"
+  },
+  "deepDive": {
+    "title": "खतरा विश्लेषण विवरण",
+    "summary": "विश्लेषण सारांश",
+    "riskScore": "जोखिम स्कोर",
+    "indicators": "खतरे के संकेतक",
+    "payload": "पूरा पेलोड",
+    "verdictReason": "परिणाम का कारण",
+    "markSafe": "सुरक्षित चिह्नित करें",
+    "escalate": "आगे भेजें",
+    "blockSource": "स्रोत को ब्लॉक करें",
+    "close": "पैनल बंद करें",
+    "noSelection": "विवरण देखने के लिए किसी घटना को चुनें"
+  },
+  "notifications": {
+    "safeTitle": "सामग्री सुरक्षित पाई गई",
+    "threatTitle": "खतरा चेतावनी",
+    "childBlockTitle": "बाल सुरक्षा शील्ड अलर्ट",
+    "phishingDetected": "फिशिंग प्रयास पकड़ा गया",
+    "malwareDetected": "मैलवेयर हस्ताक्षर मिला",
+    "urlSafe": "URL सुरक्षित सत्यापित हुआ",
+    "qrSafe": "QR कोड साफ पाया गया",
+    "qrMalicious": "हानिकारक QR पेलोड पकड़ा गया",
+    "scanComplete": "स्कैन पूरा हुआ",
+    "dismiss": "हटाएं"
+  },
+  "sources": {
+    "camera": "कैमरा",
+    "qr": "QR कोड",
+    "link": "लिंक/URL",
+    "text": "SMS/टेक्स्ट",
+    "manual": "मैनुअल",
+    "api": "API फीड"
+  },
+  "time": {
+    "justNow": "अभी-अभी",
+    "secondsAgo": "{{count}}से पहले",
+    "minutesAgo": "{{count}}मि पहले"
+  }
+}

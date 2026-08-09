@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   SATYA-GPT BRUTALIST FUNCTIONALISM COLOR SYSTEM
+   Hex Palette:
+   - Deep Slate Background: #0B0F19
+   - Card Surface:          #131B2E
+   - Card Hover:            #1B2742
+   - Border Primary:        #1E2D4A
+   - Border Card:           #27395C
+   - Secure State:          #10B981 (Crisp Green)
+   - Warning State:         #F59E0B (High-Visibility Amber)
+   - Critical Breach:       #EF4444 (Precise Crimson)
+   - Primary Accent:        #00E5FF (Cyan Accent)
+   ============================================ */
+
+:root,
+[data-theme="cyber-slate"] {
+  --bg-primary: #0b0f19;
+  --bg-secondary: #131b2e;
+  --bg-card: #131b2e;
+  --bg-card-hover: #1b2742;
+  --bg-input: #0b0f19;
+
+  --border-color: #1e2d4a;
+  --border-card: #27395c;
+
+  --accent: #00e5ff;
+  --accent-glow: rgba(0, 229, 255, 0.2);
+  --accent-muted: rgba(0, 229, 255, 0.1);
+  --accent-text: #00e5ff;
+
+  --safe: #10b981;
+  --safe-glow: rgba(16, 185, 129, 0.2);
+  --safe-muted: rgba(16, 185, 129, 0.1);
+
+  --threat: #ef4444;
+  --threat-glow: rgba(239, 68, 68, 0.2);
+  --threat-muted: rgba(239, 68, 68, 0.1);
+
+  --warning: #f59e0b;
+  --warning-glow: rgba(245, 158, 11, 0.2);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --glass-bg: rgba(19, 27, 46, 0.9);
+  --glass-border: rgba(39, 57, 92, 0.6);
+
+  --scrollbar-thumb: #27395c;
+  --scrollbar-track: #0b0f19;
+}
+
+[data-theme="tactical-navy"] {
+  --bg-primary: #070a14;
+  --bg-secondary: #0f1629;
+  --bg-card: #0f1629;
+  --bg-card-hover: #16213d;
+  --bg-input: #070a14;
+
+  --border-color: #1e2945;
+  --border-card: #28375c;
+
+  --accent: #f59e0b;
+  --accent-glow: rgba(245, 158, 11, 0.2);
+  --accent-muted: rgba(245, 158, 11, 0.1);
+  --accent-text: #f59e0b;
+
+  --safe: #10b981;
+  --safe-glow: rgba(16, 185, 129, 0.2);
+  --safe-muted: rgba(16, 185, 129, 0.1);
+
+  --threat: #ef4444;
+  --threat-glow: rgba(239, 68, 68, 0.2);
+  --threat-muted: rgba(239, 68, 68, 0.1);
+
+  --warning: #f59e0b;
+  --warning-glow: rgba(245, 158, 11, 0.2);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #9fa8da;
+  --text-muted: #5c6bc0;
+
+  --glass-bg: rgba(15, 22, 41, 0.9);
+  --glass-border: rgba(40, 55, 92, 0.6);
+
+  --scrollbar-thumb: #28375c;
+  --scrollbar-track: #070a14;
+}
+
+/* ============================================
+   ANTI-THEFT & ANTI-COPYING SECURITY CSS
+   Disables text selection and image dragging
+   ============================================ */
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  /* Anti-Selection & Anti-Copy Guard */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Re-enable selection ONLY inside text input fields */
+input, textarea {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Prevent Image Dragging */
+img, svg {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  pointer-events: auto;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ============================================
+   GLASSMORPHISM UTILITY
+   ============================================ */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  transition: all 0.2s ease;
+}
+
+/* ============================================
+   BRUTALIST CARD STYLES
+   ============================================ */
+.cyber-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.cyber-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Monospace Utility */
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
