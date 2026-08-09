@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, Terminal, RefreshCw, ArrowUpCircle, ScanLine, Rss, Info } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, Terminal, RefreshCw, ArrowUpCircle, ScanLine, Lock, ShieldAlert } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -272,10 +272,10 @@ export default function App() {
 
               {/* 2nd POSITION: SATYA AI Dedicated Threat Scanner Hub */}
               <div className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#131B2E] space-y-3">
-                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-2.5">
+                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-2.5 font-mono">
                   <div className="flex items-center gap-2">
                     <ScanLine size={18} className="text-[var(--accent)]" />
-                    <h2 className="text-xs sm:text-sm font-bold font-mono text-[var(--text-primary)] uppercase">
+                    <h2 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase">
                       SATYA AI Threat Scanner & Instant Verification
                     </h2>
                   </div>
@@ -286,32 +286,81 @@ export default function App() {
                 <ScannerPanel onScanResult={handleScanResult} />
               </div>
 
-              {/* 3rd POSITION: Incident Audit Logs & Real-Time Stream */}
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                <div className="xl:col-span-2 space-y-4">
-                  <div className="cyber-card rounded-xl overflow-hidden border border-[#27395C] bg-[#131B2E]">
-                    <div className="p-3.5 border-b border-[#1E2D4A] bg-[#0B0F19] flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Terminal size={16} className="text-[var(--accent)]" />
-                        <h2 className="text-xs sm:text-sm font-bold font-mono tracking-wider text-[var(--text-primary)] uppercase">
-                          Incident Audit Logs & Real-Time Stream
-                        </h2>
+              {/* 3rd POSITION: Incident Audit Stream — RESTRICTED ONLY TO FOUNDER */}
+              {isFounderSession ? (
+                /* Unlocked ONLY for Founder active session */
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                  <div className="xl:col-span-2 space-y-4">
+                    <div className="cyber-card rounded-xl overflow-hidden border border-[#27395C] bg-[#131B2E]">
+                      <div className="p-3.5 border-b border-[#1E2D4A] bg-[#0B0F19] flex items-center justify-between font-mono">
+                        <div className="flex items-center gap-2">
+                          <Terminal size={16} className="text-[var(--accent)]" />
+                          <h2 className="text-xs sm:text-sm font-bold tracking-wider text-[var(--text-primary)] uppercase">
+                            Incident Audit Logs & Real-Time Stream (Founder Session)
+                          </h2>
+                        </div>
+                        <span className="text-[10px] font-mono text-[var(--accent)] bg-[#131B2E] px-2 py-0.5 rounded border border-[#1E2D4A]">
+                          FOUNDER UNLOCKED
+                        </span>
                       </div>
-                      <span className="text-[10px] font-mono text-[var(--text-muted)] bg-[#131B2E] px-2 py-0.5 rounded border border-[#1E2D4A]">
-                        AUTO-STREAMING
-                      </span>
+                      <LiveFeedTable
+                        events={events}
+                        selectedEvent={selectedEvent}
+                        onSelectEvent={setSelectedEvent}
+                      />
                     </div>
-                    <LiveFeedTable
-                      events={events}
-                      selectedEvent={selectedEvent}
-                      onSelectEvent={setSelectedEvent}
-                    />
+                  </div>
+                  <div className="xl:col-span-1">
+                    <AttackPathGraph selectedEvent={selectedEvent} />
                   </div>
                 </div>
-                <div className="xl:col-span-1">
-                  <AttackPathGraph selectedEvent={selectedEvent} />
+              ) : (
+                /* Public Security Protection Card for regular visitors */
+                <div className="cyber-card p-5 rounded-xl border border-[#27395C] bg-[#131B2E] space-y-3 font-mono">
+                  <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                        <ShieldCheck size={18} />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA AI Protection Network Active</h3>
+                        <p className="text-[10px] sm:text-[11px] text-[var(--text-muted)]">Real-time threat engine safeguarding your browsing & messages</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#0B0F19] border border-[#1E2D4A] rounded-lg text-[10px] text-amber-400 font-bold">
+                      <Lock size={12} />
+                      <span>PRIVATE AUDIT LOGS</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[var(--text-secondary)] pt-1">
+                    <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
+                      <div className="font-bold text-emerald-400 flex items-center gap-1">
+                        <ShieldCheck size={14} />
+                        <span>92 Engine Shield</span>
+                      </div>
+                      <p className="text-[10px] text-[var(--text-muted)]">Automatic VirusTotal v3 threat scoring on all scanned inputs.</p>
+                    </div>
+
+                    <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
+                      <div className="font-bold text-[var(--accent)] flex items-center gap-1">
+                        <Server size={14} />
+                        <span>KAVACH Neural Engine</span>
+                      </div>
+                      <p className="text-[10px] text-[var(--text-muted)]">Instant AI threat explanations in plain Indian language.</p>
+                    </div>
+
+                    <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
+                      <div className="font-bold text-amber-400 flex items-center gap-1">
+                        <Baby size={14} />
+                        <span>Family Protection</span>
+                      </div>
+                      <p className="text-[10px] text-[var(--text-muted)]">Child Guard blocks adult scams & fake game coin traps.</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
@@ -324,35 +373,6 @@ export default function App() {
                 <p className="text-xs text-[var(--text-muted)] mt-1">Scan links, messages, camera feeds, and QR codes with VirusTotal v3 verification</p>
               </div>
               <ScannerPanel onScanResult={handleScanResult} />
-            </div>
-          )}
-
-          {activeTab === 'feeds' && (
-            <div className="space-y-4 font-mono">
-              {/* Intel Feeds Feature Explanation Banner */}
-              <div className="bg-[#131B2E] border border-cyan-500/40 p-3.5 rounded-xl flex items-center gap-3 text-xs text-cyan-200 shadow-md">
-                <Info size={20} className="text-cyan-400 shrink-0" />
-                <div>
-                  <div className="font-bold text-cyan-300">Intel Feeds — Global Threat Intelligence Archive</div>
-                  <div className="text-[11px] text-cyan-200/80 mt-0.5">This feed logs every live phishing link, scam SMS, and malicious payload blocked by our 92-engine VirusTotal security network in real-time.</div>
-                </div>
-              </div>
-
-              <div className="cyber-card rounded-xl overflow-hidden border border-[#27395C] bg-[#131B2E]">
-                <div className="p-3.5 border-b border-[#1E2D4A] bg-[#0B0F19] flex items-center justify-between">
-                  <h2 className="text-xs sm:text-sm font-bold font-mono tracking-wider text-[var(--text-primary)] uppercase">
-                    Full Threat Intelligence Stream Archive
-                  </h2>
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] bg-[#131B2E] px-2 py-0.5 rounded border border-[#1E2D4A]">
-                    {events.length} TOTAL INCIDENTS
-                  </span>
-                </div>
-                <LiveFeedTable
-                  events={events}
-                  selectedEvent={selectedEvent}
-                  onSelectEvent={setSelectedEvent}
-                />
-              </div>
             </div>
           )}
 
