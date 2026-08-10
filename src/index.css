@@ -117,25 +117,25 @@
 }
 
 /* ============================================
-   CONTINUOUS HORIZONTAL MARQUEE ANIMATION
+   SEAMLESS CONTINUOUS MARQUEE ANIMATION
    ============================================ */
-@keyframes ticker {
+@keyframes marquee {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0%);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
-.animate-ticker {
-  display: inline-block;
+.animate-marquee {
+  display: flex;
   white-space: nowrap;
-  animation: ticker 30s linear infinite;
+  animation: marquee 35s linear infinite;
   will-change: transform;
 }
 
-.animate-ticker:hover {
+.animate-marquee:hover {
   animation-play-state: paused;
 }
 
