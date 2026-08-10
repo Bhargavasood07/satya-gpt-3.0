@@ -7,7 +7,7 @@ const CHAT_HISTORY_KEY = 'satya_chat_history';
 
 /**
  * Authentication Provider for SATYA-GPT
- * Provides simulated local auth (OAuth-ready UI) with localStorage persistence
+ * Provides simulated local auth (Email Magic Link, Google, GitHub, Guest) with localStorage persistence
  */
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = !!user;
 
-  // Login handler (simulated OAuth — stores user profile locally)
+  // Social Login handler (Google, GitHub, Guest)
   const login = useCallback((provider) => {
     const profiles = {
       google: {
@@ -59,11 +59,31 @@ export function AuthProvider({ children }) {
     return userProfile;
   }, []);
 
+  // Custom Email Sign-In handler (Magic Link / Passwordless Email Login)
+  const loginWithEmail = useCallback((emailInput, customName = '') => {
+    const cleanEmail = emailInput ? emailInput.trim().toLowerCase() : 'user@example.com';
+    const emailPrefix = cleanEmail.split('@')[0] || 'User';
+    const formattedName = customName || emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+
+    const emailProfile = {
+      name: formattedName,
+      email: cleanEmail,
+      provider: 'email',
+      avatar: null,
+      loginTime: new Date().toISOString(),
+      id: 'email_' + Date.now(),
+    };
+
+    setUser(emailProfile);
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(emailProfile));
+    setIsLoginModalOpen(false);
+    return emailProfile;
+  }, []);
+
   // Logout handler
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem(AUTH_STORAGE_KEY);
-    // Keep chat history even after logout for convenience
   }, []);
 
   // Chat history persistence (keyed by user ID)
@@ -95,6 +115,7 @@ export function AuthProvider({ children }) {
     user,
     isAuthenticated,
     login,
+    loginWithEmail,
     logout,
     saveChatHistory,
     loadChatHistory,
