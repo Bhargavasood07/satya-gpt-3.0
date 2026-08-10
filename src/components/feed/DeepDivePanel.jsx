@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, ShieldAlert, AlertTriangle, ShieldOff, X, ExternalLink, Server, CheckCircle2, FileText } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, AlertTriangle, ShieldOff, X, ExternalLink, Server, CheckCircle2, FileText, Volume2 } from 'lucide-react';
 import VirusTotalBadge from '../virustotal/VirusTotalBadge';
 import VirusTotalModal from '../virustotal/VirusTotalModal';
 import ApiKeySettingsModal from '../settings/ApiKeySettingsModal';
 import BlockTransparencyCard from './BlockTransparencyCard';
 import WhatsAppShareButton from '../common/WhatsAppShareButton';
 import CyberComplaintGeneratorModal from '../common/CyberComplaintGeneratorModal';
+import { speakVoiceAlert } from '../../services/voiceAlertService';
 
 const CircularRiskScore = ({ score }) => {
   let color = 'var(--safe)';
@@ -41,13 +42,27 @@ const CircularRiskScore = ({ score }) => {
 };
 
 const DeepDivePanel = ({ event, onClose }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [showVtModal, setShowVtModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showComplaintModal, setShowComplaintModal] = useState(false);
   const [actionFeedback, setActionFeedback] = useState(null);
 
   const isThreat = event?.verdict === 'fake' || event?.verdict === 'malicious';
+  const isHindi = i18n.language && i18n.language.startsWith('hi');
+
+  // Trigger TTS Voice Announcement on mount
+  useEffect(() => {
+    if (event?.verdict) {
+      speakVoiceAlert(event.verdict, isHindi);
+    }
+  }, [event, isHindi]);
+
+  const handleReplayVoice = () => {
+    if (event?.verdict) {
+      speakVoiceAlert(event.verdict, isHindi);
+    }
+  };
 
   const handleMarkSafe = () => {
     if (event) {
@@ -129,16 +144,25 @@ const DeepDivePanel = ({ event, onClose }) => {
         <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
           <BlockTransparencyCard event={event} />
 
-          {/* Verdict Banner */}
+          {/* Verdict Banner with Voice TTS Replay Button */}
           {event.verdict && (
             <div className={`relative p-4 rounded-xl flex flex-col items-center justify-center text-center ${(event.verdict === 'fake' || event.verdict === 'malicious') ? 'bg-rose-950/40 border border-rose-500/50' : 'bg-emerald-950/40 border border-emerald-500/50'}`}>
+              <button
+                onClick={handleReplayVoice}
+                className="absolute top-2.5 right-2.5 px-2 py-1 rounded bg-[#0B0F19] hover:bg-black border border-[#27395C] text-[10px] font-bold text-amber-300 flex items-center gap-1 transition-all"
+                title="Speak Voice Alert in Hindi/English"
+              >
+                <Volume2 size={13} className="text-amber-400 animate-pulse" />
+                <span>Voice Alert</span>
+              </button>
+
               {(event.verdict === 'fake' || event.verdict === 'malicious') ? (
                 <ShieldAlert size={40} className="text-rose-400 mb-2" />
               ) : (
                 <ShieldCheck size={40} className="text-emerald-400 mb-2" />
               )}
               <div className="text-base font-extrabold text-slate-100 uppercase tracking-wider">
-                {(event.verdict === 'fake' || event.verdict === 'malicious') ? t('verdict.fake') : t('verdict.real')}
+                {event.verdictLabel || ((event.verdict === 'fake' || event.verdict === 'malicious') ? t('verdict.fake') : t('verdict.real'))}
               </div>
             </div>
           )}

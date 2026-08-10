@@ -1,16 +1,17 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award, ShieldAlert } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award, ShieldAlert, Heart, Share2 } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
 import Sidebar from './components/layout/Sidebar';
 import MobileNav from './components/layout/MobileNav';
 
-// Scanner & Clipboard Auto-Scanner
+// Ticker & Clipboard Auto-Scanner
 import ScannerPanel from './components/scanner/ScannerPanel';
 import ClipboardAutoScanner from './components/common/ClipboardAutoScanner';
+import LiveScamTicker from './components/common/LiveScamTicker';
 
 // Chatbot
 import CyberAiChatbot from './components/chat/CyberAiChatbot';
@@ -19,6 +20,8 @@ import CyberAiChatbot from './components/chat/CyberAiChatbot';
 import AdminPanelModal from './components/admin/AdminPanelModal';
 import EnterprisePartnershipModal from './components/common/EnterprisePartnershipModal';
 import GoldenHourEmergencyModal from './components/common/GoldenHourEmergencyModal';
+import TrustBadgeModal from './components/common/TrustBadgeModal';
+import FamilyShareModal from './components/common/FamilyShareModal';
 
 // Auth
 import LoginModal from './components/auth/LoginModal';
@@ -60,6 +63,8 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isPartnerOpen, setIsPartnerOpen] = useState(false);
   const [isEmergencyFreezeOpen, setIsEmergencyFreezeOpen] = useState(false);
+  const [isTrustBadgeOpen, setIsTrustBadgeOpen] = useState(false);
+  const [isFamilyShareOpen, setIsFamilyShareOpen] = useState(false);
   
   const mainScrollRef = useRef(null);
 
@@ -129,6 +134,8 @@ export default function App() {
         setIsAdminOpen(false);
         setIsPartnerOpen(false);
         setIsEmergencyFreezeOpen(false);
+        setIsTrustBadgeOpen(false);
+        setIsFamilyShareOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -205,6 +212,9 @@ export default function App() {
     <div className="flex flex-col h-screen overflow-hidden bg-[#0B0F19]">
       <TopBar onToggleChat={handleToggleChat} onToggleHelp={handleToggleHelp} onOpenAdmin={handleOpenAdmin} onOpenPartner={handleOpenPartner} />
       
+      {/* Real-Time Live Scam Alert Scrolling Ticker */}
+      <LiveScamTicker />
+
       {/* Zero-Click Clipboard Auto Scanner Banner */}
       <ClipboardAutoScanner onScanLink={(url) => handleScanResult(url, 'clipboard')} />
 
@@ -231,7 +241,7 @@ export default function App() {
 
           {showHelpGuide && <UserOnboardingBanner />}
 
-          {/* SOC Header & Enterprise Govt Badging + 15-Min Golden Hour Freeze Trigger */}
+          {/* SOC Header & Enterprise Govt Badging + Action Controls */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl shadow-xl">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#0B0F19] border border-[#27395C] flex items-center justify-center text-[var(--accent)] font-mono font-bold text-xs shrink-0">
@@ -239,14 +249,14 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v6.1 ULTRA</span>
+                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v7.0 MAX</span>
                   <span className="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold flex items-center gap-1">
                     <Award size={12} className="text-amber-400" />
                     CERT-In & MeitY ALIGNED
                   </span>
                   <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-bold flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                    AI FACT-CHECKER ACTIVE
+                    TTS VOICE ALERTS ACTIVE
                   </span>
                 </div>
                 <span className="text-[10px] sm:text-[11px] font-mono text-[var(--text-muted)]">
@@ -257,19 +267,27 @@ export default function App() {
 
             <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
               <button
+                onClick={() => setIsFamilyShareOpen(true)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 font-bold transition-all text-xs shadow-md"
+              >
+                <Share2 size={13} className="text-amber-400" />
+                <span>Family Share</span>
+              </button>
+
+              <button
+                onClick={() => setIsTrustBadgeOpen(true)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0B0F19] border border-[#27395C] text-emerald-400 hover:border-emerald-400 font-bold transition-all text-xs shadow-md"
+              >
+                <ShieldCheck size={13} className="text-emerald-400" />
+                <span>Trust Badge</span>
+              </button>
+
+              <button
                 onClick={() => setIsEmergencyFreezeOpen(true)}
                 className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold transition-all text-xs shadow-md animate-pulse"
               >
                 <ShieldAlert size={14} />
                 <span>15-Min Bank Freeze</span>
-              </button>
-
-              <button
-                onClick={handleOpenPartner}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 font-bold transition-all text-xs shadow-md"
-              >
-                <Building2 size={13} className="text-amber-400" />
-                <span>Partner Inquiry</span>
               </button>
             </div>
           </div>
@@ -341,6 +359,16 @@ export default function App() {
         {/* 15-Minute Emergency Bank Freeze Modal */}
         <AnimatePresence>
           {isEmergencyFreezeOpen && <GoldenHourEmergencyModal onClose={() => setIsEmergencyFreezeOpen(false)} />}
+        </AnimatePresence>
+
+        {/* Trust Badge Embed Modal */}
+        <AnimatePresence>
+          {isTrustBadgeOpen && <TrustBadgeModal onClose={() => setIsTrustBadgeOpen(false)} />}
+        </AnimatePresence>
+
+        {/* Family Safety Share Modal */}
+        <AnimatePresence>
+          {isFamilyShareOpen && <FamilyShareModal onClose={() => setIsFamilyShareOpen(false)} />}
         </AnimatePresence>
 
         {/* Login Modal */}
