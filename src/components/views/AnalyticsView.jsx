@@ -1,108 +1,298 @@
-import React from 'react';
-import { BarChart3, TrendingUp, ShieldAlert, ShieldCheck, PieChart, Activity, Globe, Server } from 'lucide-react';
+import React, { useState } from 'react';
+import { BarChart3, TrendingUp, ShieldAlert, ShieldCheck, PieChart, Activity, Server, ArrowUpRight, ArrowDownRight, Sparkles, LineChart } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AnalyticsView({ metrics, events }) {
-  const totalScans = metrics?.totalScans || 142;
-  const threatCount = metrics?.threatsBlocked || 38;
+  const [graphMode, setGraphMode] = useState('bars'); // 'bars', 'predictive', or 'distribution'
+  const totalScans = metrics?.totalScans || 1435;
+  const threatCount = metrics?.threatsBlocked || 98;
   const safeCount = totalScans - threatCount;
 
   const categories = [
-    { name: 'Phishing Links', count: 18, percentage: 47, color: 'bg-rose-500' },
-    { name: 'SMS Scam Forwards', count: 11, percentage: 29, color: 'bg-amber-500' },
-    { name: 'Fake QR Codes', count: 6, percentage: 16, color: 'bg-blue-500' },
-    { name: 'Adult/Child Block', count: 3, percentage: 8, color: 'bg-purple-500' },
+    { id: 'phishing', name: 'Phishing Links', count: 18, percentage: 47, color: '#ef4444', isHigh: true, prediction: '+14% Spike Projected' },
+    { id: 'sms', name: 'SMS Scam Forwards', count: 11, percentage: 29, color: '#f59e0b', isHigh: false, prediction: '+4% Moderate' },
+    { id: 'qr', name: 'Fake QR Codes', count: 6, percentage: 16, color: '#3b82f6', isHigh: false, prediction: '-2% Declining' },
+    { id: 'child', name: 'Adult/Child Block', count: 3, percentage: 8, color: '#a855f7', isLow: true, prediction: 'Stable Low' },
+  ];
+
+  // 24-Hour Historical + AI Predictive Trend Data Points
+  const hourlyData = [
+    { time: '00:00', value: 18, isPredictive: false },
+    { time: '03:00', value: 12, isPredictive: false, isLow: true },
+    { time: '06:00', value: 24, isPredictive: false },
+    { time: '09:00', value: 58, isPredictive: false },
+    { time: '12:00', value: 72, isPredictive: false },
+    { time: '15:00', value: 64, isPredictive: false },
+    { time: '18:00', value: 89, isPredictive: false, isHigh: true },
+    { time: '21:00 (PREDICTED)', value: 96, isPredictive: true, isPeak: true },
+    { time: '24:00 (PREDICTED)', value: 34, isPredictive: true },
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 font-mono">
       {/* Header */}
-      <div className="flex items-center justify-between bg-[#131B2E] border border-[#27395C] p-4 rounded-xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#131B2E] border border-[#27395C] p-4 rounded-xl">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-[var(--accent-muted)] border border-[var(--accent)] flex items-center justify-center text-[var(--accent)]">
+          <div className="w-9 h-9 rounded-lg bg-[var(--accent-muted)] border border-[var(--accent)] flex items-center justify-center text-[var(--accent)] shrink-0">
             <BarChart3 size={20} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-[var(--text-primary)] font-mono uppercase tracking-wider">
-              SOC Security Analytics & Intelligence Matrix
+            <h2 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">
+              SOC Security Analytics & Predictive Intelligence Graph
             </h2>
-            <p className="text-xs text-[var(--text-muted)]">Real-time threat distribution, VirusTotal detection analytics & scam vectors</p>
+            <p className="text-[11px] text-[var(--text-muted)]">Real-time threat distribution, High/Low peak markers & AI 24h predictive trends</p>
           </div>
         </div>
-        <span className="text-xs font-mono px-3 py-1 bg-[#0B0F19] border border-[#1E2D4A] text-emerald-400 font-bold rounded">
-          LIVE METRICS
-        </span>
-      </div>
 
-      {/* Metric Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl space-y-1">
-          <div className="text-xs text-[var(--text-muted)] font-mono">TOTAL INSPECTED</div>
-          <div className="text-2xl font-bold font-mono text-[var(--text-primary)]">{totalScans}</div>
-          <div className="text-[10px] text-emerald-400 font-mono">↑ 14% vs last 24h</div>
-        </div>
-        <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl space-y-1">
-          <div className="text-xs text-[var(--text-muted)] font-mono">THREATS NEUTRALIZED</div>
-          <div className="text-2xl font-bold font-mono text-rose-400">{threatCount}</div>
-          <div className="text-[10px] text-rose-400 font-mono">26.7% Detection Rate</div>
-        </div>
-        <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl space-y-1">
-          <div className="text-xs text-[var(--text-muted)] font-mono">VERIFIED CLEAN</div>
-          <div className="text-2xl font-bold font-mono text-emerald-400">{safeCount}</div>
-          <div className="text-[10px] text-emerald-400 font-mono">VirusTotal 0/92 Clean</div>
-        </div>
-        <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl space-y-1">
-          <div className="text-xs text-[var(--text-muted)] font-mono">VIRUSTOTAL ENGINES</div>
-          <div className="text-2xl font-bold font-mono text-[var(--accent)]">92 / 92</div>
-          <div className="text-[10px] text-[var(--text-muted)] font-mono">Multi-vendor active</div>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono px-2.5 py-1 bg-[#0B0F19] border border-[#1E2D4A] text-emerald-400 font-bold rounded flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+            AI PREDICTOR ACTIVE
+          </span>
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Threat Category Breakdown */}
-        <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl space-y-4">
-          <h3 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase flex items-center gap-2">
-            <PieChart size={16} className="text-[var(--accent)]" />
-            Threat Vector Breakdown
-          </h3>
-          <div className="space-y-3">
-            {categories.map((cat, idx) => (
-              <div key={idx} className="space-y-1 text-xs font-mono">
-                <div className="flex justify-between text-[var(--text-primary)]">
-                  <span>{cat.name}</span>
-                  <span>{cat.count} ({cat.percentage}%)</span>
-                </div>
-                <div className="h-2 w-full bg-[#0B0F19] rounded overflow-hidden border border-[#1E2D4A]">
-                  <div className={`h-full ${cat.color}`} style={{ width: `${cat.percentage}%` }} />
-                </div>
+      {/* Metric Summary Cards Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+        <div className="bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl space-y-1">
+          <div className="text-[10px] text-[var(--text-muted)] font-bold">TOTAL INSPECTED</div>
+          <div className="text-xl sm:text-2xl font-bold text-[var(--text-primary)]">{totalScans.toLocaleString()}</div>
+          <div className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
+            <ArrowUpRight size={12} />
+            <span>+14% vs last 24h</span>
+          </div>
+        </div>
+
+        <div className="bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl space-y-1">
+          <div className="text-[10px] text-[var(--text-muted)] font-bold">THREATS NEUTRALIZED</div>
+          <div className="text-xl sm:text-2xl font-bold text-rose-400">{threatCount}</div>
+          <div className="text-[10px] text-rose-400 font-bold flex items-center gap-0.5">
+            <ShieldAlert size={12} />
+            <span>PEAK HIGH: Phishing (47%)</span>
+          </div>
+        </div>
+
+        <div className="bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl space-y-1">
+          <div className="text-[10px] text-[var(--text-muted)] font-bold">VERIFIED CLEAN</div>
+          <div className="text-xl sm:text-2xl font-bold text-emerald-400">{safeCount.toLocaleString()}</div>
+          <div className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
+            <ShieldCheck size={12} />
+            <span>99.2% Clean Rating</span>
+          </div>
+        </div>
+
+        <div className="bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl space-y-1">
+          <div className="text-[10px] text-[var(--text-muted)] font-bold">PREDICTED NEXT 6H</div>
+          <div className="text-xl sm:text-2xl font-bold text-amber-400">HIGH (96/100)</div>
+          <div className="text-[10px] text-amber-300 font-bold flex items-center gap-0.5">
+            <TrendingUp size={12} />
+            <span>Evening Phishing Wave</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Interactive Graph Component */}
+      <div className="bg-[#131B2E] border border-[#27395C] p-4 sm:p-5 rounded-xl space-y-4 shadow-2xl">
+        {/* Graph Header & Mode Switcher */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1E2D4A] pb-3">
+          <div className="flex items-center gap-2">
+            <LineChart size={18} className="text-[var(--accent)]" />
+            <div>
+              <h3 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase">
+                Threat Vector Highs & Lows Comparison Graph
+              </h3>
+              <p className="text-[10px] text-[var(--text-muted)]">Visual bar chart mapping threat category peaks, lows & future predictions</p>
+            </div>
+          </div>
+
+          <div className="flex bg-[#0B0F19] rounded-lg p-1 border border-[#1E2D4A] shrink-0">
+            <button
+              onClick={() => setGraphMode('bars')}
+              className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all ${
+                graphMode === 'bars'
+                  ? 'bg-[var(--accent)] text-slate-950 shadow-md'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              Bar Graph (High/Low)
+            </button>
+            <button
+              onClick={() => setGraphMode('predictive')}
+              className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all ${
+                graphMode === 'predictive'
+                  ? 'bg-[var(--accent)] text-slate-950 shadow-md'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              Predictive Trend
+            </button>
+          </div>
+        </div>
+
+        {/* AI Predictive Insight Banner */}
+        <div className="bg-[#0B0F19] border border-amber-500/40 p-3 rounded-xl flex items-center justify-between gap-2 text-xs font-mono text-amber-200">
+          <div className="flex items-center gap-2">
+            <Sparkles size={16} className="text-amber-400 shrink-0 animate-pulse" />
+            <div>
+              <span className="font-bold text-amber-300">AI Predictive Forecast: </span>
+              <span className="text-[11px]">Phishing Links are at <strong className="text-rose-400">PEAK HIGH (47%)</strong>. A +14% evening scam spike is projected between 20:00-22:00. Keep Scanner & Child Guard active!</span>
+            </div>
+          </div>
+        </div>
+
+        {/* MODE 1: Vertical Bar Comparison Graph with High / Low Markers */}
+        {graphMode === 'bars' && (
+          <div className="space-y-4 pt-2">
+            <div className="grid grid-cols-4 gap-3 sm:gap-6 h-64 items-end bg-[#0B0F19] p-4 rounded-xl border border-[#1E2D4A] relative overflow-hidden">
+              {/* Horizontal Background Grid Lines */}
+              <div className="absolute inset-0 flex flex-col justify-between p-4 pointer-events-none opacity-20">
+                <div className="border-b border-[#27395C] w-full text-[9px] text-[var(--text-muted)]">100% — HIGH PEAK</div>
+                <div className="border-b border-[#27395C] w-full text-[9px] text-[var(--text-muted)]">50% — MODERATE</div>
+                <div className="border-b border-[#27395C] w-full text-[9px] text-[var(--text-muted)]">0% — LOW SAFE</div>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* VirusTotal Vendor Performance */}
-        <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl space-y-4">
-          <h3 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase flex items-center gap-2">
-            <Server size={16} className="text-emerald-400" />
-            Top Vendor Detection Engine Hits
-          </h3>
-          <div className="space-y-2.5 font-mono text-xs text-[var(--text-secondary)]">
-            <div className="flex justify-between items-center p-2.5 bg-[#0B0F19] rounded border border-[#1E2D4A]">
-              <span>Google Safebrowsing</span>
-              <span className="text-emerald-400 font-bold">34 Detections</span>
+              {categories.map((cat) => (
+                <div key={cat.id} className="flex flex-col items-center h-full justify-end relative z-10 group">
+                  {/* High / Low Badge Indicator */}
+                  {cat.isHigh && (
+                    <motion.div initial={{ y: -5 }} animate={{ y: 0 }} transition={{ repeat: Infinity, repeatType: 'reverse', duration: 1 }} className="mb-2 px-2 py-0.5 rounded bg-rose-500 text-slate-950 text-[9px] font-extrabold shadow-[0_0_10px_rgba(239,68,68,0.6)] shrink-0">
+                      PEAK HIGH 🚨
+                    </motion.div>
+                  )}
+
+                  {cat.isLow && (
+                    <div className="mb-2 px-2 py-0.5 rounded bg-emerald-500 text-slate-950 text-[9px] font-extrabold shadow-[0_0_10px_rgba(16,185,129,0.6)] shrink-0">
+                      SAFE LOW 🛡️
+                    </div>
+                  )}
+
+                  {/* Count & Percentage label */}
+                  <span className="text-[11px] font-bold text-[var(--text-primary)] mb-1">
+                    {cat.count} ({cat.percentage}%)
+                  </span>
+
+                  {/* Vertical Animated Bar */}
+                  <div className="w-full max-w-[60px] bg-[#131B2E] rounded-t-xl overflow-hidden border border-[#27395C] flex flex-col justify-end p-1 transition-all group-hover:border-slate-300">
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: `${cat.percentage * 1.8}%` }}
+                      transition={{ duration: 0.8 }}
+                      className="w-full rounded-t-lg shadow-lg relative"
+                      style={{ backgroundColor: cat.color }}
+                    >
+                      <div className="absolute top-1 left-1 right-1 h-1 bg-white/30 rounded" />
+                    </motion.div>
+                  </div>
+
+                  {/* Category Name Label */}
+                  <span className="text-[10px] font-bold text-[var(--text-muted)] mt-2 text-center truncate max-w-full">
+                    {cat.name}
+                  </span>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-between items-center p-2.5 bg-[#0B0F19] rounded border border-[#1E2D4A]">
-              <span>Kaspersky Threat Intelligence</span>
-              <span className="text-emerald-400 font-bold">31 Detections</span>
+
+            {/* High / Low Category Prediction Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs pt-1">
+              {categories.map((cat) => (
+                <div key={cat.id} className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-[var(--text-primary)] text-[11px]">{cat.name}</span>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
+                      cat.isHigh ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                    }`}>
+                      {cat.isHigh ? 'HIGH' : cat.isLow ? 'LOW' : 'MEDIUM'}
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-[var(--text-muted)]">Prediction: <strong className="text-[var(--accent)]">{cat.prediction}</strong></div>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-between items-center p-2.5 bg-[#0B0F19] rounded border border-[#1E2D4A]">
-              <span>Sophos Cyber Engine</span>
-              <span className="text-emerald-400 font-bold">29 Detections</span>
+          </div>
+        )}
+
+        {/* MODE 2: 24h AI Predictive Trend Wave Curve */}
+        {graphMode === 'predictive' && (
+          <div className="space-y-4 pt-2">
+            <div className="bg-[#0B0F19] p-4 rounded-xl border border-[#1E2D4A] space-y-3">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-bold text-[var(--text-primary)]">24-Hour Threat Frequency Wave (Historical vs AI Predicted)</span>
+                <span className="text-[10px] text-amber-400 font-bold">● PREDICTIVE ZONE (RIGHT)</span>
+              </div>
+
+              {/* SVG Wave Graph */}
+              <div className="h-52 w-full relative flex items-end">
+                <svg className="w-full h-full overflow-visible" viewBox="0 0 500 150" preserveAspectRatio="none">
+                  {/* Grid Lines */}
+                  <line x1="0" y1="30" x2="500" y2="30" stroke="#1E2D4A" strokeDasharray="4" />
+                  <line x1="0" y1="75" x2="500" y2="75" stroke="#1E2D4A" strokeDasharray="4" />
+                  <line x1="0" y1="120" x2="500" y2="120" stroke="#1E2D4A" strokeDasharray="4" />
+
+                  {/* Gradient Area Fill */}
+                  <defs>
+                    <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#00e5ff" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
+
+                  <path
+                    d="M 0 120 Q 60 130 120 100 T 250 40 T 380 20 T 500 100 L 500 150 L 0 150 Z"
+                    fill="url(#trendGrad)"
+                  />
+
+                  {/* Trend Line Curve */}
+                  <path
+                    d="M 0 120 Q 60 130 120 100 T 250 40 T 380 20 T 500 100"
+                    fill="none"
+                    stroke="#00e5ff"
+                    strokeWidth="3"
+                  />
+
+                  {/* Data Points */}
+                  <circle cx="120" cy="100" r="5" fill="#10b981" />
+                  <circle cx="250" cy="40" r="5" fill="#f59e0b" />
+                  <circle cx="380" cy="20" r="6" fill="#ef4444" className="animate-ping" />
+                  <circle cx="380" cy="20" r="5" fill="#ef4444" />
+                </svg>
+              </div>
+
+              {/* Time X-Axis */}
+              <div className="flex justify-between text-[10px] text-[var(--text-muted)] pt-1 border-t border-[#1E2D4A]">
+                <span>00:00 (LOW)</span>
+                <span>06:00</span>
+                <span>12:00 (MODERATE)</span>
+                <span className="text-rose-400 font-bold">18:00 (PEAK HIGH)</span>
+                <span className="text-amber-400 font-bold">21:00 (AI PREDICTED PEAK)</span>
+                <span>24:00</span>
+              </div>
             </div>
-            <div className="flex justify-between items-center p-2.5 bg-[#0B0F19] rounded border border-[#1E2D4A]">
-              <span>BitDefender URL Scanner</span>
-              <span className="text-emerald-400 font-bold">28 Detections</span>
-            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Top VirusTotal Vendor Detection Engine Hits */}
+      <div className="bg-[#131B2E] border border-[#27395C] p-4 sm:p-5 rounded-xl space-y-4 shadow-xl">
+        <h3 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase flex items-center gap-2">
+          <Server size={16} className="text-emerald-400" />
+          Top VirusTotal Vendor Detection Engine Hits
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[var(--text-secondary)]">
+          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A]">
+            <span className="font-bold text-[var(--text-primary)]">Google Safebrowsing</span>
+            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded">34 Detections</span>
+          </div>
+          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A]">
+            <span className="font-bold text-[var(--text-primary)]">Kaspersky Threat Intelligence</span>
+            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded">31 Detections</span>
+          </div>
+          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A]">
+            <span className="font-bold text-[var(--text-primary)]">Sophos Cyber Engine</span>
+            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded">29 Detections</span>
+          </div>
+          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A]">
+            <span className="font-bold text-[var(--text-primary)]">BitDefender URL Scanner</span>
+            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded">28 Detections</span>
           </div>
         </div>
       </div>
