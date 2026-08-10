@@ -1,6 +1,6 @@
 import React, { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GraduationCap, Award, CheckCircle2, XCircle, AlertTriangle, ArrowRight, RefreshCw, Download, Sparkles, ShieldCheck, User } from 'lucide-react';
+import { GraduationCap, Award, CheckCircle2, XCircle, AlertTriangle, ArrowRight, RefreshCw, Download, Sparkles, ShieldCheck, User, Check, Play } from 'lucide-react';
 
 const SCAM_QUIZZES = [
   {
@@ -108,7 +108,7 @@ const SCAM_QUIZZES = [
     category: 'Investment Fraud',
     smsText: 'You are added to a WhatsApp group "VIP Institutional Stock Tips". The admin guarantees 300% profit per week using an exclusive VIP Trading App.',
     options: [
-      { text: 'Deposit ₹50,000 into VIP trading app for 300% returns', isCorrect: false, fallback: false, feedback: '❌ Pig Butchering Investment Fraud! Fake trading apps show dummy high profits on screen but block all withdrawals.' },
+      { text: 'Deposit ₹50,000 into VIP trading app for 300% returns', isCorrect: false, feedback: '❌ Pig Butchering Investment Fraud! Fake trading apps show dummy high profits on screen but block all withdrawals.' },
       { text: 'Exit group, report as scam, and invest only via SEBI-registered brokers', isCorrect: true, feedback: '✅ Spot On! Guaranteed high returns do not exist. Always trade via official SEBI-registered stockbrokers.' },
       { text: 'Take a personal loan to invest bigger amount', isCorrect: false, feedback: '❌ Never borrow money to invest in unverified online trading groups.' }
     ]
@@ -121,16 +121,23 @@ const KavachAcademyView = memo(() => {
   const [score, setScore] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [candidateName, setCandidateName] = useState('Bhargava Sood');
+  const [answeredState, setAnsweredState] = useState({});
 
   const currentQuiz = SCAM_QUIZZES[currentQuizIndex];
+  const progressPercent = Math.round(((currentQuizIndex + 1) / SCAM_QUIZZES.length) * 100);
 
   const handleSelectOption = (index) => {
     if (selectedOption !== null) return;
     setSelectedOption(index);
 
-    if (currentQuiz.options[index].isCorrect) {
+    const isCorrect = currentQuiz.options[index].isCorrect;
+    if (isCorrect) {
       setScore((prev) => prev + 1);
     }
+    setAnsweredState((prev) => ({
+      ...prev,
+      [currentQuizIndex]: { selectedOption: index, isCorrect }
+    }));
   };
 
   const handleNext = () => {
@@ -142,11 +149,17 @@ const KavachAcademyView = memo(() => {
     }
   };
 
+  const handleJumpToScenario = (idx) => {
+    setCurrentQuizIndex(idx);
+    setSelectedOption(answeredState[idx]?.selectedOption ?? null);
+  };
+
   const handleRestart = () => {
     setCurrentQuizIndex(0);
     setSelectedOption(null);
     setScore(0);
     setIsCompleted(false);
+    setAnsweredState({});
   };
 
   const handleDownloadCertificate = () => {
@@ -379,7 +392,7 @@ const KavachAcademyView = memo(() => {
             <h2 className="text-xs sm:text-sm font-bold text-slate-100 uppercase tracking-wider">
               Kavach Cyber Shield Academy — 60s Scam Simulation
             </h2>
-            <p className="text-[11px] text-[var(--text-muted)] font-mono">Master real-world scam spotter quizzes & earn official Cyber Safety Certificates</p>
+            <p className="text-[11px] text-[var(--text-muted)] font-mono">Master 10 real-world scam scenarios & earn official Cyber Safety Certificates</p>
           </div>
         </div>
 
@@ -392,15 +405,51 @@ const KavachAcademyView = memo(() => {
       {/* Main Quiz View */}
       {!isCompleted ? (
         <div className="bg-[#131B2E] border border-[#27395C] rounded-xl p-5 space-y-4 shadow-2xl">
-          <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3 text-xs">
-            <span className="font-bold text-purple-400">SCENARIO {currentQuizIndex + 1} OF {SCAM_QUIZZES.length}</span>
-            <span className="px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-purple-300 text-[10px] font-bold">
-              {currentQuiz.category}
-            </span>
+          {/* Progress Tracker Bar */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-purple-400">SCENARIO {currentQuizIndex + 1} OF {SCAM_QUIZZES.length}</span>
+              <span className="text-[var(--text-muted)]">{progressPercent}% COMPLETED</span>
+            </div>
+            <div className="w-full h-2 bg-[#0B0F19] border border-[#27395C] rounded-full overflow-hidden">
+              <div className="h-full bg-purple-500 transition-all duration-500" style={{ width: `${progressPercent}%` }} />
+            </div>
+
+            {/* Scenario Navigation Chips */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-1 overflow-x-auto">
+              {SCAM_QUIZZES.map((quiz, idx) => {
+                const state = answeredState[idx];
+                let chipBg = 'bg-[#0B0F19] border-[#27395C] text-[var(--text-muted)]';
+                if (state) {
+                  chipBg = state.isCorrect
+                    ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
+                    : 'bg-rose-500/20 border-rose-500 text-rose-400';
+                }
+                if (idx === currentQuizIndex) {
+                  chipBg = 'bg-purple-500/20 border-purple-400 text-purple-300 ring-1 ring-purple-400';
+                }
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleJumpToScenario(idx)}
+                    className={`w-7 h-7 rounded-lg border text-[11px] font-bold flex items-center justify-center transition-all ${chipBg}`}
+                    title={`Jump to Scenario ${idx + 1}`}
+                  >
+                    {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <h3 className="text-sm font-bold text-slate-100">{currentQuiz.title}</h3>
+          <div className="space-y-2 pt-2 border-t border-[#1E2D4A]">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold text-slate-100">{currentQuiz.title}</h3>
+              <span className="px-2.5 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-purple-300 text-[10px] font-bold">
+                {currentQuiz.category}
+              </span>
+            </div>
             <div className="p-3.5 bg-[#0B0F19] border border-amber-500/30 rounded-xl text-xs text-amber-200/90 leading-relaxed font-mono">
               <span className="font-bold text-amber-400 block mb-1">📩 Suspicious Message / Situation:</span>
               "{currentQuiz.smsText}"
@@ -440,7 +489,7 @@ const KavachAcademyView = memo(() => {
 
           {/* Feedback Explanation */}
           {selectedOption !== null && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-3 bg-[#0B0F19] border border-[#27395C] rounded-xl text-xs font-mono space-y-2">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-3.5 bg-[#0B0F19] border border-[#27395C] rounded-xl text-xs font-mono space-y-2">
               <div className="font-bold text-slate-200">{currentQuiz.options[selectedOption].feedback}</div>
               <button
                 onClick={handleNext}
@@ -473,7 +522,7 @@ const KavachAcademyView = memo(() => {
             <input
               type="text"
               value={candidateName}
-              onChange={(e) => setCandidateName(e.target.value)}
+              onChange={(e) => setCandidateName(e.target.value.slice(0, 50))}
               placeholder="e.g. Bhargava Sood"
               className="w-full bg-[#0B0F19] border border-[#27395C] rounded-xl p-3 text-xs text-slate-100 focus:border-[var(--accent)] focus:outline-none font-bold"
             />
@@ -493,7 +542,7 @@ const KavachAcademyView = memo(() => {
               className="px-5 py-3 bg-[#0B0F19] border border-[#27395C] hover:border-slate-400 text-slate-200 font-bold rounded-xl text-xs flex items-center gap-2 transition-all"
             >
               <RefreshCw size={16} />
-              <span>Restart Quiz</span>
+              <span>Restart Masterclass</span>
             </button>
           </div>
         </div>
