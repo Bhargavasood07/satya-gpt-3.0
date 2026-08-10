@@ -49,8 +49,12 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin, onOpen
   };
 
   const handleLangToggle = () => {
-    i18n.changeLanguage(i18n.language === 'en' ? 'hi' : 'en');
+    const isHindi = i18n.language && i18n.language.startsWith('hi');
+    const nextLang = isHindi ? 'en' : 'hi';
+    i18n.changeLanguage(nextLang);
   };
+
+  const isHindiActive = i18n.language && i18n.language.startsWith('hi');
 
   return (
     <header className="glass-panel h-14 sm:h-16 w-full flex items-center justify-between px-3 sm:px-4 border-b border-[var(--border-card)] z-50 select-none overflow-hidden font-mono">
@@ -191,14 +195,18 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin, onOpen
           <span className="text-xs">{formatTime(time)}</span>
         </div>
 
-        {/* Language Toggle */}
+        {/* 100% Reliable English ↔ Hindi Language Switcher */}
         <button
           onClick={handleLangToggle}
-          className="flex items-center space-x-1 px-2 py-1 rounded-lg border border-[var(--border-card)] hover:border-[var(--accent)] transition-colors text-[var(--text-primary)] text-xs font-semibold"
-          title="Change Language"
+          className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg border transition-colors text-xs font-mono font-bold shadow-sm ${
+            isHindiActive
+              ? 'bg-amber-500/20 border-amber-400 text-amber-300'
+              : 'bg-[#0B0F19] border-[var(--border-card)] text-[var(--text-primary)] hover:border-[var(--accent)]'
+          }`}
+          title="Switch Language (English / हिंदी)"
         >
           <Globe className="w-3.5 h-3.5 text-[var(--accent)]" />
-          <span className="uppercase text-[10px]">{i18n.language === 'hi' ? 'HI' : 'EN'}</span>
+          <span className="text-[11px] uppercase">{isHindiActive ? 'हिंदी' : 'EN'}</span>
         </button>
 
         {/* Theme Toggle */}

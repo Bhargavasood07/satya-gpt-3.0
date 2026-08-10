@@ -32,6 +32,7 @@ import { secureStorage } from './utils/securityGuard';
 
 // Views
 import AnalyticsView from './components/views/AnalyticsView';
+import ChildSafetyView from './components/views/ChildSafetyView';
 
 // Context
 import { useChildMode } from './context/ChildModeContext';
@@ -253,22 +254,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Child Guard Banner */}
-          {isChildMode && (
-            <div className="bg-[#131B2E] border border-amber-500/40 p-3.5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-amber-200 font-mono shadow-md">
-              <div className="flex items-center gap-2.5">
-                <Baby size={18} className="text-amber-400 shrink-0" />
-                <div>
-                  <div className="font-bold text-amber-300">Child Guard Protection Active</div>
-                  <div className="text-[10px] text-amber-200/80">Automatically blocks adult links, gaming scams (Free Robux traps), and unverified money requests for family safety.</div>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded text-amber-300 w-fit shrink-0">
-                CHILD GUARD ACTIVE
-              </span>
-            </div>
-          )}
-
           {/* ═══════════════ TAB CONTENT ═══════════════ */}
 
           {activeTab === 'dashboard' && (
@@ -289,47 +274,6 @@ export default function App() {
                 </div>
                 <ScannerPanel onScanResult={handleScanResult} />
               </div>
-
-              <div className="cyber-card p-5 rounded-xl border border-[#27395C] bg-[#131B2E] space-y-3 font-mono">
-                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-                      <ShieldCheck size={18} />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA AI Protection Network Active</h3>
-                      <p className="text-[10px] sm:text-[11px] text-[var(--text-muted)]">Real-time threat engine safeguarding your browsing & messages</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#0B0F19] border border-[#1E2D4A] rounded-lg text-[10px] text-amber-400 font-bold">
-                    <Lock size={12} />
-                    <span>PRIVATE THREAT VAULT</span>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[var(--text-secondary)] pt-1">
-                  <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
-                    <div className="font-bold text-emerald-400 flex items-center gap-1">
-                      <ShieldCheck size={14} />
-                      <span>92 Engine Shield</span>
-                    </div>
-                    <p className="text-[10px] text-[var(--text-muted)]">Automatic VirusTotal v3 threat scoring on all scanned inputs.</p>
-                  </div>
-                  <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
-                    <div className="font-bold text-[var(--accent)] flex items-center gap-1">
-                      <Server size={14} />
-                      <span>KAVACH Neural Engine</span>
-                    </div>
-                    <p className="text-[10px] text-[var(--text-muted)]">Instant AI threat explanations in plain Indian language.</p>
-                  </div>
-                  <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
-                    <div className="font-bold text-amber-400 flex items-center gap-1">
-                      <Baby size={14} />
-                      <span>Family Protection</span>
-                    </div>
-                    <p className="text-[10px] text-[var(--text-muted)]">Child Guard blocks adult scams & fake game coin traps.</p>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
@@ -344,6 +288,8 @@ export default function App() {
           )}
 
           {activeTab === 'aihub' && <AIHubView />}
+
+          {activeTab === 'childSafety' && <ChildSafetyView />}
 
           {activeTab === 'analytics' && <AnalyticsView metrics={metrics} events={events} />}
         </main>
