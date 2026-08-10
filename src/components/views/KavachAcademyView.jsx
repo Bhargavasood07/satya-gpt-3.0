@@ -1,6 +1,6 @@
 import React, { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GraduationCap, Award, CheckCircle2, XCircle, AlertTriangle, ArrowRight, RefreshCw, Download, Sparkles, ShieldCheck } from 'lucide-react';
+import { GraduationCap, Award, CheckCircle2, XCircle, AlertTriangle, ArrowRight, RefreshCw, Download, Sparkles, ShieldCheck, User } from 'lucide-react';
 
 const SCAM_QUIZZES = [
   {
@@ -43,11 +43,12 @@ const KavachAcademyView = memo(() => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [score, setScore] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [candidateName, setCandidateName] = useState('Bhargava Sood');
 
   const currentQuiz = SCAM_QUIZZES[currentQuizIndex];
 
   const handleSelectOption = (index) => {
-    if (selectedOption !== null) return; // Prevent re-select
+    if (selectedOption !== null) return;
     setSelectedOption(index);
 
     if (currentQuiz.options[index].isCorrect) {
@@ -73,29 +74,213 @@ const KavachAcademyView = memo(() => {
 
   const handleDownloadCertificate = () => {
     const certWindow = window.open('', '_blank');
+    const todayDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    const certId = 'CERT-SATYA-2026-' + Math.floor(100000 + Math.random() * 900000);
+
     certWindow.document.write(`
+      <!DOCTYPE html>
       <html>
         <head>
-          <title>SATYA-GPT Cyber Safety Certificate</title>
+          <title>SATYA-GPT Official Cyber Security Certificate - ${candidateName}</title>
           <style>
-            body { font-family: 'Arial', sans-serif; text-align: center; padding: 50px; background: #0b0f19; color: #fff; }
-            .cert { border: 8px solid #00e5ff; padding: 40px; border-radius: 20px; background: #131b2e; }
-            h1 { color: #00e5ff; font-size: 32px; }
-            h2 { color: #f59e0b; font-size: 24px; margin-top: 20px; }
-            p { font-size: 16px; color: #94a3b8; }
-            .badge { display: inline-block; padding: 10px 20px; background: #10b981; color: #000; font-weight: bold; border-radius: 30px; margin-top: 20px; }
+            @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600;700;800&family=Great+Vibes&display=swap');
+            
+            @page {
+              size: A4 landscape;
+              margin: 0;
+            }
+            
+            body {
+              margin: 0;
+              padding: 25px;
+              background-color: #0b0f19;
+              color: #f8fafc;
+              font-family: 'Montserrat', sans-serif;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 90vh;
+              -webkit-print-color-adjust: exact;
+            }
+
+            .cert-card {
+              width: 900px;
+              padding: 40px;
+              background: linear-gradient(135deg, #0b0f19 0%, #131b2e 50%, #0b0f19 100%);
+              border: 10px double #d97706;
+              border-radius: 16px;
+              box-shadow: 0 0 50px rgba(0, 229, 255, 0.2);
+              position: relative;
+              box-sizing: border-box;
+              text-align: center;
+            }
+
+            .inner-border {
+              border: 2px stroke #00e5ff;
+              outline: 2px dashed rgba(0, 229, 255, 0.4);
+              outline-offset: -12px;
+              padding: 30px;
+            }
+
+            .cert-header {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 15px;
+              margin-bottom: 10px;
+            }
+
+            .cert-title {
+              font-family: 'Cinzel', serif;
+              font-size: 26px;
+              color: #00e5ff;
+              letter-spacing: 2px;
+              margin: 0;
+              text-transform: uppercase;
+            }
+
+            .cert-subtitle {
+              font-size: 11px;
+              color: #d97706;
+              letter-spacing: 3px;
+              text-transform: uppercase;
+              font-weight: 700;
+              margin-top: 5px;
+            }
+
+            .cert-body-label {
+              font-size: 14px;
+              color: #94a3b8;
+              margin-top: 25px;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+            }
+
+            .candidate-name {
+              font-size: 34px;
+              font-weight: 800;
+              color: #fbbf24;
+              margin: 15px 0;
+              text-transform: uppercase;
+              letter-spacing: 2px;
+              border-bottom: 2px solid #d97706;
+              display: inline-block;
+              padding-bottom: 5px;
+            }
+
+            .cert-text {
+              font-size: 14px;
+              color: #e2e8f0;
+              line-height: 1.6;
+              max-width: 700px;
+              margin: 0 auto;
+            }
+
+            .badge-box {
+              display: inline-block;
+              padding: 8px 20px;
+              background: rgba(16, 185, 129, 0.15);
+              border: 1px solid #10b981;
+              color: #34d399;
+              font-weight: 700;
+              font-size: 12px;
+              border-radius: 20px;
+              margin-top: 20px;
+              letter-spacing: 1px;
+            }
+
+            .footer-signatures {
+              margin-top: 40px;
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-end;
+              padding: 0 30px;
+            }
+
+            .sig-block {
+              text-align: center;
+            }
+
+            .sig-line {
+              width: 200px;
+              border-top: 1px solid #64748b;
+              margin-top: 5px;
+            }
+
+            .founder-sig {
+              font-family: 'Great Vibes', cursive;
+              font-size: 38px;
+              color: #00e5ff;
+              margin-bottom: -10px;
+              line-height: 1;
+            }
+
+            .sig-name {
+              font-size: 13px;
+              font-weight: 700;
+              color: #f8fafc;
+              margin-top: 5px;
+            }
+
+            .sig-title {
+              font-size: 10px;
+              color: #94a3b8;
+            }
+
+            .cert-meta {
+              text-align: left;
+              font-size: 11px;
+              color: #94a3b8;
+            }
+
+            .cert-meta strong {
+              color: #f8fafc;
+            }
           </style>
         </head>
         <body>
-          <div className="cert">
-            <h1>🏛️ SATYA-GPT NATIONAL CYBER SAFETY ACADEMY</h1>
-            <p>This is to certify that</p>
-            <h2>VALUED CITIZEN / CYBER GUARD</h2>
-            <p>has successfully completed the <strong>National Scam Awareness & Cyber Threat Prevention Masterclass</strong> with a score of ${score}/${SCAM_QUIZZES.length}.</p>
-            <div className="badge">VERIFIED CYBER SAFETY CHAMPION</div>
-            <p style="margin-top: 30px; font-size: 12px;">Issued on ${new Date().toLocaleDateString()} • CERT-In & MeitY Framework Aligned</p>
+          <div class="cert-card">
+            <div class="inner-border">
+              <div class="cert-header">
+                <div>
+                  <h1 class="cert-title">SATYA-GPT NATIONAL CYBER SAFETY ACADEMY</h1>
+                  <div class="cert-subtitle">Aligned with CERT-In & MeitY National Cyber Safety Framework</div>
+                </div>
+              </div>
+
+              <div class="cert-body-label">Official Certificate of Merit & Cyber Defense</div>
+              <div class="candidate-name">${candidateName || 'Bhargava Sood'}</div>
+
+              <div class="cert-text">
+                has successfully completed the <strong>National Scam Awareness & Cyber Threat Prevention Masterclass</strong>, 
+                demonstrating exceptional mastery in real-world phishing detection, UPI scam defense, and AI deepfake verification 
+                with a final evaluation score of <strong>${score} / ${SCAM_QUIZZES.length}</strong>.
+              </div>
+
+              <div class="badge-box">VERIFIED CYBER DEFENSE CHAMPION</div>
+
+              <div class="footer-signatures">
+                <div class="cert-meta">
+                  <div>Date of Issuance: <strong>${todayDate}</strong></div>
+                  <div>Certificate Serial ID: <strong>${certId}</strong></div>
+                  <div>Verification Status: <strong>VERIFIED GENUINE</strong></div>
+                </div>
+
+                <div class="sig-block">
+                  <div class="founder-sig">Bhargava Sood</div>
+                  <div class="sig-line"></div>
+                  <div class="sig-name">BHARGAVA SOOD</div>
+                  <div class="sig-title">Founder & Chief Architect, SATYA-GPT</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <script>window.print();</script>
+
+          <script>
+            window.onload = function() {
+              window.print();
+            }
+          </script>
         </body>
       </html>
     `);
@@ -189,30 +374,45 @@ const KavachAcademyView = memo(() => {
         </div>
       ) : (
         /* Completion Certificate View */
-        <div className="bg-[#131B2E] border border-[#27395C] rounded-xl p-6 text-center space-y-4 shadow-2xl font-mono">
+        <div className="bg-[#131B2E] border border-[#27395C] rounded-xl p-6 text-center space-y-5 shadow-2xl font-mono">
           <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 mx-auto">
             <Award size={36} />
           </div>
 
           <div className="space-y-1">
             <h3 className="text-lg font-bold text-slate-100">Congratulations! You Passed!</h3>
-            <p className="text-xs text-[var(--text-muted)]">Score: {score} / {SCAM_QUIZZES.length} — Verified Cyber Safety Champion</p>
+            <p className="text-xs text-[var(--text-muted)]">Score: {score} / {SCAM_QUIZZES.length} — Verified Cyber Defense Champion</p>
+          </div>
+
+          {/* Candidate Name Input */}
+          <div className="max-w-md mx-auto space-y-1 text-left">
+            <label className="block text-[10px] text-[var(--text-muted)] font-bold uppercase flex items-center gap-1">
+              <User size={13} className="text-[var(--accent)]" />
+              <span>Full Name for Certificate:</span>
+            </label>
+            <input
+              type="text"
+              value={candidateName}
+              onChange={(e) => setCandidateName(e.target.value)}
+              placeholder="e.g. Bhargava Sood"
+              className="w-full bg-[#0B0F19] border border-[#27395C] rounded-xl p-3 text-xs text-slate-100 focus:border-[var(--accent)] focus:outline-none font-bold"
+            />
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 pt-2">
             <button
               onClick={handleDownloadCertificate}
-              className="px-5 py-2.5 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-2 transition-all shadow-lg"
+              className="px-5 py-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-2 transition-all shadow-lg"
             >
-              <Download size={15} />
-              <span>Download Official Certificate (PDF)</span>
+              <Download size={16} />
+              <span>Download Signed Official Certificate (PDF)</span>
             </button>
 
             <button
               onClick={handleRestart}
-              className="px-5 py-2.5 bg-[#0B0F19] border border-[#27395C] hover:border-slate-400 text-slate-200 font-bold rounded-xl text-xs flex items-center gap-2 transition-all"
+              className="px-5 py-3 bg-[#0B0F19] border border-[#27395C] hover:border-slate-400 text-slate-200 font-bold rounded-xl text-xs flex items-center gap-2 transition-all"
             >
-              <RefreshCw size={15} />
+              <RefreshCw size={16} />
               <span>Restart Quiz</span>
             </button>
           </div>
