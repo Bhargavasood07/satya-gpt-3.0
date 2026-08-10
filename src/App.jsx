@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award, ShieldAlert } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -15,25 +15,25 @@ import ClipboardAutoScanner from './components/common/ClipboardAutoScanner';
 // Chatbot
 import CyberAiChatbot from './components/chat/CyberAiChatbot';
 
-// Admin Vault & Enterprise Partner Modal
+// Modals
 import AdminPanelModal from './components/admin/AdminPanelModal';
 import EnterprisePartnershipModal from './components/common/EnterprisePartnershipModal';
+import GoldenHourEmergencyModal from './components/common/GoldenHourEmergencyModal';
 
 // Auth
 import LoginModal from './components/auth/LoginModal';
 import { useAuth } from './context/AuthContext';
 
-// AI Hub
+// AI Hub & Views
 import AIHubView from './components/aihub/AIHubView';
+import AnalyticsView from './components/views/AnalyticsView';
+import ChildSafetyView from './components/views/ChildSafetyView';
+import KavachAcademyView from './components/views/KavachAcademyView';
 
 // Onboarding Guide & Auto Updater
 import UserOnboardingBanner from './components/common/UserOnboardingBanner';
 import { initAutoUpdater, reloadToLatestVersion } from './utils/autoUpdater';
 import { secureStorage } from './utils/securityGuard';
-
-// Views
-import AnalyticsView from './components/views/AnalyticsView';
-import ChildSafetyView from './components/views/ChildSafetyView';
 
 // Context
 import { useChildMode } from './context/ChildModeContext';
@@ -45,6 +45,7 @@ import MetricDetailModal from './components/feed/MetricDetailModal';
 
 // Hooks & Data
 import { useSimulatedFeed } from './hooks/useSimulatedFeed';
+import { scanPayloadOffline } from './services/offlineAiEngine';
 
 export default function App() {
   const { t } = useTranslation();
@@ -57,6 +58,7 @@ export default function App() {
   const [hasNewVersion, setHasNewVersion] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isPartnerOpen, setIsPartnerOpen] = useState(false);
+  const [isEmergencyFreezeOpen, setIsEmergencyFreezeOpen] = useState(false);
   
   const mainScrollRef = useRef(null);
 
@@ -125,6 +127,7 @@ export default function App() {
         setActiveMetricModal(null);
         setIsAdminOpen(false);
         setIsPartnerOpen(false);
+        setIsEmergencyFreezeOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -133,6 +136,9 @@ export default function App() {
 
   const handleScanResult = useCallback(
     (decodedText, source = 'qr', vtReport = null) => {
+      // Run offline edge AI scanner engine if online fails
+      const offlineResult = scanPayloadOffline(decodedText);
+
       const lower = decodedText.toLowerCase();
       const isAdultRedirect = lower.includes('adult') || lower.includes('watch') || lower.includes('hot');
       const isGamingScam = lower.includes('robux') || lower.includes('fire-coins') || lower.includes('free-diamonds');
@@ -143,7 +149,8 @@ export default function App() {
         lower.includes('sbi-kyc') ||
         lower.includes('bitcoin:') ||
         lower.includes('pan immediately') ||
-        lower.includes('.exe');
+        lower.includes('.exe') ||
+        offlineResult.verdict === 'fake';
 
       const isSuspicious = isAdultRedirect || isGamingScam || isPhishing || (vtReport && vtReport.maliciousCount > 0);
 
@@ -214,7 +221,7 @@ export default function App() {
 
           {showHelpGuide && <UserOnboardingBanner />}
 
-          {/* SOC Header & Enterprise Govt Badging */}
+          {/* SOC Header & Enterprise Govt Badging + 15-Min Golden Hour Freeze Trigger */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl shadow-xl">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#0B0F19] border border-[#27395C] flex items-center justify-center text-[var(--accent)] font-mono font-bold text-xs shrink-0">
@@ -222,14 +229,14 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v5.0 ENTERPRISE</span>
+                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v6.0 ULTRA</span>
                   <span className="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold flex items-center gap-1">
                     <Award size={12} className="text-amber-400" />
                     CERT-In & MeitY ALIGNED
                   </span>
                   <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-bold flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                    STABLE & SECURE
+                    OFFLINE EDGE AI READY
                   </span>
                 </div>
                 <span className="text-[10px] sm:text-[11px] font-mono text-[var(--text-muted)]">
@@ -238,7 +245,15 @@ export default function App() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-mono">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+              <button
+                onClick={() => setIsEmergencyFreezeOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold transition-all text-xs shadow-md animate-pulse"
+              >
+                <ShieldAlert size={14} />
+                <span>15-Min Bank Freeze</span>
+              </button>
+
               <button
                 onClick={handleOpenPartner}
                 className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 font-bold transition-all text-xs shadow-md"
@@ -246,15 +261,6 @@ export default function App() {
                 <Building2 size={13} className="text-amber-400" />
                 <span>Partner Inquiry</span>
               </button>
-
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0B0F19] border border-[#1E2D4A] text-[var(--text-secondary)]">
-                <Server size={13} className="text-[var(--accent)]" />
-                <span>VT v3: ACTIVE</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0B0F19] border border-[#1E2D4A] text-[var(--text-secondary)]">
-                <Activity size={13} className="text-emerald-400 animate-pulse" />
-                <span>LATENCY: 12ms</span>
-              </div>
             </div>
           </div>
 
@@ -293,6 +299,8 @@ export default function App() {
 
           {activeTab === 'aihub' && <AIHubView />}
 
+          {activeTab === 'academy' && <KavachAcademyView />}
+
           {activeTab === 'childSafety' && <ChildSafetyView />}
 
           {activeTab === 'analytics' && <AnalyticsView metrics={metrics} events={events} />}
@@ -318,6 +326,11 @@ export default function App() {
         {/* Government & Enterprise Partner Modal */}
         <AnimatePresence>
           {isPartnerOpen && <EnterprisePartnershipModal onClose={() => setIsPartnerOpen(false)} />}
+        </AnimatePresence>
+
+        {/* 15-Minute Emergency Bank Freeze Modal */}
+        <AnimatePresence>
+          {isEmergencyFreezeOpen && <GoldenHourEmergencyModal onClose={() => setIsEmergencyFreezeOpen(false)} />}
         </AnimatePresence>
 
         {/* Login Modal */}

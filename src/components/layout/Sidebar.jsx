@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles, Building2 } from 'lucide-react';
+import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles, Building2, GraduationCap } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
 export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPartner }) {
@@ -11,6 +11,7 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
     { id: 'dashboard', icon: LayoutDashboard, label: t('nav.dashboard', 'Dashboard') },
     { id: 'scanner', icon: ScanLine, label: t('nav.scanner', 'AI Scanner') },
     { id: 'aihub', icon: Sparkles, label: 'AI Hub' },
+    { id: 'academy', icon: GraduationCap, label: 'Kavach Academy' },
     { id: 'partner', icon: Building2, action: onOpenPartner, label: 'Govt & Founder Portal' },
     { id: 'childSafety', icon: Baby, action: toggleChildMode, isToggle: true, label: t('nav.childSafety', 'Child Guard') },
     { id: 'analytics', icon: BarChart3, label: t('nav.analytics', 'Analytics') },
