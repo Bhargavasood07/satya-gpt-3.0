@@ -117,6 +117,29 @@
 }
 
 /* ============================================
+   CONTINUOUS HORIZONTAL MARQUEE ANIMATION
+   ============================================ */
+@keyframes ticker {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-ticker {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+  will-change: transform;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================
    STRICT MOBILE FLUID & SECURITY CSS
    Enforces 100% viewport width limits
    ============================================ */
