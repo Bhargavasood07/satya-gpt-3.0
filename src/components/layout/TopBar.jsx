@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../context/ThemeContext';
 import { useChildMode } from '../../context/ChildModeContext';
+import { useAuth } from '../../context/AuthContext';
 import { usePwaInstall } from '../../hooks/usePwaInstall';
-import { Globe, Sun, Moon, Clock, Baby, Download, Bot, HelpCircle, Lock } from 'lucide-react';
+import { Globe, Sun, Moon, Clock, Baby, Download, Bot, HelpCircle, Lock, User, LogOut } from 'lucide-react';
 import SatyaGptLogo from '../common/SatyaGptLogo';
 
 export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { isChildMode, toggleChildMode } = useChildMode();
+  const { user, isAuthenticated, openLoginModal, logout } = useAuth();
   const { canInstall, isInstalled, installApp } = usePwaInstall();
   const [time, setTime] = useState(new Date());
+  const [showUserMenu, setShowUserMenu] = useState(false);
   
   // Secret Founder Click Counter (Triple click logo to open Founder Admin Vault)
   const [logoClickCount, setLogoClickCount] = useState(0);
@@ -119,6 +122,49 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
           <Baby className={`w-3.5 h-3.5 ${isChildMode ? 'text-amber-400' : ''}`} />
           <span>{isChildMode ? t('app.childShieldActive') : t('app.childShieldDisabled')}</span>
         </button>
+
+        {/* User Auth Button */}
+        <div className="relative">
+          {isAuthenticated ? (
+            <button
+              onClick={() => setShowUserMenu((p) => !p)}
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-[var(--bg-card)] border border-emerald-500/40 text-emerald-400 text-xs font-mono font-semibold transition-all hover:bg-emerald-500/10"
+              title={user?.name || 'User'}
+            >
+              <div className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
+                <User className="w-3 h-3" />
+              </div>
+              <span className="hidden lg:inline max-w-[80px] truncate">{user?.name}</span>
+            </button>
+          ) : (
+            <button
+              onClick={openLoginModal}
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono font-semibold transition-all"
+              title="Login to SATYA-GPT"
+            >
+              <User className="w-3.5 h-3.5 text-[var(--accent)]" />
+              <span className="hidden lg:inline">Login</span>
+            </button>
+          )}
+
+          {/* User Dropdown Menu */}
+          {showUserMenu && isAuthenticated && (
+            <div className="absolute right-0 top-full mt-1 w-48 bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 p-1.5 font-mono text-xs">
+              <div className="px-3 py-2 border-b border-[#1E2D4A] mb-1">
+                <div className="font-bold text-[var(--text-primary)]">{user?.name}</div>
+                <div className="text-[10px] text-[var(--text-muted)]">{user?.email}</div>
+                <div className="text-[10px] text-emerald-400 mt-0.5 capitalize">via {user?.provider}</div>
+              </div>
+              <button
+                onClick={() => { logout(); setShowUserMenu(false); }}
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-colors"
+              >
+                <LogOut size={14} />
+                <span>Logout</span>
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Download & Install SATYA-GPT App Button */}
         <button

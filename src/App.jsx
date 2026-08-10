@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, ShieldAlert } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -16,6 +16,13 @@ import CyberAiChatbot from './components/chat/CyberAiChatbot';
 
 // Admin Vault
 import AdminPanelModal from './components/admin/AdminPanelModal';
+
+// Auth
+import LoginModal from './components/auth/LoginModal';
+import { useAuth } from './context/AuthContext';
+
+// AI Hub
+import AIHubView from './components/aihub/AIHubView';
 
 // Onboarding Guide & Auto Updater
 import UserOnboardingBanner from './components/common/UserOnboardingBanner';
@@ -39,6 +46,7 @@ import { useSimulatedFeed } from './hooks/useSimulatedFeed';
 export default function App() {
   const { t } = useTranslation();
   const { isChildMode } = useChildMode();
+  const { isLoginModalOpen, closeLoginModal } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showHelpGuide, setShowHelpGuide] = useState(true);
@@ -87,25 +95,22 @@ export default function App() {
     });
   }, []);
 
-  // Founder Secret Shortcuts: ⌘B/Ctrl+B Chat, ⌘+Shift+A/Ctrl+Shift+A Secret Admin Vault, Esc Close
+  // Founder Secret Shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
       const isCmdOrCtrl = e.metaKey || e.ctrlKey;
       const key = e.key ? e.key.toLowerCase() : '';
 
-      // Ctrl+B / Cmd+B Chat
       if (isCmdOrCtrl && key === 'b') {
         e.preventDefault();
         setIsChatOpen((prev) => !prev);
       }
 
-      // Founder Secret Shortcut: Ctrl+Shift+A / Cmd+Shift+A
       if (isCmdOrCtrl && e.shiftKey && key === 'a') {
         e.preventDefault();
         setIsAdminOpen(true);
       }
 
-      // Escape key to close modals
       if (e.key === 'Escape') {
         setSelectedEvent(null);
         setIsChatOpen(false);
@@ -148,10 +153,7 @@ export default function App() {
       const newEvt = addManualEvent({
         source,
         payload: decodedText,
-        preview:
-          decodedText.length > 50
-            ? decodedText.substring(0, 50) + '...'
-            : decodedText,
+        preview: decodedText.length > 50 ? decodedText.substring(0, 50) + '...' : decodedText,
         verdict: isSuspicious ? 'fake' : 'real',
         verdictLabel: isSuspicious ? 'FAKE' : 'REAL',
         confidence: isSuspicious ? 98.4 : 99.2,
@@ -168,7 +170,6 @@ export default function App() {
           : ['VirusTotal v3 Clean Rating', 'Official Domain Certificate Verified'],
       });
 
-      // Opens deep dive detailed drawer directly without intrusive toast popups
       setSelectedEvent(newEvt);
     },
     [addManualEvent, isChildMode, t, setSelectedEvent]
@@ -176,17 +177,13 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#0B0F19]">
-      {/* Top Bar (Founder secret triggers active) */}
       <TopBar onToggleChat={handleToggleChat} onToggleHelp={handleToggleHelp} onOpenAdmin={handleOpenAdmin} />
 
-      {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Desktop/Tablet Sidebar */}
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} />
 
-        {/* Main Workspace Content (Auto-scrolling container) */}
         <main ref={mainScrollRef} className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 pb-28 md:pb-6 text-xs sm:text-sm">
-          {/* New Version Auto-Update Banner */}
+          {/* Auto-Update Banner */}
           {hasNewVersion && (
             <div className="bg-cyan-950/60 border border-cyan-400/60 p-3 rounded-xl flex items-center justify-between font-mono text-xs text-cyan-200 shadow-lg animate-pulse">
               <div className="flex items-center gap-2">
@@ -203,10 +200,9 @@ export default function App() {
             </div>
           )}
 
-          {/* User Onboarding Guide Banner */}
           {showHelpGuide && <UserOnboardingBanner />}
 
-          {/* Command Subheader & Active Vulnerability Ticker */}
+          {/* SOC Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#131B2E] border border-[#1E2D4A] p-3.5 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#0B0F19] border border-[#27395C] flex items-center justify-center text-[var(--accent)] font-mono font-bold text-xs shrink-0">
@@ -214,7 +210,7 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v3.5.0</span>
+                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v4.0</span>
                   <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono font-bold flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
                     STABLE & SECURE
@@ -225,7 +221,6 @@ export default function App() {
                 </span>
               </div>
             </div>
-
             <div className="flex items-center gap-2 text-xs font-mono">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0B0F19] border border-[#1E2D4A] text-[var(--text-secondary)]">
                 <Server size={13} className="text-[var(--accent)]" />
@@ -242,7 +237,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Child Guard Active Explanation Banner */}
+          {/* Child Guard Banner */}
           {isChildMode && (
             <div className="bg-[#131B2E] border border-amber-500/40 p-3.5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-amber-200 font-mono shadow-md">
               <div className="flex items-center gap-2.5">
@@ -258,17 +253,12 @@ export default function App() {
             </div>
           )}
 
-          {/* Render Active Tab Content */}
+          {/* ═══════════════ TAB CONTENT ═══════════════ */}
+
           {activeTab === 'dashboard' && (
             <div className="space-y-5">
-              {/* 1st POSITION: Metrics Bar */}
-              <MetricsBar
-                metrics={metrics}
-                onCardClick={(type) => setActiveMetricModal(type)}
-                isFounderSession={isFounderSession}
-              />
+              <MetricsBar metrics={metrics} onCardClick={(type) => setActiveMetricModal(type)} isFounderSession={isFounderSession} />
 
-              {/* 2nd POSITION: SATYA AI Dedicated Threat Scanner Hub */}
               <div className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#131B2E] space-y-3">
                 <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-2.5 font-mono">
                   <div className="flex items-center gap-2">
@@ -284,7 +274,6 @@ export default function App() {
                 <ScannerPanel onScanResult={handleScanResult} />
               </div>
 
-              {/* 3rd POSITION: Public AI Threat Safeguard Card (Raw Incident Audit Table 100% Removed from Public view) */}
               <div className="cyber-card p-5 rounded-xl border border-[#27395C] bg-[#131B2E] space-y-3 font-mono">
                 <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3">
                   <div className="flex items-center gap-2.5">
@@ -296,13 +285,11 @@ export default function App() {
                       <p className="text-[10px] sm:text-[11px] text-[var(--text-muted)]">Real-time threat engine safeguarding your browsing & messages</p>
                     </div>
                   </div>
-
                   <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#0B0F19] border border-[#1E2D4A] rounded-lg text-[10px] text-amber-400 font-bold">
                     <Lock size={12} />
                     <span>PRIVATE THREAT VAULT</span>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[var(--text-secondary)] pt-1">
                   <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
                     <div className="font-bold text-emerald-400 flex items-center gap-1">
@@ -311,7 +298,6 @@ export default function App() {
                     </div>
                     <p className="text-[10px] text-[var(--text-muted)]">Automatic VirusTotal v3 threat scoring on all scanned inputs.</p>
                   </div>
-
                   <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
                     <div className="font-bold text-[var(--accent)] flex items-center gap-1">
                       <Server size={14} />
@@ -319,7 +305,6 @@ export default function App() {
                     </div>
                     <p className="text-[10px] text-[var(--text-muted)]">Instant AI threat explanations in plain Indian language.</p>
                   </div>
-
                   <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-1">
                     <div className="font-bold text-amber-400 flex items-center gap-1">
                       <Baby size={14} />
@@ -335,58 +320,41 @@ export default function App() {
           {activeTab === 'scanner' && (
             <div className="max-w-4xl mx-auto space-y-4">
               <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl font-mono">
-                <h2 className="text-sm font-bold text-[var(--text-primary)] uppercase">
-                  SATYA AI Dedicated Threat Scanner Hub
-                </h2>
+                <h2 className="text-sm font-bold text-[var(--text-primary)] uppercase">SATYA AI Dedicated Threat Scanner Hub</h2>
                 <p className="text-xs text-[var(--text-muted)] mt-1">Scan links, messages, camera feeds, and QR codes with VirusTotal v3 verification</p>
               </div>
               <ScannerPanel onScanResult={handleScanResult} />
             </div>
           )}
 
-          {activeTab === 'analytics' && (
-            <AnalyticsView metrics={metrics} events={events} />
-          )}
+          {activeTab === 'aihub' && <AIHubView />}
+
+          {activeTab === 'analytics' && <AnalyticsView metrics={metrics} events={events} />}
         </main>
 
-        {/* Deep Dive Panel Overlay */}
+        {/* Overlays */}
         <AnimatePresence>
-          {selectedEvent && (
-            <DeepDivePanel
-              event={selectedEvent}
-              onClose={() => setSelectedEvent(null)}
-            />
-          )}
+          {selectedEvent && <DeepDivePanel event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
         </AnimatePresence>
 
-        {/* Metric Detail Modal Overlay */}
         <AnimatePresence>
           {activeMetricModal && isFounderSession && (
-            <MetricDetailModal
-              modalType={activeMetricModal}
-              onClose={() => setActiveMetricModal(null)}
-              metrics={metrics}
-              events={events}
-            />
+            <MetricDetailModal modalType={activeMetricModal} onClose={() => setActiveMetricModal(null)} metrics={metrics} events={events} />
           )}
         </AnimatePresence>
 
-        {/* Secret Founder Admin Vault Portal Modal */}
         <AnimatePresence>
           {isAdminOpen && (
-            <AdminPanelModal
-              isOpen={isAdminOpen}
-              onClose={() => setIsAdminOpen(false)}
-              events={events}
-              metrics={metrics}
-            />
+            <AdminPanelModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} events={events} metrics={metrics} />
           )}
         </AnimatePresence>
 
-        {/* Mobile & Tablet Bottom Touch Bar */}
-        <MobileNav activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} />
+        {/* Login Modal */}
+        <AnimatePresence>
+          {isLoginModalOpen && <LoginModal onClose={closeLoginModal} />}
+        </AnimatePresence>
 
-        {/* KAVACH AI Cybersecurity Assistant Chatbot */}
+        <MobileNav activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} />
         <CyberAiChatbot isOpen={isChatOpen} onToggle={handleToggleChat} />
       </div>
     </div>

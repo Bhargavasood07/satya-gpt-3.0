@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, BarChart3, Baby, Lock } from 'lucide-react';
+import { LayoutDashboard, ScanLine, BarChart3, Baby, Lock, Sparkles } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
 export default function Sidebar({ activeTab, onTabChange, onOpenAdmin }) {
@@ -10,6 +10,7 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin }) {
   const navItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: t('nav.dashboard', 'Dashboard') },
     { id: 'scanner', icon: ScanLine, label: t('nav.scanner', 'AI Scanner') },
+    { id: 'aihub', icon: Sparkles, label: 'AI Hub' },
     { id: 'childSafety', icon: Baby, action: toggleChildMode, isToggle: true, label: t('nav.childSafety', 'Child Guard') },
     { id: 'analytics', icon: BarChart3, label: t('nav.analytics', 'Analytics') },
     { id: 'adminVault', icon: Lock, action: onOpenAdmin, label: 'Admin Vault' },
@@ -36,6 +37,8 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin }) {
                 isActive
                   ? item.isToggle
                     ? 'bg-purple-600/20 text-purple-400'
+                    : item.id === 'aihub'
+                    ? 'bg-violet-500/20 text-violet-400'
                     : 'bg-[var(--accent-muted)] text-[var(--accent)]'
                   : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)]'
               }`}
@@ -44,7 +47,7 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin }) {
               {isActive && (
                 <div
                   className={`absolute left-[-8px] top-1/2 -translate-y-1/2 w-[3px] h-3/4 rounded-r-md ${
-                    item.isToggle ? 'bg-purple-400 drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]' : 'bg-[var(--accent)] drop-shadow-[0_0_5px_var(--accent-glow)]'
+                    item.isToggle ? 'bg-purple-400 drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]' : item.id === 'aihub' ? 'bg-violet-400 drop-shadow-[0_0_5px_rgba(139,92,246,0.8)]' : 'bg-[var(--accent)] drop-shadow-[0_0_5px_var(--accent-glow)]'
                   }`}
                 />
               )}
