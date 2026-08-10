@@ -56,41 +56,64 @@
   --scrollbar-track: #0b0f19;
 }
 
-[data-theme="tactical-navy"] {
-  --bg-primary: #070a14;
-  --bg-secondary: #0f1629;
-  --bg-card: #0f1629;
-  --bg-card-hover: #16213d;
-  --bg-input: #070a14;
+/* Crisp High-Contrast Light Theme */
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-input: #ffffff;
 
-  --border-color: #1e2945;
-  --border-card: #28375c;
+  --border-color: #cbd5e1;
+  --border-card: #cbd5e1;
 
-  --accent: #f59e0b;
-  --accent-glow: rgba(245, 158, 11, 0.2);
-  --accent-muted: rgba(245, 158, 11, 0.1);
-  --accent-text: #f59e0b;
+  --accent: #0284c7;
+  --accent-glow: rgba(2, 132, 199, 0.2);
+  --accent-muted: rgba(2, 132, 199, 0.1);
+  --accent-text: #0284c7;
 
-  --safe: #10b981;
-  --safe-glow: rgba(16, 185, 129, 0.2);
-  --safe-muted: rgba(16, 185, 129, 0.1);
+  --safe: #059669;
+  --safe-glow: rgba(5, 150, 105, 0.2);
+  --safe-muted: rgba(5, 150, 105, 0.1);
 
-  --threat: #ef4444;
-  --threat-glow: rgba(239, 68, 68, 0.2);
-  --threat-muted: rgba(239, 68, 68, 0.1);
+  --threat: #dc2626;
+  --threat-glow: rgba(220, 38, 38, 0.2);
+  --threat-muted: rgba(220, 38, 38, 0.1);
 
-  --warning: #f59e0b;
-  --warning-glow: rgba(245, 158, 11, 0.2);
+  --warning: #d97706;
+  --warning-glow: rgba(217, 119, 6, 0.2);
 
-  --text-primary: #f8fafc;
-  --text-secondary: #9fa8da;
-  --text-muted: #5c6bc0;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
 
-  --glass-bg: rgba(15, 22, 41, 0.9);
-  --glass-border: rgba(40, 55, 92, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(203, 213, 225, 0.8);
 
-  --scrollbar-thumb: #28375c;
-  --scrollbar-track: #070a14;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-track: #f8fafc;
+}
+
+/* Dynamic Light Mode Utility Overrides */
+[data-theme="light"] .bg-\[\#0B0F19\] {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+[data-theme="light"] .bg-\[\#131B2E\] {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+[data-theme="light"] .border-\[\#27395C\],
+[data-theme="light"] .border-\[\#1E2D4A\] {
+  border-color: #CBD5E1 !important;
+}
+
+[data-theme="light"] .text-slate-100,
+[data-theme="light"] .text-slate-200 {
+  color: #0F172A !important;
 }
 
 /* ============================================
@@ -190,7 +213,7 @@ html {
 
 .cyber-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Monospace Utility */

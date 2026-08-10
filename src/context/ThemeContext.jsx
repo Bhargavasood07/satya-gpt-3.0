@@ -22,9 +22,7 @@ export function ThemeProvider({ children }) {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev =>
-      prev === 'cyber-slate' ? 'tactical-navy' : 'cyber-slate'
-    );
+    setTheme(prev => (prev === 'light' ? 'cyber-slate' : 'light'));
   };
 
   return (

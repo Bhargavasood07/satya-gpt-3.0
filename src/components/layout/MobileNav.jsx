@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, Lock, Baby, Sparkles } from 'lucide-react';
+import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
-export default function MobileNav({ activeTab, onTabChange, onOpenAdmin }) {
+export default function MobileNav({ activeTab, onTabChange }) {
   const { t } = useTranslation();
   const { isChildMode, toggleChildMode } = useChildMode();
 
@@ -12,7 +12,7 @@ export default function MobileNav({ activeTab, onTabChange, onOpenAdmin }) {
     { id: 'scanner', icon: ScanLine, label: 'Scanner' },
     { id: 'aihub', icon: Sparkles, label: 'AI Hub' },
     { id: 'childSafety', icon: Baby, action: toggleChildMode, isToggle: true, label: 'Guard' },
-    { id: 'adminVault', icon: Lock, action: onOpenAdmin, label: 'Admin' },
+    { id: 'analytics', icon: BarChart3, label: 'Analytics' },
   ];
 
   return (
