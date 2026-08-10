@@ -43,9 +43,10 @@ import MetricsBar from './components/feed/MetricsBar';
 import DeepDivePanel from './components/feed/DeepDivePanel';
 import MetricDetailModal from './components/feed/MetricDetailModal';
 
-// Hooks & Data
+// Hooks & Services
 import { useSimulatedFeed } from './hooks/useSimulatedFeed';
 import { scanPayloadOffline } from './services/offlineAiEngine';
+import { detectFakeNews } from './services/fakeNewsDetector';
 
 export default function App() {
   const { t } = useTranslation();
@@ -136,7 +137,10 @@ export default function App() {
 
   const handleScanResult = useCallback(
     (decodedText, source = 'qr', vtReport = null) => {
-      // Run offline edge AI scanner engine if online fails
+      // 1. Run Fake News & Misinformation Fact-Checker Engine
+      const fakeNewsResult = detectFakeNews(decodedText);
+
+      // 2. Run offline edge AI scanner engine
       const offlineResult = scanPayloadOffline(decodedText);
 
       const lower = decodedText.toLowerCase();
@@ -152,13 +156,15 @@ export default function App() {
         lower.includes('.exe') ||
         offlineResult.verdict === 'fake';
 
-      const isSuspicious = isAdultRedirect || isGamingScam || isPhishing || (vtReport && vtReport.maliciousCount > 0);
+      const isSuspicious = fakeNewsResult.isFakeNews || isAdultRedirect || isGamingScam || isPhishing || (vtReport && vtReport.maliciousCount > 0);
 
-      let verdictReason = isSuspicious
+      let verdictReason = fakeNewsResult.isFakeNews
+        ? fakeNewsResult.reason
+        : isSuspicious
         ? 'KAVACH AI & VirusTotal v3 Analysis: High risk malicious payload detected across security vendor engines.'
         : 'KAVACH AI & VirusTotal v3 Analysis: Payload verified clean across 90+ security engines.';
 
-      if (isChildMode && isSuspicious) {
+      if (isChildMode && isSuspicious && !fakeNewsResult.isFakeNews) {
         verdictReason = isAdultRedirect
           ? t('childMode.blockedAdult')
           : isGamingScam
@@ -166,24 +172,28 @@ export default function App() {
           : t('childMode.blockedPhishing');
       }
 
+      const indicatorsList = fakeNewsResult.isFakeNews
+        ? fakeNewsResult.indicators
+        : isSuspicious
+        ? [
+            isChildMode ? 'Child Protection Guard: Blocked' : 'VirusTotal v3 Security Alert',
+            'Multi-Engine Flagged (Kaspersky / Safebrowsing)',
+            'Unverified Origin / Obfuscated Payload',
+          ]
+        : ['VirusTotal v3 Clean Rating', 'Official Domain Certificate Verified'];
+
       const newEvt = addManualEvent({
         source,
         payload: decodedText,
         preview: decodedText.length > 50 ? decodedText.substring(0, 50) + '...' : decodedText,
         verdict: isSuspicious ? 'fake' : 'real',
-        verdictLabel: isSuspicious ? 'FAKE' : 'REAL',
+        verdictLabel: fakeNewsResult.isFakeNews ? 'FAKE NEWS / HOAX' : isSuspicious ? 'FAKE' : 'REAL',
         confidence: isSuspicious ? 98.4 : 99.2,
-        riskScore: isSuspicious ? 92 : 4,
+        riskScore: fakeNewsResult.isFakeNews ? (fakeNewsResult.riskScore || 92) : isSuspicious ? 92 : 4,
         severity: isSuspicious ? 'high' : 'low',
         verdictReason,
         vtReport,
-        indicators: isSuspicious
-          ? [
-              isChildMode ? 'Child Protection Guard: Blocked' : 'VirusTotal v3 Security Alert',
-              'Multi-Engine Flagged (Kaspersky / Safebrowsing)',
-              'Unverified Origin / Obfuscated Payload',
-            ]
-          : ['VirusTotal v3 Clean Rating', 'Official Domain Certificate Verified'],
+        indicators: indicatorsList,
       });
 
       setSelectedEvent(newEvt);
@@ -229,14 +239,14 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v6.0 ULTRA</span>
+                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v6.1 ULTRA</span>
                   <span className="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold flex items-center gap-1">
                     <Award size={12} className="text-amber-400" />
                     CERT-In & MeitY ALIGNED
                   </span>
                   <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-bold flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                    OFFLINE EDGE AI READY
+                    AI FACT-CHECKER ACTIVE
                   </span>
                 </div>
                 <span className="text-[10px] sm:text-[11px] font-mono text-[var(--text-muted)]">
