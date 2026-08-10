@@ -4,7 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useChildMode } from '../../context/ChildModeContext';
 import { useAuth } from '../../context/AuthContext';
 import { usePwaInstall } from '../../hooks/usePwaInstall';
-import { Globe, Sun, Moon, Clock, Baby, Download, Bot, HelpCircle, Lock, User, LogOut } from 'lucide-react';
+import { Globe, Sun, Moon, Clock, Baby, Download, Bot, HelpCircle, User, LogOut } from 'lucide-react';
 import SatyaGptLogo from '../common/SatyaGptLogo';
 
 export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
@@ -12,7 +12,7 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
   const { theme, toggleTheme } = useTheme();
   const { isChildMode, toggleChildMode } = useChildMode();
   const { user, isAuthenticated, openLoginModal, logout } = useAuth();
-  const { canInstall, isInstalled, installApp } = usePwaInstall();
+  const { isInstalled, installApp } = usePwaInstall();
   const [time, setTime] = useState(new Date());
   const [showUserMenu, setShowUserMenu] = useState(false);
   
@@ -34,7 +34,6 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
       return next;
     });
 
-    // Reset click count after 2 seconds
     setTimeout(() => {
       setLogoClickCount(0);
     }, 2000);
@@ -54,29 +53,28 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
   };
 
   return (
-    <header className="glass-panel h-16 w-full flex items-center justify-between px-4 border-b border-[var(--border-card)] z-50">
-      {/* Left Section */}
-      <div className="flex items-center space-x-3 md:space-x-4">
-        {/* Logo with Secret Founder Triple Click Trigger */}
+    <header className="glass-panel h-14 sm:h-16 w-full flex items-center justify-between px-3 sm:px-4 border-b border-[var(--border-card)] z-50 select-none overflow-hidden">
+      {/* Left Section: Logo & Title */}
+      <div className="flex items-center space-x-2.5 sm:space-x-3 shrink-0">
         <div 
           onClick={handleLogoClick}
-          className="flex items-center space-x-2.5 cursor-pointer group select-none"
-          title="SATYA-GPT Security Operations Center (Founder Vault: Triple-Click Logo or Ctrl+Shift+A)"
+          className="flex items-center space-x-2 cursor-pointer group"
+          title="SATYA-GPT SOC (Founder Vault: Triple-Click Logo or Ctrl+Shift+A)"
         >
-          <SatyaGptLogo size={36} className="drop-shadow-[0_0_10px_var(--accent-glow)] group-hover:scale-105 transition-transform" />
+          <SatyaGptLogo size={32} className="drop-shadow-[0_0_8px_var(--accent-glow)] group-hover:scale-105 transition-transform" />
           <div className="flex flex-col">
-            <span className="text-[var(--text-primary)] font-extrabold text-base md:text-lg leading-tight tracking-wider font-mono">
-              {t('app.title')}
+            <span className="text-[var(--text-primary)] font-extrabold text-sm sm:text-base leading-tight tracking-wider font-mono">
+              SATYA-GPT
             </span>
-            <span className="text-[var(--text-muted)] text-[10px] md:text-xs">
+            <span className="text-[var(--text-muted)] text-[9px] sm:text-[10px] hidden sm:block">
               {t('app.subtitle')}
             </span>
           </div>
         </div>
 
-        <div className="h-6 w-px bg-[var(--border-color)] hidden sm:block"></div>
+        <div className="h-5 w-px bg-[var(--border-color)] hidden md:block"></div>
 
-        <div className="hidden md:flex items-center space-x-2 bg-[var(--bg-card)] px-3 py-1 rounded-md border border-[var(--border-card)]">
+        <div className="hidden lg:flex items-center space-x-2 bg-[var(--bg-card)] px-2.5 py-0.5 rounded-md border border-[var(--border-card)]">
           <div className="pulse-dot w-2 h-2 rounded-full bg-[var(--safe)]"></div>
           <span className="text-[var(--text-secondary)] text-xs font-mono font-semibold">
             {t('app.status')}
@@ -84,35 +82,32 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
         </div>
       </div>
 
-      {/* Right Section */}
-      <div className="flex items-center space-x-2 md:space-x-3">
-        {/* Help / Guide Button */}
+      {/* Right Section: Compact Responsive Controls */}
+      <div className="flex items-center space-x-1.5 sm:space-x-2 font-mono">
+        {/* User Guide */}
         <button
           onClick={onToggleHelp}
-          className="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono font-semibold transition-all"
-          title="How to Use SATYA-GPT (User Guide)"
+          className="p-1.5 sm:px-2.5 sm:py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-semibold transition-all"
+          title="User Guide"
         >
-          <HelpCircle className="w-3.5 h-3.5 text-[var(--accent)]" />
-          <span className="hidden xl:inline">User Guide</span>
+          <HelpCircle className="w-4 h-4 text-[var(--accent)]" />
+          <span className="hidden xl:inline ml-1">User Guide</span>
         </button>
 
-        {/* KAVACH AI Header Button */}
+        {/* KAVACH AI Header Action (Desktop/Tablet) */}
         <button
           onClick={onToggleChat}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--accent)] hover:bg-[var(--accent-muted)] text-[var(--accent)] text-xs font-mono font-bold transition-all shadow-sm"
-          title="Open KAVACH AI Cyber Shield Assistant (Ctrl+B)"
+          className="hidden md:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--accent)] hover:bg-[var(--accent-muted)] text-[var(--accent)] text-xs font-bold transition-all shadow-sm"
+          title="Open KAVACH AI Assistant (Ctrl+B)"
         >
           <Bot className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span>KAVACH AI</span>
-          <span className="hidden sm:inline-block px-1 py-0.2 bg-[var(--bg-primary)] text-[9px] text-[var(--text-muted)] rounded border border-[var(--border-card)] font-mono">
-            ⌘B
-          </span>
         </button>
 
-        {/* Child Mode Toggle Button */}
+        {/* Child Mode Toggle Button (Desktop/Tablet) */}
         <button
           onClick={toggleChildMode}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border transition-all ${
+          className={`hidden sm:flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all ${
             isChildMode
               ? 'bg-amber-500/10 border-amber-500/50 text-amber-300 shadow-sm'
               : 'bg-[var(--bg-card)] border-[var(--border-card)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
@@ -120,7 +115,7 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
           title={t('childMode.toggleLabel')}
         >
           <Baby className={`w-3.5 h-3.5 ${isChildMode ? 'text-amber-400' : ''}`} />
-          <span>{isChildMode ? t('app.childShieldActive') : t('app.childShieldDisabled')}</span>
+          <span className="hidden md:inline">{isChildMode ? 'Guard Active' : 'Guard Off'}</span>
         </button>
 
         {/* User Auth Button */}
@@ -128,76 +123,74 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
           {isAuthenticated ? (
             <button
               onClick={() => setShowUserMenu((p) => !p)}
-              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-[var(--bg-card)] border border-emerald-500/40 text-emerald-400 text-xs font-mono font-semibold transition-all hover:bg-emerald-500/10"
+              className="flex items-center space-x-1 px-2 py-1 rounded-lg bg-[var(--bg-card)] border border-emerald-500/40 text-emerald-400 text-xs font-semibold transition-all hover:bg-emerald-500/10"
               title={user?.name || 'User'}
             >
-              <div className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
-                <User className="w-3 h-3" />
+              <div className="w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
+                <User className="w-2.5 h-2.5" />
               </div>
-              <span className="hidden lg:inline max-w-[80px] truncate">{user?.name}</span>
+              <span className="hidden md:inline max-w-[70px] truncate">{user?.name}</span>
             </button>
           ) : (
             <button
               onClick={openLoginModal}
-              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono font-semibold transition-all"
-              title="Login to SATYA-GPT"
+              className="flex items-center space-x-1 px-2 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-semibold transition-all"
+              title="Login"
             >
               <User className="w-3.5 h-3.5 text-[var(--accent)]" />
-              <span className="hidden lg:inline">Login</span>
+              <span className="hidden md:inline">Login</span>
             </button>
           )}
 
           {/* User Dropdown Menu */}
           {showUserMenu && isAuthenticated && (
-            <div className="absolute right-0 top-full mt-1 w-48 bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 p-1.5 font-mono text-xs">
-              <div className="px-3 py-2 border-b border-[#1E2D4A] mb-1">
-                <div className="font-bold text-[var(--text-primary)]">{user?.name}</div>
-                <div className="text-[10px] text-[var(--text-muted)]">{user?.email}</div>
-                <div className="text-[10px] text-emerald-400 mt-0.5 capitalize">via {user?.provider}</div>
+            <div className="absolute right-0 top-full mt-1 w-44 bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 p-1.5 text-xs">
+              <div className="px-2.5 py-1.5 border-b border-[#1E2D4A] mb-1">
+                <div className="font-bold text-[var(--text-primary)] truncate">{user?.name}</div>
+                <div className="text-[9px] text-[var(--text-muted)] truncate">{user?.email}</div>
               </div>
               <button
                 onClick={() => { logout(); setShowUserMenu(false); }}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-colors"
+                className="w-full flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-colors"
               >
-                <LogOut size={14} />
+                <LogOut size={13} />
                 <span>Logout</span>
               </button>
             </div>
           )}
         </div>
 
-        {/* Download & Install SATYA-GPT App Button */}
+        {/* Download App Button (Desktop) */}
         <button
           onClick={installApp}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-primary)] text-xs font-mono font-semibold transition-all shadow-sm"
-          title="Download and Install SATYA-GPT Desktop/Mobile App"
+          className="hidden xl:flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-primary)] text-xs font-semibold transition-all"
+          title="Download App"
         >
           <Download className="w-3.5 h-3.5 text-[var(--accent)]" />
-          <span className="hidden sm:inline">{isInstalled ? 'App Installed' : 'Download App'}</span>
+          <span>{isInstalled ? 'Installed' : 'App'}</span>
         </button>
 
-        {/* Live Clock */}
-        <div className="hidden lg:flex items-center space-x-1.5 text-[var(--text-secondary)]">
+        {/* Live Clock (Desktop) */}
+        <div className="hidden xl:flex items-center space-x-1 text-[var(--text-secondary)]">
           <Clock className="w-3.5 h-3.5 text-[var(--accent)]" />
-          <span className="font-mono text-xs">{formatTime(time)}</span>
+          <span className="text-xs">{formatTime(time)}</span>
         </div>
-
-        <div className="h-6 w-px bg-[var(--border-color)] hidden lg:block"></div>
 
         {/* Language Toggle */}
         <button
           onClick={handleLangToggle}
-          className="flex items-center space-x-1 px-2.5 py-1 rounded-lg border border-[var(--border-card)] hover:border-[var(--accent)] transition-colors text-[var(--text-primary)] text-xs font-mono font-semibold"
+          className="flex items-center space-x-1 px-2 py-1 rounded-lg border border-[var(--border-card)] hover:border-[var(--accent)] transition-colors text-[var(--text-primary)] text-xs font-semibold"
+          title="Change Language"
         >
           <Globe className="w-3.5 h-3.5 text-[var(--accent)]" />
-          <span>{t('lang.toggle')}</span>
+          <span className="uppercase text-[10px]">{i18n.language === 'hi' ? 'HI' : 'EN'}</span>
         </button>
 
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] transition-colors"
-          title={theme === 'cyber-slate' ? t('theme.tacticalNavy') : t('theme.cyberSlate')}
+          className="p-1 sm:px-2 sm:py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] transition-colors"
+          title="Toggle Theme"
         >
           {theme === 'cyber-slate' ? (
             <Moon className="w-3.5 h-3.5 text-[var(--accent)]" />
