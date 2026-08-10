@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, ShieldAlert, AlertTriangle, ShieldOff, X, ExternalLink, Server, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, AlertTriangle, ShieldOff, X, ExternalLink, Server, CheckCircle2, FileText } from 'lucide-react';
 import VirusTotalBadge from '../virustotal/VirusTotalBadge';
 import VirusTotalModal from '../virustotal/VirusTotalModal';
 import ApiKeySettingsModal from '../settings/ApiKeySettingsModal';
 import BlockTransparencyCard from './BlockTransparencyCard';
+import WhatsAppShareButton from '../common/WhatsAppShareButton';
+import CyberComplaintGeneratorModal from '../common/CyberComplaintGeneratorModal';
 
 const CircularRiskScore = ({ score }) => {
   let color = 'var(--safe)';
@@ -42,6 +44,7 @@ const DeepDivePanel = ({ event, onClose }) => {
   const { t } = useTranslation();
   const [showVtModal, setShowVtModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showComplaintModal, setShowComplaintModal] = useState(false);
   const [actionFeedback, setActionFeedback] = useState(null);
 
   const isThreat = event?.verdict === 'fake' || event?.verdict === 'malicious';
@@ -152,27 +155,21 @@ const DeepDivePanel = ({ event, onClose }) => {
             <CircularRiskScore score={event.riskScore || 0} />
           </div>
 
-          {/* CyberCrime Portal Reporting Link */}
-          {isThreat && (
-            <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-xl flex items-center justify-between font-mono">
-              <div className="flex flex-col">
-                <span className="text-xs font-bold text-rose-300">Monetary Scam Alert</span>
-                <span className="text-[10px] text-rose-200/80">Report incident to National Cyber Crime Portal</span>
-              </div>
-              <a
-                href="https://cybercrime.gov.in"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-lg text-xs flex items-center gap-1 transition-all shadow-md shrink-0"
-              >
-                <span>Report</span>
-                <ExternalLink size={12} />
-              </a>
-            </div>
-          )}
+          {/* 1-Click WhatsApp Share & PDF Complaint Buttons */}
+          <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-[#0B0F19] border border-[#27395C] rounded-xl">
+            <WhatsAppShareButton payload={event.payload} verdict={event.verdict} />
+
+            <button
+              onClick={() => setShowComplaintModal(true)}
+              className="px-3 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-md"
+            >
+              <FileText size={14} />
+              <span>Generate Police PDF</span>
+            </button>
+          </div>
         </div>
 
-        {/* Working Action Buttons */}
+        {/* Action Buttons */}
         <div className="p-4 border-t border-[#1E2D4A] bg-[#0B0F19] flex flex-wrap gap-2">
           <button 
             onClick={handleMarkSafe}
@@ -199,6 +196,14 @@ const DeepDivePanel = ({ event, onClose }) => {
           </button>
         </div>
       </motion.div>
+
+      {/* 1-Click Bank & Police Cyber Complaint PDF Modal */}
+      {showComplaintModal && (
+        <CyberComplaintGeneratorModal
+          threatPayload={event.payload}
+          onClose={() => setShowComplaintModal(false)}
+        />
+      )}
 
       {/* VirusTotal Vendor Analysis Modal */}
       {showVtModal && (

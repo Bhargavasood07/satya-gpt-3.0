@@ -8,8 +8,9 @@ import TopBar from './components/layout/TopBar';
 import Sidebar from './components/layout/Sidebar';
 import MobileNav from './components/layout/MobileNav';
 
-// Scanner
+// Scanner & Clipboard Auto-Scanner
 import ScannerPanel from './components/scanner/ScannerPanel';
+import ClipboardAutoScanner from './components/common/ClipboardAutoScanner';
 
 // Chatbot
 import CyberAiChatbot from './components/chat/CyberAiChatbot';
@@ -186,6 +187,9 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#0B0F19]">
       <TopBar onToggleChat={handleToggleChat} onToggleHelp={handleToggleHelp} onOpenAdmin={handleOpenAdmin} onOpenPartner={handleOpenPartner} />
+      
+      {/* Zero-Click Clipboard Auto Scanner Banner */}
+      <ClipboardAutoScanner onScanLink={(url) => handleScanResult(url, 'clipboard')} />
 
       <div className="flex flex-1 overflow-hidden">
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} onOpenPartner={handleOpenPartner} />
