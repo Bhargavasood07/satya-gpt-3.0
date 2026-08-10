@@ -11,10 +11,10 @@ export default function AnalyticsView({ metrics, events }) {
   const safeCount = totalScans - threatCount;
 
   const categories = [
-    { id: 'phishing', name: 'Phishing Links', count: 18, percentage: 47, color: '#EF4444', gradient: 'from-rose-500 to-red-600', isHigh: true, prediction: '+14% Spike Projected' },
-    { id: 'sms', name: 'SMS Scam Forwards', count: 11, percentage: 29, color: '#F59E0B', gradient: 'from-amber-400 to-orange-500', isHigh: false, prediction: '+4% Moderate' },
-    { id: 'qr', name: 'Fake QR Codes', count: 6, percentage: 16, color: '#3B82F6', gradient: 'from-cyan-400 to-blue-500', isHigh: false, prediction: '-2% Declining' },
-    { id: 'child', name: 'Adult/Child Block', count: 3, percentage: 8, color: '#A855F7', gradient: 'from-purple-500 to-indigo-600', isLow: true, prediction: 'Stable Low' },
+    { id: 'phishing', name: 'Phishing Links', count: 18, color: '#EF4444', gradient: 'from-rose-500 to-red-600', isHigh: true, prediction: '+14% Spike Projected' },
+    { id: 'sms', name: 'SMS Scam Forwards', count: 11, color: '#F59E0B', gradient: 'from-amber-400 to-orange-500', isHigh: false, prediction: '+4% Moderate' },
+    { id: 'qr', name: 'Fake QR Codes', count: 6, color: '#3B82F6', gradient: 'from-cyan-400 to-blue-500', isHigh: false, prediction: '-2% Declining' },
+    { id: 'child', name: 'Adult/Child Block', count: 3, color: '#A855F7', gradient: 'from-purple-500 to-indigo-600', isLow: true, prediction: 'Stable Low' },
   ];
 
   return (
@@ -57,7 +57,7 @@ export default function AnalyticsView({ metrics, events }) {
           <div className="text-xl sm:text-2xl font-bold text-rose-400">{threatCount}</div>
           <div className="text-[10px] text-rose-400 font-bold flex items-center gap-0.5">
             <ShieldAlert size={12} />
-            <span>PEAK HIGH: Phishing (47%)</span>
+            <span>HIGH PEAK: Phishing</span>
           </div>
         </div>
 
@@ -66,13 +66,13 @@ export default function AnalyticsView({ metrics, events }) {
           <div className="text-xl sm:text-2xl font-bold text-emerald-400">{safeCount.toLocaleString()}</div>
           <div className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
             <ShieldCheck size={12} />
-            <span>99.2% Clean Rating</span>
+            <span>Clean Safety Rating</span>
           </div>
         </div>
 
         <div className="bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl space-y-1">
           <div className="text-[10px] text-[var(--text-muted)] font-bold">PREDICTED NEXT 6H</div>
-          <div className="text-xl sm:text-2xl font-bold text-amber-400">HIGH (96/100)</div>
+          <div className="text-xl sm:text-2xl font-bold text-amber-400">HIGH LEVEL</div>
           <div className="text-[10px] text-amber-300 font-bold flex items-center gap-0.5">
             <TrendingUp size={12} />
             <span>Evening Phishing Wave</span>
@@ -141,12 +141,12 @@ export default function AnalyticsView({ metrics, events }) {
             <Sparkles size={16} className="text-amber-400 shrink-0 animate-pulse" />
             <div>
               <span className="font-bold text-amber-300">AI Predictive Forecast: </span>
-              <span className="text-[11px]">Phishing Links are at <strong className="text-rose-400 font-extrabold">PEAK HIGH (47%)</strong>. A +14% evening scam spike is projected between 20:00-22:00. Keep Scanner & Child Guard active!</span>
+              <span className="text-[11px]">Phishing Links are at <strong className="text-rose-400 font-extrabold">HIGH PEAK</strong>. An evening scam spike is projected between 20:00-22:00. Keep Scanner & Child Guard active!</span>
             </div>
           </div>
         </div>
 
-        {/* MODE 1: Vertical Bar Comparison Graph with Light/Dark High-Contrast Theme */}
+        {/* MODE 1: Vertical Bar Comparison Graph with High/Low Plain Text Labels (No % numbers) */}
         {graphMode === 'bars' && (
           <div className="space-y-4 pt-2">
             <div className={`grid grid-cols-4 gap-3 sm:gap-6 h-72 items-end p-4 rounded-xl border transition-colors relative overflow-hidden ${
@@ -154,21 +154,23 @@ export default function AnalyticsView({ metrics, events }) {
                 ? 'bg-[#F8FAFC] border-slate-300 text-slate-900 shadow-inner'
                 : 'bg-[#0B0F19] border-[#1E2D4A] text-slate-100'
             }`}>
-              {/* Horizontal Background Grid Lines */}
+              {/* Horizontal Background Grid Lines (Clean Text: HIGH PEAK, MODERATE, LOW SAFE) */}
               <div className="absolute inset-0 flex flex-col justify-between p-4 pointer-events-none">
-                <div className={`border-b w-full text-[9px] font-bold ${isLightContrast ? 'border-slate-300 text-slate-500' : 'border-[#27395C] text-[var(--text-muted)]'}`}>
-                  100% — HIGH PEAK
+                <div className={`border-b w-full text-[10px] font-extrabold tracking-wider ${isLightContrast ? 'border-slate-300 text-rose-600' : 'border-[#27395C] text-rose-400'}`}>
+                  HIGH PEAK
                 </div>
-                <div className={`border-b w-full text-[9px] font-bold ${isLightContrast ? 'border-slate-300 text-slate-500' : 'border-[#27395C] text-[var(--text-muted)]'}`}>
-                  50% — MODERATE
+                <div className={`border-b w-full text-[10px] font-extrabold tracking-wider ${isLightContrast ? 'border-slate-300 text-amber-600' : 'border-[#27395C] text-amber-400'}`}>
+                  MODERATE
                 </div>
-                <div className={`border-b w-full text-[9px] font-bold ${isLightContrast ? 'border-slate-300 text-slate-500' : 'border-[#27395C] text-[var(--text-muted)]'}`}>
-                  0% — LOW SAFE
+                <div className={`border-b w-full text-[10px] font-extrabold tracking-wider ${isLightContrast ? 'border-slate-300 text-emerald-600' : 'border-[#27395C] text-emerald-400'}`}>
+                  LOW SAFE
                 </div>
               </div>
 
               {categories.map((cat) => {
-                const barHeightPx = Math.max(36, Math.round(cat.percentage * 3.4));
+                // Calculation based on threat count
+                const barHeights = { phishing: 180, sms: 115, qr: 70, child: 40 };
+                const barHeightPx = barHeights[cat.id] || 60;
 
                 return (
                   <div key={cat.id} className="flex flex-col items-center h-full justify-end relative z-10 group">
@@ -180,23 +182,23 @@ export default function AnalyticsView({ metrics, events }) {
                         transition={{ repeat: Infinity, repeatType: 'reverse', duration: 1 }}
                         className="mb-2 px-2.5 py-1 rounded bg-rose-600 text-white text-[10px] font-extrabold shadow-[0_0_12px_rgba(239,68,68,0.8)] shrink-0 border border-rose-400"
                       >
-                        PEAK HIGH 🚨
+                        HIGH PEAK 🚨
                       </motion.div>
                     )}
 
                     {cat.isLow && (
                       <div className="mb-2 px-2.5 py-1 rounded bg-emerald-600 text-white text-[10px] font-extrabold shadow-[0_0_12px_rgba(16,185,129,0.8)] shrink-0 border border-emerald-400">
-                        SAFE LOW 🛡️
+                        LOW SAFE 🛡️
                       </div>
                     )}
 
-                    {/* Count & Percentage label */}
-                    <span className={`text-[11px] sm:text-xs font-bold px-2 py-0.5 rounded mb-1.5 shadow-sm border ${
+                    {/* Count Label */}
+                    <span className={`text-[11px] sm:text-xs font-bold px-2.5 py-0.5 rounded mb-1.5 shadow-sm border ${
                       isLightContrast
                         ? 'bg-slate-900 text-white border-slate-700'
                         : 'bg-[#131B2E] text-slate-100 border-[#27395C]'
                     }`}>
-                      {cat.count} ({cat.percentage}%)
+                      {cat.count} Threats
                     </span>
 
                     {/* Vertical High-Visibility Glowing Bar */}
@@ -214,7 +216,7 @@ export default function AnalyticsView({ metrics, events }) {
                     </div>
 
                     {/* Category Name Label */}
-                    <span className={`text-[10px] sm:text-[11px] font-extrabold mt-2 text-center truncate max-w-full px-1 py-0.5 rounded ${
+                    <span className={`text-[10px] sm:text-[11px] font-extrabold mt-2 text-center truncate max-w-full px-1.5 py-0.5 rounded ${
                       isLightContrast ? 'text-slate-900 bg-white/80 border border-slate-300 shadow-sm' : 'text-slate-200 bg-[#0B0F19]'
                     }`}>
                       {cat.name}
@@ -233,7 +235,7 @@ export default function AnalyticsView({ metrics, events }) {
                     <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
                       cat.isHigh ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                     }`}>
-                      {cat.isHigh ? 'HIGH' : cat.isLow ? 'LOW' : 'MEDIUM'}
+                      {cat.isHigh ? 'HIGH PEAK' : cat.isLow ? 'LOW SAFE' : 'MODERATE'}
                     </span>
                   </div>
                   <div className="text-[10px] text-[var(--text-muted)]">Prediction: <strong className="text-[var(--accent)]">{cat.prediction}</strong></div>
@@ -243,7 +245,7 @@ export default function AnalyticsView({ metrics, events }) {
           </div>
         )}
 
-        {/* MODE 2: 24h AI Predictive Trend Wave Curve (With Light/Dark High-Contrast Theme) */}
+        {/* MODE 2: 24h AI Predictive Trend Wave Curve */}
         {graphMode === 'predictive' && (
           <div className="space-y-4 pt-2">
             <div className={`p-4 rounded-xl border transition-colors space-y-3 ${
@@ -289,10 +291,10 @@ export default function AnalyticsView({ metrics, events }) {
 
               {/* Time X-Axis */}
               <div className={`flex justify-between text-[10px] font-bold pt-2 border-t ${isLightContrast ? 'border-slate-300 text-slate-700' : 'border-[#1E2D4A] text-[var(--text-muted)]'}`}>
-                <span>00:00 (LOW)</span>
+                <span>00:00 (LOW SAFE)</span>
                 <span>06:00</span>
                 <span>12:00 (MODERATE)</span>
-                <span className="text-rose-600 font-extrabold">18:00 (PEAK HIGH)</span>
+                <span className="text-rose-600 font-extrabold">18:00 (HIGH PEAK)</span>
                 <span className="text-amber-600 font-extrabold">21:00 (AI PREDICTED PEAK)</span>
                 <span>24:00</span>
               </div>
