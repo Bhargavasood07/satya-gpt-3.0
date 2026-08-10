@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -14,8 +14,9 @@ import ScannerPanel from './components/scanner/ScannerPanel';
 // Chatbot
 import CyberAiChatbot from './components/chat/CyberAiChatbot';
 
-// Admin Vault
+// Admin Vault & Enterprise Partner Modal
 import AdminPanelModal from './components/admin/AdminPanelModal';
+import EnterprisePartnershipModal from './components/common/EnterprisePartnershipModal';
 
 // Auth
 import LoginModal from './components/auth/LoginModal';
@@ -53,6 +54,7 @@ export default function App() {
   const [activeMetricModal, setActiveMetricModal] = useState(null);
   const [hasNewVersion, setHasNewVersion] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isPartnerOpen, setIsPartnerOpen] = useState(false);
   
   const mainScrollRef = useRef(null);
 
@@ -74,6 +76,10 @@ export default function App() {
 
   const handleOpenAdmin = useCallback(() => {
     setIsAdminOpen(true);
+  }, []);
+
+  const handleOpenPartner = useCallback(() => {
+    setIsPartnerOpen(true);
   }, []);
 
   // Auto-scroll main view to top whenever active tab changes
@@ -116,6 +122,7 @@ export default function App() {
         setIsChatOpen(false);
         setActiveMetricModal(null);
         setIsAdminOpen(false);
+        setIsPartnerOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -177,12 +184,12 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#0B0F19]">
-      <TopBar onToggleChat={handleToggleChat} onToggleHelp={handleToggleHelp} onOpenAdmin={handleOpenAdmin} />
+      <TopBar onToggleChat={handleToggleChat} onToggleHelp={handleToggleHelp} onOpenAdmin={handleOpenAdmin} onOpenPartner={handleOpenPartner} />
 
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} />
+        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} onOpenPartner={handleOpenPartner} />
 
-        <main ref={mainScrollRef} className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 pb-28 md:pb-6 text-xs sm:text-sm">
+        <main ref={mainScrollRef} className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 pb-28 md:pb-6 text-xs sm:text-sm font-mono">
           {/* Auto-Update Banner */}
           {hasNewVersion && (
             <div className="bg-cyan-950/60 border border-cyan-400/60 p-3 rounded-xl flex items-center justify-between font-mono text-xs text-cyan-200 shadow-lg animate-pulse">
@@ -202,16 +209,20 @@ export default function App() {
 
           {showHelpGuide && <UserOnboardingBanner />}
 
-          {/* SOC Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#131B2E] border border-[#1E2D4A] p-3.5 rounded-xl">
+          {/* SOC Header & Enterprise Govt Badging */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl shadow-xl">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#0B0F19] border border-[#27395C] flex items-center justify-center text-[var(--accent)] font-mono font-bold text-xs shrink-0">
                 SOC
               </div>
               <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v4.0</span>
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono font-bold flex items-center gap-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v5.0 ENTERPRISE</span>
+                  <span className="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold flex items-center gap-1">
+                    <Award size={12} className="text-amber-400" />
+                    CERT-In & MeitY ALIGNED
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-bold flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
                     STABLE & SECURE
                   </span>
@@ -221,7 +232,16 @@ export default function App() {
                 </span>
               </div>
             </div>
+
             <div className="flex items-center gap-2 text-xs font-mono">
+              <button
+                onClick={handleOpenPartner}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 font-bold transition-all text-xs shadow-md"
+              >
+                <Building2 size={13} className="text-amber-400" />
+                <span>Partner Inquiry</span>
+              </button>
+
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0B0F19] border border-[#1E2D4A] text-[var(--text-secondary)]">
                 <Server size={13} className="text-[var(--accent)]" />
                 <span>VT v3: ACTIVE</span>
@@ -229,10 +249,6 @@ export default function App() {
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0B0F19] border border-[#1E2D4A] text-[var(--text-secondary)]">
                 <Activity size={13} className="text-emerald-400 animate-pulse" />
                 <span>LATENCY: 12ms</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0B0F19] border border-[#1E2D4A] text-amber-400">
-                <ShieldCheck size={13} />
-                <span>LEVEL: SAFE</span>
               </div>
             </div>
           </div>
@@ -347,6 +363,11 @@ export default function App() {
           {isAdminOpen && (
             <AdminPanelModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} events={events} metrics={metrics} />
           )}
+        </AnimatePresence>
+
+        {/* Government & Enterprise Partner Modal */}
+        <AnimatePresence>
+          {isPartnerOpen && <EnterprisePartnershipModal onClose={() => setIsPartnerOpen(false)} />}
         </AnimatePresence>
 
         {/* Login Modal */}

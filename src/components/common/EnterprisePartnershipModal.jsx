@@ -1,0 +1,214 @@
+import React, { useState, memo } from 'react';
+import { motion } from 'framer-motion';
+import { Building2, ShieldCheck, Cpu, Send, CheckCircle2, X, Sparkles, Award, Globe, ExternalLink, Zap } from 'lucide-react';
+
+const EnterprisePartnershipModal = memo(({ onClose }) => {
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [orgType, setOrgType] = useState('government'); // 'government' or 'enterprise'
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    organization: '',
+    proposal: '',
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email) return;
+
+    setFormSubmitted(true);
+    setTimeout(() => {
+      // Auto close after 3 seconds
+    }, 3000);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md font-mono">
+      <motion.div
+        initial={{ scale: 0.92, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.92, opacity: 0 }}
+        className="w-full max-w-2xl bg-[#131B2E] border border-[#27395C] rounded-2xl p-5 sm:p-7 shadow-2xl relative max-h-[90vh] overflow-y-auto"
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3.5 right-3.5 p-1.5 rounded-lg text-[var(--text-muted)] hover:text-slate-100 hover:bg-[#0B0F19] transition-all"
+        >
+          <X size={18} />
+        </button>
+
+        {/* Top Gold & Cyan Gradient Accent Bar */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-[var(--accent)] to-purple-500 rounded-t-2xl" />
+
+        {/* Header Title & Badges */}
+        <div className="space-y-3 border-b border-[#1E2D4A] pb-4 mb-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold flex items-center gap-1">
+              <Award size={12} className="text-amber-400" />
+              <span>GOVERNMENT & FOUNDER COLLABORATION PORTAL</span>
+            </span>
+
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold flex items-center gap-1">
+              <ShieldCheck size={12} className="text-emerald-400" />
+              <span>MeitY & CERT-In ALIGNED</span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#0B0F19] border border-[var(--accent)] flex items-center justify-center text-[var(--accent)] shrink-0 shadow-lg">
+              <Building2 size={22} />
+            </div>
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-100 uppercase tracking-wide">
+                SATYA-GPT National Enterprise Prospectus
+              </h2>
+              <p className="text-xs text-[var(--text-muted)]">Official Platform for Government Agencies, Cyber Divisions & VC Founders</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 4 Core Value Pillars for Government & Founders */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs mb-6">
+          <div className="p-3.5 bg-[#0B0F19] rounded-xl border border-[#27395C] space-y-1">
+            <div className="font-bold text-[var(--accent)] flex items-center gap-1.5">
+              <ShieldCheck size={16} />
+              <span>92-Engine VirusTotal Detection</span>
+            </div>
+            <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">Multi-vendor threat scoring on links, SMS payloads, QR codes & executable malware.</p>
+          </div>
+
+          <div className="p-3.5 bg-[#0B0F19] rounded-xl border border-[#27395C] space-y-1">
+            <div className="font-bold text-amber-400 flex items-center gap-1.5">
+              <Cpu size={16} />
+              <span>NVIDIA Nemotron-3 Ultra 550B</span>
+            </div>
+            <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">Multimodal AI engine offering instant plain-language scam explanations in Indian languages.</p>
+          </div>
+
+          <div className="p-3.5 bg-[#0B0F19] rounded-xl border border-[#27395C] space-y-1">
+            <div className="font-bold text-emerald-400 flex items-center gap-1.5">
+              <Zap size={16} />
+              <span>AI Spatial Motion Tracking</span>
+            </div>
+            <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">Real-time device motion radar & frame-difference targeting for physical QR code verification.</p>
+          </div>
+
+          <div className="p-3.5 bg-[#0B0F19] rounded-xl border border-[#27395C] space-y-1">
+            <div className="font-bold text-purple-400 flex items-center gap-1.5">
+              <Globe size={16} />
+              <span>National 1930 Helpline API</span>
+            </div>
+            <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">Direct dispatch integration for Indian Cyber Crime Helpline & cybercrime.gov.in portal.</p>
+          </div>
+        </div>
+
+        {/* Collaboration Form */}
+        <div className="bg-[#0B0F19] border border-[#27395C] rounded-xl p-4 sm:p-5 space-y-4">
+          <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3">
+            <h3 className="text-xs font-bold text-slate-200 uppercase flex items-center gap-2">
+              <Sparkles size={16} className="text-amber-400 animate-pulse" />
+              <span>Submit Collaboration Proposal</span>
+            </h3>
+
+            {/* Type Selector */}
+            <div className="flex bg-[#131B2E] rounded-lg p-1 border border-[#27395C]">
+              <button
+                type="button"
+                onClick={() => setOrgType('government')}
+                className={`px-2.5 py-1 text-[10px] font-bold rounded-md transition-all ${
+                  orgType === 'government'
+                    ? 'bg-amber-400 text-slate-950 shadow-md'
+                    : 'text-[var(--text-muted)] hover:text-slate-200'
+                }`}
+              >
+                Government / PSU
+              </button>
+              <button
+                type="button"
+                onClick={() => setOrgType('enterprise')}
+                className={`px-2.5 py-1 text-[10px] font-bold rounded-md transition-all ${
+                  orgType === 'enterprise'
+                    ? 'bg-[var(--accent)] text-slate-950 shadow-md'
+                    : 'text-[var(--text-muted)] hover:text-slate-200'
+                }`}
+              >
+                Founder / VC
+              </button>
+            </div>
+          </div>
+
+          {formSubmitted ? (
+            <div className="p-6 bg-emerald-500/10 border border-emerald-500/40 rounded-xl text-center space-y-2 text-emerald-300 animate-pulse">
+              <CheckCircle2 size={36} className="mx-auto text-emerald-400" />
+              <div className="font-bold text-sm">Proposal Submitted Successfully!</div>
+              <p className="text-xs text-emerald-200/80">Our executive founder office will reach out to {formData.email} within 24 hours.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-3 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">Official Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="e.g. Officer R. Sharma / Founder"
+                    className="w-full bg-[#131B2E] border border-[#27395C] rounded-lg p-2.5 text-xs text-slate-100 focus:border-[var(--accent)] focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">Official Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="official@gov.in or founder@vc.com"
+                    className="w-full bg-[#131B2E] border border-[#27395C] rounded-lg p-2.5 text-xs text-slate-100 focus:border-[var(--accent)] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">Organization / Ministry / Fund</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.organization}
+                  onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
+                  placeholder="e.g. Cyber Crime Cell / MeitY / Venture Capital Fund"
+                  className="w-full bg-[#131B2E] border border-[#27395C] rounded-lg p-2.5 text-xs text-slate-100 focus:border-[var(--accent)] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">Collaboration Intent</label>
+                <textarea
+                  rows={2}
+                  value={formData.proposal}
+                  onChange={(e) => setFormData({ ...formData, proposal: e.target.value })}
+                  placeholder="Describe your government partnership initiative, API integration, or investment proposal..."
+                  className="w-full bg-[#131B2E] border border-[#27395C] rounded-lg p-2.5 text-xs text-slate-100 focus:border-[var(--accent)] focus:outline-none resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg"
+              >
+                <Send size={14} />
+                <span>Submit Collaboration Inquiry</span>
+              </button>
+            </form>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
+});
+
+EnterprisePartnershipModal.displayName = 'EnterprisePartnershipModal';
+export default EnterprisePartnershipModal;

@@ -4,10 +4,10 @@ import { useTheme } from '../../context/ThemeContext';
 import { useChildMode } from '../../context/ChildModeContext';
 import { useAuth } from '../../context/AuthContext';
 import { usePwaInstall } from '../../hooks/usePwaInstall';
-import { Globe, Sun, Moon, Clock, Baby, Download, Bot, HelpCircle, User, LogOut } from 'lucide-react';
+import { Globe, Sun, Moon, Clock, Baby, Download, Bot, HelpCircle, User, LogOut, Building2, Award } from 'lucide-react';
 import SatyaGptLogo from '../common/SatyaGptLogo';
 
-export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
+export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner }) {
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { isChildMode, toggleChildMode } = useChildMode();
@@ -53,7 +53,7 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
   };
 
   return (
-    <header className="glass-panel h-14 sm:h-16 w-full flex items-center justify-between px-3 sm:px-4 border-b border-[var(--border-card)] z-50 select-none overflow-hidden">
+    <header className="glass-panel h-14 sm:h-16 w-full flex items-center justify-between px-3 sm:px-4 border-b border-[var(--border-card)] z-50 select-none overflow-hidden font-mono">
       {/* Left Section: Logo & Title */}
       <div className="flex items-center space-x-2.5 sm:space-x-3 shrink-0">
         <div 
@@ -63,9 +63,14 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
         >
           <SatyaGptLogo size={32} className="drop-shadow-[0_0_8px_var(--accent-glow)] group-hover:scale-105 transition-transform" />
           <div className="flex flex-col">
-            <span className="text-[var(--text-primary)] font-extrabold text-sm sm:text-base leading-tight tracking-wider font-mono">
-              SATYA-GPT
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[var(--text-primary)] font-extrabold text-sm sm:text-base leading-tight tracking-wider">
+                SATYA-GPT
+              </span>
+              <span className="hidden xl:inline-block px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-bold">
+                MeitY / CERT-In ALIGNED
+              </span>
+            </div>
             <span className="text-[var(--text-muted)] text-[9px] sm:text-[10px] hidden sm:block">
               {t('app.subtitle')}
             </span>
@@ -76,14 +81,24 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin }) {
 
         <div className="hidden lg:flex items-center space-x-2 bg-[var(--bg-card)] px-2.5 py-0.5 rounded-md border border-[var(--border-card)]">
           <div className="pulse-dot w-2 h-2 rounded-full bg-[var(--safe)]"></div>
-          <span className="text-[var(--text-secondary)] text-xs font-mono font-semibold">
+          <span className="text-[var(--text-secondary)] text-xs font-semibold">
             {t('app.status')}
           </span>
         </div>
       </div>
 
-      {/* Right Section: Compact Responsive Controls */}
+      {/* Right Section: Enterprise Controls */}
       <div className="flex items-center space-x-1.5 sm:space-x-2 font-mono">
+        {/* Government & Founder Partner Portal Button */}
+        <button
+          onClick={onOpenPartner}
+          className="flex items-center space-x-1 px-2.5 py-1.5 sm:py-1 rounded-lg bg-amber-500/10 border border-amber-500/40 hover:bg-amber-500/20 text-amber-300 text-xs font-bold transition-all shadow-sm"
+          title="Government & Founder Partner Portal"
+        >
+          <Building2 className="w-3.5 h-3.5 text-amber-400" />
+          <span className="hidden sm:inline">Govt / Founder Portal</span>
+        </button>
+
         {/* User Guide */}
         <button
           onClick={onToggleHelp}
