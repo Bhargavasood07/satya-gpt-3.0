@@ -104,19 +104,19 @@ const KavachAcademyView = memo(() => {
             }
 
             .cert-card {
-              width: 900px;
+              width: 920px;
               padding: 40px;
               background: linear-gradient(135deg, #0b0f19 0%, #131b2e 50%, #0b0f19 100%);
               border: 10px double #d97706;
               border-radius: 16px;
-              box-shadow: 0 0 50px rgba(0, 229, 255, 0.2);
+              box-shadow: 0 0 50px rgba(0, 229, 255, 0.25);
               position: relative;
               box-sizing: border-box;
               text-align: center;
             }
 
             .inner-border {
-              border: 2px stroke #00e5ff;
+              border: 2px solid #00e5ff;
               outline: 2px dashed rgba(0, 229, 255, 0.4);
               outline-offset: -12px;
               padding: 30px;
@@ -137,11 +137,12 @@ const KavachAcademyView = memo(() => {
               letter-spacing: 2px;
               margin: 0;
               text-transform: uppercase;
+              text-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
             }
 
             .cert-subtitle {
               font-size: 11px;
-              color: #d97706;
+              color: #f59e0b;
               letter-spacing: 3px;
               text-transform: uppercase;
               font-weight: 700;
@@ -149,7 +150,7 @@ const KavachAcademyView = memo(() => {
             }
 
             .cert-body-label {
-              font-size: 14px;
+              font-size: 13px;
               color: #94a3b8;
               margin-top: 25px;
               text-transform: uppercase;
@@ -166,19 +167,20 @@ const KavachAcademyView = memo(() => {
               border-bottom: 2px solid #d97706;
               display: inline-block;
               padding-bottom: 5px;
+              text-shadow: 0 0 12px rgba(251, 191, 36, 0.3);
             }
 
             .cert-text {
-              font-size: 14px;
+              font-size: 13.5px;
               color: #e2e8f0;
               line-height: 1.6;
-              max-width: 700px;
+              max-width: 720px;
               margin: 0 auto;
             }
 
             .badge-box {
               display: inline-block;
-              padding: 8px 20px;
+              padding: 8px 22px;
               background: rgba(16, 185, 129, 0.15);
               border: 1px solid #10b981;
               color: #34d399;
@@ -190,11 +192,11 @@ const KavachAcademyView = memo(() => {
             }
 
             .footer-signatures {
-              margin-top: 40px;
+              margin-top: 35px;
               display: flex;
               justify-content: space-between;
               align-items: flex-end;
-              padding: 0 30px;
+              padding: 0 25px;
             }
 
             .sig-block {
@@ -202,39 +204,34 @@ const KavachAcademyView = memo(() => {
             }
 
             .sig-line {
-              width: 200px;
-              border-top: 1px solid #64748b;
-              margin-top: 5px;
-            }
-
-            .founder-sig {
-              font-family: 'Great Vibes', cursive;
-              font-size: 38px;
-              color: #00e5ff;
-              margin-bottom: -10px;
-              line-height: 1;
+              width: 220px;
+              border-top: 1.5px solid #00e5ff;
+              margin-top: 4px;
             }
 
             .sig-name {
-              font-size: 13px;
-              font-weight: 700;
+              font-size: 12.5px;
+              font-weight: 800;
               color: #f8fafc;
               margin-top: 5px;
+              letter-spacing: 1px;
             }
 
             .sig-title {
               font-size: 10px;
               color: #94a3b8;
+              margin-top: 2px;
             }
 
             .cert-meta {
               text-align: left;
               font-size: 11px;
               color: #94a3b8;
+              line-height: 1.8;
             }
 
             .cert-meta strong {
-              color: #f8fafc;
+              color: #00e5ff;
             }
           </style>
         </head>
@@ -267,7 +264,19 @@ const KavachAcademyView = memo(() => {
                 </div>
 
                 <div class="sig-block">
-                  <div class="founder-sig">Bhargava Sood</div>
+                  <!-- Vector Authentic Handwritten Signature of Founder Bhargava Sood -->
+                  <svg width="220" height="65" viewBox="0 0 220 65" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block; margin: 0 auto -4px auto;">
+                    <!-- Circled Capital 'B' Seal -->
+                    <circle cx="26" cy="30" r="20" stroke="#00E5FF" stroke-width="2.5" fill="none" />
+                    <path d="M 20 18 L 20 42 M 20 18 C 30 18 34 24 20 30 C 34 30 36 42 20 42" stroke="#00E5FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                    
+                    <!-- Authentic Cursive "hargava Sood" Text -->
+                    <text x="46" y="35" font-family="'Great Vibes', 'Brush Script MT', cursive" font-size="32" font-weight="bold" fill="#00E5FF" letter-spacing="1">hargava Sood</text>
+                    
+                    <!-- Continuous Signature Baseline Underline Running Through -->
+                    <path d="M 10 38 L 210 24" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" />
+                  </svg>
+
                   <div class="sig-line"></div>
                   <div class="sig-name">BHARGAVA SOOD</div>
                   <div class="sig-title">Founder & Chief Architect, SATYA-GPT</div>
