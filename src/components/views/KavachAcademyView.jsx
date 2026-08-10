@@ -35,6 +35,83 @@ const SCAM_QUIZZES = [
       { text: 'Hang up and call your son directly on his personal mobile number', isCorrect: true, feedback: '✅ Brilliant! Always verify distress calls by calling the relative on their known phone number or contacting family.' },
       { text: 'Ask the advocate to send his Aadhar card copy on WhatsApp', isCorrect: false, feedback: '❌ Scammers use stolen or fabricated Aadhar cards to build trust.' }
     ]
+  },
+  {
+    id: 4,
+    title: 'Traffic Speed e-Challan APK Download Scam',
+    category: 'Android Malware',
+    smsText: 'E-Challan Alert: Your vehicle MH-02-AB-1234 has a pending speed violation fine of ₹1,000. Download the official Traffic Police app to view photo proof: http://echallan-parivahan.apk',
+    options: [
+      { text: 'Download and install the .apk file on your phone', isCorrect: false, feedback: '❌ Malicious Malware! Installing untrusted .apk files installs trojans that steal banking OTPs and read SMS messages.' },
+      { text: 'Check pending challans on official echallan.parivahan.gov.in portal', isCorrect: true, feedback: '✅ Correct! Never install .apk files sent via SMS. Always use official government .gov.in portals.' },
+      { text: 'Forward the message to your friends', isCorrect: false, feedback: '❌ Forwarding malware link puts your friends at risk.' }
+    ]
+  },
+  {
+    id: 5,
+    title: 'Part-Time "YouTube Video Like" Work-From-Home Scam',
+    category: 'Work-From-Home Fraud',
+    smsText: 'Earn ₹5,000 daily by simply liking YouTube videos! No experience needed. Join Telegram group @EarnEasyTask to get paid ₹150 per like immediately.',
+    options: [
+      { text: 'Join Telegram group and pay initial registration fee', isCorrect: false, feedback: '❌ Task Scam Trap! Scammers pay ₹200 initially to build trust, then trap victims into investing lakhs in fake crypto tasks.' },
+      { text: 'Block the sender and report as Work-From-Home fraud', isCorrect: true, feedback: '✅ Correct! Real companies do not offer thousands per day for liking videos or require Telegram task groups.' },
+      { text: 'Quit your current job for this easy money', isCorrect: false, feedback: '❌ Highly dangerous! These are organized international fraud rings.' }
+    ]
+  },
+  {
+    id: 6,
+    title: 'Fake Google Search Bank Customer Care Helpline',
+    category: 'SEO Vishing Fraud',
+    smsText: 'Your bank app transfer failed. You search Google for "HDFC customer care number" and call the top mobile number result: 9811223344. The representative asks for your Card CVV & OTP to reverse transaction.',
+    options: [
+      { text: 'Give CVV and OTP since he claims to be bank customer care', isCorrect: false, feedback: '❌ Fraud Alert! Scammers post fake mobile numbers on Google search results. Bank employees NEVER ask for OTP or CVV.' },
+      { text: 'Hang up immediately and use the official number printed on back of bank card', isCorrect: true, feedback: '✅ Spot On! Always use the customer care number printed on the back of your physical debit/credit card.' },
+      { text: 'Share your netbanking password instead', isCorrect: false, feedback: '❌ Never share netbanking credentials under any circumstance.' }
+    ]
+  },
+  {
+    id: 7,
+    title: 'Credit Card Reward Points Expiry Link',
+    category: 'Banking Smishing',
+    smsText: 'Dear HDFC Cardholder, your 9,850 Reward Points worth ₹4,925 will expire TODAY. Click to redeem cash directly into your bank account: http://hdfc-rewards-redeem.com',
+    options: [
+      { text: 'Click link and enter debit card credentials to claim cash', isCorrect: false, feedback: '❌ Phishing Link! Banks do not send reward point redemption links requesting card numbers & CVV.' },
+      { text: 'Redeem points only via official bank netbanking / mobile app', isCorrect: true, feedback: '✅ Correct! Legitimate reward points are redeemed safely inside official mobile banking apps.' },
+      { text: 'Send card details via SMS to claim bonus', isCorrect: false, feedback: '❌ Dangerous! Never send card details over SMS.' }
+    ]
+  },
+  {
+    id: 8,
+    title: 'SIM Card KYC Suspension Threat',
+    category: 'Telecom Fraud',
+    smsText: 'Jio Notice: Your SIM card KYC has been SUSPENDED by Telecom Authority. Your outgoing calls will be blocked in 2 hours. Call SIM Executive at 7788990011 to update KYC via AnyDesk app.',
+    options: [
+      { text: 'Call executive and download AnyDesk app as instructed', isCorrect: false, feedback: '❌ Remote Access Fraud! Downloading AnyDesk allows scammers to view your phone screen and steal banking OTPs.' },
+      { text: 'Ignore SMS and visit official SIM retailer store or official app', isCorrect: true, feedback: '✅ Perfect! Telecom providers never ask users to download screen-sharing apps like AnyDesk or TeamViewer.' },
+      { text: 'Transfer ₹100 fee to executive via UPI', isCorrect: false, feedback: '❌ Never pay unauthorized individuals over personal UPI.' }
+    ]
+  },
+  {
+    id: 9,
+    title: 'Fake Courier Customs Tax / Address Update SMS',
+    category: 'Delivery Scam',
+    smsText: 'India Post Alert: Your parcel could not be delivered due to incorrect house address. Update address & pay ₹25 redelivery fee within 24h at http://indiapost-update.top',
+    options: [
+      { text: 'Click link and pay ₹25 using credit card', isCorrect: false, feedback: '❌ Card Stealer Scam! Paying ₹25 on fake sites captures your credit card number, CVV, and OTP for unauthorized international charges.' },
+      { text: 'Track parcel directly on official indiapost.gov.in using tracking number', isCorrect: true, feedback: '✅ Excellent! Always verify courier tracking numbers on official .gov.in or official courier portals.' },
+      { text: 'Reply to SMS with home address and card details', isCorrect: false, feedback: '❌ Never share sensitive info over SMS.' }
+    ]
+  },
+  {
+    id: 10,
+    title: 'Guaranteed Stock Market / Crypto Trading WhatsApp Group',
+    category: 'Investment Fraud',
+    smsText: 'You are added to a WhatsApp group "VIP Institutional Stock Tips". The admin guarantees 300% profit per week using an exclusive VIP Trading App.',
+    options: [
+      { text: 'Deposit ₹50,000 into VIP trading app for 300% returns', isCorrect: false, fallback: false, feedback: '❌ Pig Butchering Investment Fraud! Fake trading apps show dummy high profits on screen but block all withdrawals.' },
+      { text: 'Exit group, report as scam, and invest only via SEBI-registered brokers', isCorrect: true, feedback: '✅ Spot On! Guaranteed high returns do not exist. Always trade via official SEBI-registered stockbrokers.' },
+      { text: 'Take a personal loan to invest bigger amount', isCorrect: false, feedback: '❌ Never borrow money to invest in unverified online trading groups.' }
+    ]
   }
 ];
 
@@ -264,16 +341,10 @@ const KavachAcademyView = memo(() => {
                 </div>
 
                 <div class="sig-block">
-                  <!-- Vector Authentic Handwritten Signature of Founder Bhargava Sood -->
                   <svg width="220" height="65" viewBox="0 0 220 65" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block; margin: 0 auto -4px auto;">
-                    <!-- Circled Capital 'B' Seal -->
                     <circle cx="26" cy="30" r="20" stroke="#00E5FF" stroke-width="2.5" fill="none" />
                     <path d="M 20 18 L 20 42 M 20 18 C 30 18 34 24 20 30 C 34 30 36 42 20 42" stroke="#00E5FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-                    
-                    <!-- Authentic Cursive "hargava Sood" Text -->
                     <text x="46" y="35" font-family="'Great Vibes', 'Brush Script MT', cursive" font-size="32" font-weight="bold" fill="#00E5FF" letter-spacing="1">hargava Sood</text>
-                    
-                    <!-- Continuous Signature Baseline Underline Running Through -->
                     <path d="M 10 38 L 210 24" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" />
                   </svg>
 
