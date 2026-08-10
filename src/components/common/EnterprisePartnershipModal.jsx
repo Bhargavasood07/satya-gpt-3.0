@@ -1,6 +1,8 @@
 import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, ShieldCheck, Cpu, Send, CheckCircle2, X, Sparkles, Award, Globe, ExternalLink, Zap } from 'lucide-react';
+import { Building2, ShieldCheck, Cpu, Send, CheckCircle2, X, Sparkles, Award, Globe, ExternalLink, Zap, Mail } from 'lucide-react';
+
+const FOUNDER_EMAIL = 'bhargavasood5@gmail.com';
 
 const EnterprisePartnershipModal = memo(({ onClose }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -16,10 +18,36 @@ const EnterprisePartnershipModal = memo(({ onClose }) => {
     e.preventDefault();
     if (!formData.name || !formData.email) return;
 
+    // 1. Save proposal to localStorage
+    try {
+      const stored = JSON.parse(localStorage.getItem('satya_partner_inquiries') || '[]');
+      const newInquiry = {
+        id: 'inquiry_' + Date.now(),
+        ...formData,
+        orgType,
+        timestamp: new Date().toISOString(),
+      };
+      stored.unshift(newInquiry);
+      localStorage.setItem('satya_partner_inquiries', JSON.stringify(stored));
+    } catch (err) {
+      console.warn('Storage error:', err);
+    }
+
+    // 2. Trigger mailto dispatch directly to founder email bhargavasood5@gmail.com
+    const subject = encodeURIComponent(`[SATYA-GPT Proposal] ${formData.organization} (${orgType.toUpperCase()})`);
+    const body = encodeURIComponent(
+      `Official Name: ${formData.name}\n` +
+      `Email: ${formData.email}\n` +
+      `Organization: ${formData.organization}\n` +
+      `Type: ${orgType.toUpperCase()}\n` +
+      `Date: ${new Date().toLocaleString()}\n\n` +
+      `Collaboration Proposal:\n${formData.proposal}`
+    );
+
+    const mailtoUrl = `mailto:${FOUNDER_EMAIL}?subject=${subject}&body=${body}`;
+    window.open(mailtoUrl, '_blank');
+
     setFormSubmitted(true);
-    setTimeout(() => {
-      // Auto close after 3 seconds
-    }, 3000);
   };
 
   return (
@@ -64,6 +92,17 @@ const EnterprisePartnershipModal = memo(({ onClose }) => {
                 SATYA-GPT National Enterprise Prospectus
               </h2>
               <p className="text-xs text-[var(--text-muted)]">Official Platform for Government Agencies, Cyber Divisions & VC Founders</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Direct Founder Email Badge */}
+        <div className="p-3 bg-[#0B0F19] border border-amber-500/40 rounded-xl flex items-center justify-between gap-2 text-xs mb-5 text-amber-200">
+          <div className="flex items-center gap-2">
+            <Mail size={16} className="text-amber-400 shrink-0" />
+            <div>
+              <span className="font-bold text-amber-300">Direct Founder Inbox Linked: </span>
+              <span className="text-[11px] text-slate-200">All proposal submissions dispatch directly to Founder Office <strong className="text-[var(--accent)]">{FOUNDER_EMAIL}</strong></span>
             </div>
           </div>
         </div>
@@ -141,8 +180,14 @@ const EnterprisePartnershipModal = memo(({ onClose }) => {
           {formSubmitted ? (
             <div className="p-6 bg-emerald-500/10 border border-emerald-500/40 rounded-xl text-center space-y-2 text-emerald-300 animate-pulse">
               <CheckCircle2 size={36} className="mx-auto text-emerald-400" />
-              <div className="font-bold text-sm">Proposal Submitted Successfully!</div>
-              <p className="text-xs text-emerald-200/80">Our executive founder office will reach out to {formData.email} within 24 hours.</p>
+              <div className="font-bold text-sm">Proposal Dispatched to Founder Email!</div>
+              <p className="text-xs text-emerald-200/80">Inquiry dispatched to {FOUNDER_EMAIL}. Our founder office will reply to {formData.email} shortly.</p>
+              <button
+                onClick={() => setFormSubmitted(false)}
+                className="mt-2 text-[10px] text-[var(--accent)] hover:underline"
+              >
+                Submit another inquiry
+              </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-3 text-xs">
@@ -188,6 +233,7 @@ const EnterprisePartnershipModal = memo(({ onClose }) => {
                 <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">Collaboration Intent</label>
                 <textarea
                   rows={2}
+                  required
                   value={formData.proposal}
                   onChange={(e) => setFormData({ ...formData, proposal: e.target.value })}
                   placeholder="Describe your government partnership initiative, API integration, or investment proposal..."
@@ -200,7 +246,7 @@ const EnterprisePartnershipModal = memo(({ onClose }) => {
                 className="w-full py-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg"
               >
                 <Send size={14} />
-                <span>Submit Collaboration Inquiry</span>
+                <span>Submit & Email Inquiry to {FOUNDER_EMAIL}</span>
               </button>
             </form>
           )}
