@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { Shield, Clock, HelpCircle, Bot, Baby, Globe, Sun, Moon, Lock, Download, User, Building2, LogOut, RefreshCw, KeyRound } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useChildMode } from '../../context/ChildModeContext';
-import { usePWAInstall } from '../../hooks/usePWAInstall';
+import { usePwaInstall } from '../../hooks/usePWAInstall';
 import { useAuth } from '../../context/AuthContext';
 
 const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner }) => {
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { isChildMode, toggleChildMode } = useChildMode();
-  const { isInstalled, installApp } = usePWAInstall();
+  const { isInstalled, installApp } = usePwaInstall();
   const { user, isAuthenticated, logout, openLoginModal } = useAuth();
   
   const [time, setTime] = useState(new Date());
