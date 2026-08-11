@@ -1,12 +1,12 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, Clock, HelpCircle, Bot, Baby, Globe, Sun, Moon, Download, User, Building2, ChevronDown, Sparkles, ShieldCheck } from 'lucide-react';
+import { Shield, Clock, HelpCircle, Bot, Baby, Globe, Sun, Moon, Download, User, Building2, ChevronDown, Sparkles, ShieldCheck, Award } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useChildMode } from '../../context/ChildModeContext';
 import { usePwaInstall } from '../../hooks/usePWAInstall';
 import { useAuth } from '../../context/AuthContext';
 
-const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner }) => {
+const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner, onOpenGovtVerification }) => {
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { isChildMode, toggleChildMode } = useChildMode();
@@ -46,27 +46,28 @@ const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner })
           className="flex items-center space-x-2.5 group focus:outline-none"
           title="Triple click or Ctrl+Shift+A for Founder Vault"
         >
-          <div className="w-8 h-8 rounded-xl bg-[var(--accent-muted)] border-2 border-[var(--accent)] flex items-center justify-center text-[var(--accent)] group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(0,229,255,0.3)]">
-            <Shield className="w-4.5 h-4.5 text-[var(--accent)]" />
+          <div className="w-8.5 h-8.5 rounded-xl bg-[var(--accent-muted)] border-2 border-[var(--accent)] flex items-center justify-center text-[var(--accent)] group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(0,229,255,0.3)]">
+            <Shield className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div className="flex items-baseline space-x-1.5">
             <span className="font-extrabold text-sm sm:text-base tracking-wider text-slate-100">
               SATYA<span className="text-[var(--accent)]">-GPT</span>
             </span>
-            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[var(--accent-muted)] border border-[var(--accent)] text-[var(--accent)] font-extrabold tracking-widest uppercase">
-              v9.0 PRO
+            <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400 text-amber-300 font-extrabold tracking-widest uppercase flex items-center gap-1">
+              <Award size={10} className="text-amber-400" />
+              v10.0 GOVT EDITION
             </span>
           </div>
         </button>
 
-        {/* CERT-In & MeitY Alignment Badge */}
+        {/* CERT-In & MeitY Official Verification Badge */}
         <button
-          onClick={onOpenPartner}
-          className="hidden lg:flex items-center space-x-1.5 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-300 text-[10px] font-bold hover:bg-amber-500/20 transition-all shadow-sm"
+          onClick={onOpenGovtVerification || onOpenPartner}
+          className="hidden lg:flex items-center space-x-1.5 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/50 text-amber-300 text-[10px] font-bold hover:bg-amber-500/20 transition-all shadow-sm animate-pulse"
         >
           <Building2 size={13} className="text-amber-400" />
-          <span>MeitY/CERT-In Partner</span>
-          <ShieldCheck size={12} className="text-emerald-400" />
+          <span>MeitY / CERT-In Accredited</span>
+          <ShieldCheck size={13} className="text-emerald-400" />
         </button>
       </div>
 

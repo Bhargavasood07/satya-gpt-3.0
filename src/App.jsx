@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award, ShieldAlert, Heart, Share2 } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award, ShieldAlert, Heart, Share2, PhoneCall, Globe, CheckCircle2 } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -23,6 +23,7 @@ import GoldenHourEmergencyModal from './components/common/GoldenHourEmergencyMod
 import TrustBadgeModal from './components/common/TrustBadgeModal';
 import FamilyShareModal from './components/common/FamilyShareModal';
 import AccountSwitcherModal from './components/common/AccountSwitcherModal';
+import GovtVerificationModal from './components/common/GovtVerificationModal';
 
 // Auth
 import LoginModal from './components/auth/LoginModal';
@@ -67,6 +68,7 @@ export default function App() {
   const [isTrustBadgeOpen, setIsTrustBadgeOpen] = useState(false);
   const [isFamilyShareOpen, setIsFamilyShareOpen] = useState(false);
   const [isAccountSwitcherOpen, setIsAccountSwitcherOpen] = useState(false);
+  const [isGovtVerificationOpen, setIsGovtVerificationOpen] = useState(false);
   
   const mainScrollRef = useRef(null);
 
@@ -139,6 +141,7 @@ export default function App() {
         setIsTrustBadgeOpen(false);
         setIsFamilyShareOpen(false);
         setIsAccountSwitcherOpen(false);
+        setIsGovtVerificationOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -212,13 +215,13 @@ export default function App() {
   );
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#0B0F19]">
+    <div className="flex flex-col h-screen overflow-hidden bg-[#060913]">
       <TopBar
         onToggleChat={handleToggleChat}
         onToggleHelp={handleToggleHelp}
         onOpenAdmin={handleOpenAdmin}
         onOpenPartner={handleOpenPartner}
-        onOpenAccountSwitcher={() => setIsAccountSwitcherOpen(true)}
+        onOpenGovtVerification={() => setIsGovtVerificationOpen(true)}
       />
       
       {/* Real-Time Live Scam Alert Scrolling Ticker */}
@@ -250,52 +253,67 @@ export default function App() {
 
           {showHelpGuide && <UserOnboardingBanner />}
 
-          {/* SOC Header & Enterprise Govt Badging + Action Controls */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl shadow-xl">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#0B0F19] border border-[#27395C] flex items-center justify-center text-[var(--accent)] font-mono font-bold text-xs shrink-0">
-                SOC
+          {/* National Government Defense Command Banner */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#0D1527] border-2 border-[#27395C] p-4 rounded-2xl shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 via-[var(--accent)] to-emerald-400" />
+
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-[#060913] border-2 border-amber-500/60 flex items-center justify-center text-amber-400 font-mono font-bold text-xs shrink-0 shadow-lg">
+                <Building2 size={22} />
               </div>
               <div className="flex flex-col">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v8.0 MAX</span>
-                  <span className="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold flex items-center gap-1">
-                    <Award size={12} className="text-amber-400" />
-                    CERT-In & MeitY ALIGNED
+                  <span className="font-mono font-extrabold text-xs sm:text-sm text-slate-100 uppercase tracking-wider">
+                    NATIONAL CYBER CRIME DEFENSE & THREAT SOC
                   </span>
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-bold flex items-center gap-1">
+                  <button
+                    onClick={() => setIsGovtVerificationOpen(true)}
+                    className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400 text-amber-300 text-[10px] font-extrabold flex items-center gap-1 hover:bg-amber-500/30 transition-all cursor-pointer"
+                  >
+                    <Award size={12} className="text-amber-400" />
+                    MeitY / CERT-In ALIGNED
+                  </button>
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-extrabold flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                    TTS VOICE ALERTS ACTIVE
+                    I4C 1930 HELPLINE ACTIVE
                   </span>
                 </div>
-                <span className="text-[10px] sm:text-[11px] font-mono text-[var(--text-muted)]">
-                  Active View: {activeTab.toUpperCase()} • VirusTotal v3 & KAVACH AI Active
+                <span className="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-0.5">
+                  Official Nodal Architecture • VirusTotal v3 90-Engine Verification • Founder: Bhargava Sood
                 </span>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+              <a
+                href="tel:1930"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold transition-all text-xs shadow-md"
+              >
+                <PhoneCall size={14} />
+                <span>Dial 1930 Helpline</span>
+              </a>
+
               <button
                 onClick={() => setIsFamilyShareOpen(true)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 font-bold transition-all text-xs shadow-md"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 font-bold transition-all text-xs shadow-md"
               >
                 <Share2 size={13} className="text-amber-400" />
-                <span>Family Share</span>
+                <span>Family Guard</span>
               </button>
 
               <button
                 onClick={() => setIsTrustBadgeOpen(true)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0B0F19] border border-[#27395C] text-emerald-400 hover:border-emerald-400 font-bold transition-all text-xs shadow-md"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#060913] border border-[#27395C] text-emerald-400 hover:border-emerald-400 font-bold transition-all text-xs shadow-md"
               >
                 <ShieldCheck size={13} className="text-emerald-400" />
-                <span>Trust Badge</span>
+                <span>Trust Seal</span>
               </button>
 
               <button
                 onClick={() => setIsEmergencyFreezeOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold transition-all text-xs shadow-md animate-pulse"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold transition-all text-xs shadow-lg animate-pulse"
               >
-                <ShieldAlert size={14} />
+                <ShieldAlert size={15} />
                 <span>15-Min Bank Freeze</span>
               </button>
             </div>
@@ -307,16 +325,17 @@ export default function App() {
             <div className="space-y-5">
               <MetricsBar metrics={metrics} onCardClick={(type) => setActiveMetricModal(type)} isFounderSession={isFounderSession} />
 
-              <div className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#131B2E] space-y-3">
-                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-2.5 font-mono">
-                  <div className="flex items-center gap-2">
-                    <ScanLine size={18} className="text-[var(--accent)]" />
-                    <h2 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase">
-                      SATYA AI Threat Scanner & Instant Verification
+              <div className="cyber-card p-4.5 rounded-2xl border-2 border-[#27395C] bg-[#0D1527] space-y-3 shadow-xl relative overflow-hidden">
+                <div className="animate-cyber-scan" />
+                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3 font-mono">
+                  <div className="flex items-center gap-2.5">
+                    <ScanLine size={20} className="text-[var(--accent)] animate-pulse" />
+                    <h2 className="text-xs sm:text-sm font-extrabold text-slate-100 uppercase tracking-wider">
+                      SATYA AI Threat Scanner & VirusTotal Verification
                     </h2>
                   </div>
-                  <span className="text-[10px] font-mono text-[var(--accent)] bg-[#0B0F19] px-2 py-0.5 rounded border border-[#1E2D4A]">
-                    92-ENGINE VIRUSTOTAL CHECK
+                  <span className="text-[10px] font-mono text-[var(--accent)] bg-[#060913] px-2.5 py-1 rounded-lg border border-[#27395C] font-bold">
+                    92-ENGINE REAL-TIME CHECK
                   </span>
                 </div>
                 <ScannerPanel onScanResult={handleScanResult} />
@@ -326,9 +345,10 @@ export default function App() {
 
           {activeTab === 'scanner' && (
             <div className="max-w-4xl mx-auto space-y-4">
-              <div className="bg-[#131B2E] border border-[#27395C] p-4 rounded-xl font-mono">
-                <h2 className="text-sm font-bold text-[var(--text-primary)] uppercase">SATYA AI Dedicated Threat Scanner Hub</h2>
-                <p className="text-xs text-[var(--text-muted)] mt-1">Scan links, messages, camera feeds, and QR codes with VirusTotal v3 verification</p>
+              <div className="bg-[#0D1527] border-2 border-[#27395C] p-4.5 rounded-2xl font-mono shadow-xl relative overflow-hidden">
+                <div className="animate-cyber-scan" />
+                <h2 className="text-sm font-extrabold text-slate-100 uppercase tracking-wider">SATYA AI Dedicated Threat Scanner Hub</h2>
+                <p className="text-xs text-slate-400 mt-1">Scan links, messages, camera feeds, and QR codes with VirusTotal v3 verification</p>
               </div>
               <ScannerPanel onScanResult={handleScanResult} />
             </div>
@@ -365,6 +385,11 @@ export default function App() {
           {isPartnerOpen && <EnterprisePartnershipModal onClose={() => setIsPartnerOpen(false)} />}
         </AnimatePresence>
 
+        {/* Official Govt Accreditation Verification Modal */}
+        <AnimatePresence>
+          {isGovtVerificationOpen && <GovtVerificationModal onClose={() => setIsGovtVerificationOpen(false)} />}
+        </AnimatePresence>
+
         {/* 15-Minute Emergency Bank Freeze Modal */}
         <AnimatePresence>
           {isEmergencyFreezeOpen && <GoldenHourEmergencyModal onClose={() => setIsEmergencyFreezeOpen(false)} />}
@@ -378,16 +403,6 @@ export default function App() {
         {/* Family Safety Share Modal */}
         <AnimatePresence>
           {isFamilyShareOpen && <FamilyShareModal onClose={() => setIsFamilyShareOpen(false)} />}
-        </AnimatePresence>
-
-        {/* 👤 Root-Level High-Visibility Account Switcher Portal (z-[99999]) */}
-        <AnimatePresence>
-          {isAccountSwitcherOpen && (
-            <AccountSwitcherModal
-              onClose={() => setIsAccountSwitcherOpen(false)}
-              onOpenAdmin={handleOpenAdmin}
-            />
-          )}
         </AnimatePresence>
 
         {/* Login Modal */}
