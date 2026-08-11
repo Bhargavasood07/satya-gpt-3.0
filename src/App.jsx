@@ -22,6 +22,7 @@ import EnterprisePartnershipModal from './components/common/EnterprisePartnershi
 import GoldenHourEmergencyModal from './components/common/GoldenHourEmergencyModal';
 import TrustBadgeModal from './components/common/TrustBadgeModal';
 import FamilyShareModal from './components/common/FamilyShareModal';
+import AccountSwitcherModal from './components/common/AccountSwitcherModal';
 
 // Auth
 import LoginModal from './components/auth/LoginModal';
@@ -65,6 +66,7 @@ export default function App() {
   const [isEmergencyFreezeOpen, setIsEmergencyFreezeOpen] = useState(false);
   const [isTrustBadgeOpen, setIsTrustBadgeOpen] = useState(false);
   const [isFamilyShareOpen, setIsFamilyShareOpen] = useState(false);
+  const [isAccountSwitcherOpen, setIsAccountSwitcherOpen] = useState(false);
   
   const mainScrollRef = useRef(null);
 
@@ -136,6 +138,7 @@ export default function App() {
         setIsEmergencyFreezeOpen(false);
         setIsTrustBadgeOpen(false);
         setIsFamilyShareOpen(false);
+        setIsAccountSwitcherOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -210,7 +213,13 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#0B0F19]">
-      <TopBar onToggleChat={handleToggleChat} onToggleHelp={handleToggleHelp} onOpenAdmin={handleOpenAdmin} onOpenPartner={handleOpenPartner} />
+      <TopBar
+        onToggleChat={handleToggleChat}
+        onToggleHelp={handleToggleHelp}
+        onOpenAdmin={handleOpenAdmin}
+        onOpenPartner={handleOpenPartner}
+        onOpenAccountSwitcher={() => setIsAccountSwitcherOpen(true)}
+      />
       
       {/* Real-Time Live Scam Alert Scrolling Ticker */}
       <LiveScamTicker />
@@ -249,7 +258,7 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v7.0 MAX</span>
+                  <span className="font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">SATYA-GPT ENGINE v8.0 MAX</span>
                   <span className="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold flex items-center gap-1">
                     <Award size={12} className="text-amber-400" />
                     CERT-In & MeitY ALIGNED
@@ -369,6 +378,16 @@ export default function App() {
         {/* Family Safety Share Modal */}
         <AnimatePresence>
           {isFamilyShareOpen && <FamilyShareModal onClose={() => setIsFamilyShareOpen(false)} />}
+        </AnimatePresence>
+
+        {/* 👤 Root-Level High-Visibility Account Switcher Portal (z-[99999]) */}
+        <AnimatePresence>
+          {isAccountSwitcherOpen && (
+            <AccountSwitcherModal
+              onClose={() => setIsAccountSwitcherOpen(false)}
+              onOpenAdmin={handleOpenAdmin}
+            />
+          )}
         </AnimatePresence>
 
         {/* Login Modal */}
