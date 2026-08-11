@@ -1,16 +1,16 @@
-import React, { useState, memo } from 'react';
+import React, { useState, useMemo, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GraduationCap, Award, CheckCircle2, XCircle, AlertTriangle, ArrowRight, RefreshCw, Download, Sparkles, ShieldCheck, User, Check, Play } from 'lucide-react';
 
-const SCAM_QUIZZES = [
+const RAW_SCAM_QUIZZES = [
   {
     id: 1,
     title: 'Electricity Bill Disconnection SMS Scam',
     category: 'SMS Phishing',
     smsText: 'Dear Customer, your Electricity power will be disconnected tonight at 9:30 PM because your previous month bill was not updated. Immediately call Officer Sharma at 9876543210 or pay at http://bses-bill-update.xyz',
     options: [
-      { text: 'Pay immediately on the link to prevent power cuts', isCorrect: false, feedback: '❌ Incorrect! Power companies never send raw .xyz links or personal phone numbers via SMS.' },
       { text: 'Ignore the link and check official BSES website or app', isCorrect: true, feedback: '✅ Correct! Official utility providers never demand payment via unofficial 10-digit mobile numbers or .xyz domain links.' },
+      { text: 'Pay immediately on the link to prevent power cuts', isCorrect: false, feedback: '❌ Incorrect! Power companies never send raw .xyz links or personal phone numbers via SMS.' },
       { text: 'Call Officer Sharma to verify details over phone', isCorrect: false, feedback: '❌ Incorrect! Scammers setup fake numbers to pressure victims over phone calls.' }
     ]
   },
@@ -21,8 +21,8 @@ const SCAM_QUIZZES = [
     smsText: 'A buyer sends you a QR code on WhatsApp claiming: "Scan this QR code and enter your UPI PIN to receive ₹10,000 for your old sofa listing."',
     options: [
       { text: 'Scan the QR code and enter UPI PIN to claim money', isCorrect: false, feedback: '❌ Critical Error! You NEVER enter your UPI PIN to RECEIVE money. Entering PIN always DEBITS money from your account!' },
-      { text: 'Refuse to enter UPI PIN and report buyer as scammer', isCorrect: true, feedback: '✅ Spot On! UPI PIN is ONLY required when SENDING money, never when receiving!' },
-      { text: 'Share your bank account password instead', isCorrect: false, feedback: '❌ Dangerous! Never share passwords or PINs with anyone.' }
+      { text: 'Share your bank account password instead', isCorrect: false, feedback: '❌ Dangerous! Never share passwords or PINs with anyone.' },
+      { text: 'Refuse to enter UPI PIN and report buyer as scammer', isCorrect: true, feedback: '✅ Spot On! UPI PIN is ONLY required when SENDING money, never when receiving!' }
     ]
   },
   {
@@ -42,8 +42,8 @@ const SCAM_QUIZZES = [
     category: 'Android Malware',
     smsText: 'E-Challan Alert: Your vehicle MH-02-AB-1234 has a pending speed violation fine of ₹1,000. Download the official Traffic Police app to view photo proof: http://echallan-parivahan.apk',
     options: [
-      { text: 'Download and install the .apk file on your phone', isCorrect: false, feedback: '❌ Malicious Malware! Installing untrusted .apk files installs trojans that steal banking OTPs and read SMS messages.' },
       { text: 'Check pending challans on official echallan.parivahan.gov.in portal', isCorrect: true, feedback: '✅ Correct! Never install .apk files sent via SMS. Always use official government .gov.in portals.' },
+      { text: 'Download and install the .apk file on your phone', isCorrect: false, feedback: '❌ Malicious Malware! Installing untrusted .apk files installs trojans that steal banking OTPs and read SMS messages.' },
       { text: 'Forward the message to your friends', isCorrect: false, feedback: '❌ Forwarding malware link puts your friends at risk.' }
     ]
   },
@@ -54,8 +54,8 @@ const SCAM_QUIZZES = [
     smsText: 'Earn ₹5,000 daily by simply liking YouTube videos! No experience needed. Join Telegram group @EarnEasyTask to get paid ₹150 per like immediately.',
     options: [
       { text: 'Join Telegram group and pay initial registration fee', isCorrect: false, feedback: '❌ Task Scam Trap! Scammers pay ₹200 initially to build trust, then trap victims into investing lakhs in fake crypto tasks.' },
-      { text: 'Block the sender and report as Work-From-Home fraud', isCorrect: true, feedback: '✅ Correct! Real companies do not offer thousands per day for liking videos or require Telegram task groups.' },
-      { text: 'Quit your current job for this easy money', isCorrect: false, feedback: '❌ Highly dangerous! These are organized international fraud rings.' }
+      { text: 'Quit your current job for this easy money', isCorrect: false, feedback: '❌ Highly dangerous! These are organized international fraud rings.' },
+      { text: 'Block the sender and report as Work-From-Home fraud', isCorrect: true, feedback: '✅ Correct! Real companies do not offer thousands per day for liking videos or require Telegram task groups.' }
     ]
   },
   {
@@ -75,8 +75,8 @@ const SCAM_QUIZZES = [
     category: 'Banking Smishing',
     smsText: 'Dear HDFC Cardholder, your 9,850 Reward Points worth ₹4,925 will expire TODAY. Click to redeem cash directly into your bank account: http://hdfc-rewards-redeem.com',
     options: [
-      { text: 'Click link and enter debit card credentials to claim cash', isCorrect: false, feedback: '❌ Phishing Link! Banks do not send reward point redemption links requesting card numbers & CVV.' },
       { text: 'Redeem points only via official bank netbanking / mobile app', isCorrect: true, feedback: '✅ Correct! Legitimate reward points are redeemed safely inside official mobile banking apps.' },
+      { text: 'Click link and enter debit card credentials to claim cash', isCorrect: false, feedback: '❌ Phishing Link! Banks do not send reward point redemption links requesting card numbers & CVV.' },
       { text: 'Send card details via SMS to claim bonus', isCorrect: false, feedback: '❌ Dangerous! Never send card details over SMS.' }
     ]
   },
@@ -87,8 +87,8 @@ const SCAM_QUIZZES = [
     smsText: 'Jio Notice: Your SIM card KYC has been SUSPENDED by Telecom Authority. Your outgoing calls will be blocked in 2 hours. Call SIM Executive at 7788990011 to update KYC via AnyDesk app.',
     options: [
       { text: 'Call executive and download AnyDesk app as instructed', isCorrect: false, feedback: '❌ Remote Access Fraud! Downloading AnyDesk allows scammers to view your phone screen and steal banking OTPs.' },
-      { text: 'Ignore SMS and visit official SIM retailer store or official app', isCorrect: true, feedback: '✅ Perfect! Telecom providers never ask users to download screen-sharing apps like AnyDesk or TeamViewer.' },
-      { text: 'Transfer ₹100 fee to executive via UPI', isCorrect: false, feedback: '❌ Never pay unauthorized individuals over personal UPI.' }
+      { text: 'Transfer ₹100 fee to executive via UPI', isCorrect: false, feedback: '❌ Never pay unauthorized individuals over personal UPI.' },
+      { text: 'Ignore SMS and visit official SIM retailer store or official app', isCorrect: true, feedback: '✅ Perfect! Telecom providers never ask users to download screen-sharing apps like AnyDesk or TeamViewer.' }
     ]
   },
   {
@@ -97,8 +97,8 @@ const SCAM_QUIZZES = [
     category: 'Delivery Scam',
     smsText: 'India Post Alert: Your parcel could not be delivered due to incorrect house address. Update address & pay ₹25 redelivery fee within 24h at http://indiapost-update.top',
     options: [
-      { text: 'Click link and pay ₹25 using credit card', isCorrect: false, feedback: '❌ Card Stealer Scam! Paying ₹25 on fake sites captures your credit card number, CVV, and OTP for unauthorized international charges.' },
       { text: 'Track parcel directly on official indiapost.gov.in using tracking number', isCorrect: true, feedback: '✅ Excellent! Always verify courier tracking numbers on official .gov.in or official courier portals.' },
+      { text: 'Click link and pay ₹25 using credit card', isCorrect: false, feedback: '❌ Card Stealer Scam! Paying ₹25 on fake sites captures your credit card number, CVV, and OTP for unauthorized international charges.' },
       { text: 'Reply to SMS with home address and card details', isCorrect: false, feedback: '❌ Never share sensitive info over SMS.' }
     ]
   },
@@ -109,11 +109,21 @@ const SCAM_QUIZZES = [
     smsText: 'You are added to a WhatsApp group "VIP Institutional Stock Tips". The admin guarantees 300% profit per week using an exclusive VIP Trading App.',
     options: [
       { text: 'Deposit ₹50,000 into VIP trading app for 300% returns', isCorrect: false, feedback: '❌ Pig Butchering Investment Fraud! Fake trading apps show dummy high profits on screen but block all withdrawals.' },
-      { text: 'Exit group, report as scam, and invest only via SEBI-registered brokers', isCorrect: true, feedback: '✅ Spot On! Guaranteed high returns do not exist. Always trade via official SEBI-registered stockbrokers.' },
-      { text: 'Take a personal loan to invest bigger amount', isCorrect: false, feedback: '❌ Never borrow money to invest in unverified online trading groups.' }
+      { text: 'Take a personal loan to invest bigger amount', isCorrect: false, feedback: '❌ Never borrow money to invest in unverified online trading groups.' },
+      { text: 'Exit group, report as scam, and invest only via SEBI-registered brokers', isCorrect: true, feedback: '✅ Spot On! Guaranteed high returns do not exist. Always trade via official SEBI-registered stockbrokers.' }
     ]
   }
 ];
+
+// Fisher-Yates Shuffle algorithm for dynamic option randomization
+const shuffleArray = (array) => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 
 const KavachAcademyView = memo(() => {
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
@@ -122,9 +132,18 @@ const KavachAcademyView = memo(() => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [candidateName, setCandidateName] = useState('Bhargava Sood');
   const [answeredState, setAnsweredState] = useState({});
+  const [quizAttemptId, setQuizAttemptId] = useState(0);
 
-  const currentQuiz = SCAM_QUIZZES[currentQuizIndex];
-  const progressPercent = Math.round(((currentQuizIndex + 1) / SCAM_QUIZZES.length) * 100);
+  // Dynamically shuffle options for all 10 quizzes on attempt change
+  const activeQuizzes = useMemo(() => {
+    return RAW_SCAM_QUIZZES.map((quiz) => ({
+      ...quiz,
+      options: shuffleArray(quiz.options),
+    }));
+  }, [quizAttemptId]);
+
+  const currentQuiz = activeQuizzes[currentQuizIndex];
+  const progressPercent = Math.round(((currentQuizIndex + 1) / activeQuizzes.length) * 100);
 
   const handleSelectOption = (index) => {
     if (selectedOption !== null) return;
@@ -142,7 +161,7 @@ const KavachAcademyView = memo(() => {
 
   const handleNext = () => {
     setSelectedOption(null);
-    if (currentQuizIndex < SCAM_QUIZZES.length - 1) {
+    if (currentQuizIndex < activeQuizzes.length - 1) {
       setCurrentQuizIndex((prev) => prev + 1);
     } else {
       setIsCompleted(true);
@@ -160,6 +179,7 @@ const KavachAcademyView = memo(() => {
     setScore(0);
     setIsCompleted(false);
     setAnsweredState({});
+    setQuizAttemptId((prev) => prev + 1); // Trigger new option shuffle
   };
 
   const handleDownloadCertificate = () => {
@@ -341,7 +361,7 @@ const KavachAcademyView = memo(() => {
               <div class="cert-text">
                 has successfully completed the <strong>National Scam Awareness & Cyber Threat Prevention Masterclass</strong>, 
                 demonstrating exceptional mastery in real-world phishing detection, UPI scam defense, and AI deepfake verification 
-                with a final evaluation score of <strong>${score} / ${SCAM_QUIZZES.length}</strong>.
+                with a final evaluation score of <strong>${score} / ${activeQuizzes.length}</strong>.
               </div>
 
               <div class="badge-box">VERIFIED CYBER DEFENSE CHAMPION</div>
@@ -398,7 +418,7 @@ const KavachAcademyView = memo(() => {
 
         <div className="flex items-center gap-2 px-3 py-1 bg-[#0B0F19] border border-[#27395C] rounded-lg text-xs font-bold text-purple-400">
           <Award size={16} />
-          <span>SCORE: {score} / {SCAM_QUIZZES.length}</span>
+          <span>SCORE: {score} / {activeQuizzes.length}</span>
         </div>
       </div>
 
@@ -408,7 +428,7 @@ const KavachAcademyView = memo(() => {
           {/* Progress Tracker Bar */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-purple-400">SCENARIO {currentQuizIndex + 1} OF {SCAM_QUIZZES.length}</span>
+              <span className="text-purple-400">SCENARIO {currentQuizIndex + 1} OF {activeQuizzes.length}</span>
               <span className="text-[var(--text-muted)]">{progressPercent}% COMPLETED</span>
             </div>
             <div className="w-full h-2 bg-[#0B0F19] border border-[#27395C] rounded-full overflow-hidden">
@@ -417,7 +437,7 @@ const KavachAcademyView = memo(() => {
 
             {/* Scenario Navigation Chips */}
             <div className="flex flex-wrap items-center gap-1.5 pt-1 overflow-x-auto">
-              {SCAM_QUIZZES.map((quiz, idx) => {
+              {activeQuizzes.map((quiz, idx) => {
                 const state = answeredState[idx];
                 let chipBg = 'bg-[#0B0F19] border-[#27395C] text-[var(--text-muted)]';
                 if (state) {
@@ -495,7 +515,7 @@ const KavachAcademyView = memo(() => {
                 onClick={handleNext}
                 className="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 transition-all shadow-md mt-2"
               >
-                <span>{currentQuizIndex < SCAM_QUIZZES.length - 1 ? 'Next Scenario' : 'Complete Masterclass'}</span>
+                <span>{currentQuizIndex < activeQuizzes.length - 1 ? 'Next Scenario' : 'Complete Masterclass'}</span>
                 <ArrowRight size={14} />
               </button>
             </motion.div>
@@ -510,7 +530,7 @@ const KavachAcademyView = memo(() => {
 
           <div className="space-y-1">
             <h3 className="text-lg font-bold text-slate-100">Congratulations! You Passed!</h3>
-            <p className="text-xs text-[var(--text-muted)]">Score: {score} / {SCAM_QUIZZES.length} — Verified Cyber Defense Champion</p>
+            <p className="text-xs text-[var(--text-muted)]">Score: {score} / {activeQuizzes.length} — Verified Cyber Defense Champion</p>
           </div>
 
           {/* Candidate Name Input */}
