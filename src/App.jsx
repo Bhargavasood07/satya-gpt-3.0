@@ -25,6 +25,7 @@ import FamilyShareModal from './components/common/FamilyShareModal';
 import AccountSwitcherModal from './components/common/AccountSwitcherModal';
 import GovtVerificationModal from './components/common/GovtVerificationModal';
 import CyberThreatMapModal from './components/common/CyberThreatMapModal';
+import IpProtectionModal from './components/common/IpProtectionModal';
 
 // Auth
 import LoginModal from './components/auth/LoginModal';
@@ -71,6 +72,7 @@ export default function App() {
   const [isAccountSwitcherOpen, setIsAccountSwitcherOpen] = useState(false);
   const [isGovtVerificationOpen, setIsGovtVerificationOpen] = useState(false);
   const [isThreatMapOpen, setIsThreatMapOpen] = useState(false);
+  const [isIpProtectionOpen, setIsIpProtectionOpen] = useState(false);
   
   const mainScrollRef = useRef(null);
 
@@ -145,6 +147,7 @@ export default function App() {
         setIsAccountSwitcherOpen(false);
         setIsGovtVerificationOpen(false);
         setIsThreatMapOpen(false);
+        setIsIpProtectionOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -277,10 +280,13 @@ export default function App() {
                     <Award size={12} className="text-amber-400" />
                     MeitY / CERT-In ALIGNED
                   </button>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-[10px] font-extrabold flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                    I4C 1930 HELPLINE ACTIVE
-                  </span>
+                  <button
+                    onClick={() => setIsIpProtectionOpen(true)}
+                    className="px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/40 text-rose-400 text-[10px] font-extrabold flex items-center gap-1 hover:bg-rose-500/20 transition-all cursor-pointer"
+                  >
+                    <Lock size={11} className="text-rose-400" />
+                    IP FORTRESS SEALED
+                  </button>
                 </div>
                 <span className="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-0.5">
                   Official Nodal Architecture • VirusTotal v3 90-Engine Verification • Founder: Bhargava Sood
@@ -405,6 +411,11 @@ export default function App() {
         {/* Live State-wise Indian Cyber Threat Heatmap Modal */}
         <AnimatePresence>
           {isThreatMapOpen && <CyberThreatMapModal onClose={() => setIsThreatMapOpen(false)} />}
+        </AnimatePresence>
+
+        {/* Intellectual Property Protection Seal Modal */}
+        <AnimatePresence>
+          {isIpProtectionOpen && <IpProtectionModal onClose={() => setIsIpProtectionOpen(false)} />}
         </AnimatePresence>
 
         {/* 15-Minute Emergency Bank Freeze Modal */}
