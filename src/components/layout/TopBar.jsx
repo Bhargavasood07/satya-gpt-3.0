@@ -1,17 +1,17 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, Clock, HelpCircle, Bot, Baby, Globe, Sun, Moon, Download, User, Building2, ChevronDown } from 'lucide-react';
+import { Shield, Clock, HelpCircle, Bot, Baby, Globe, Sun, Moon, Download, User, Building2, ChevronDown, Sparkles } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useChildMode } from '../../context/ChildModeContext';
 import { usePwaInstall } from '../../hooks/usePWAInstall';
 import { useAuth } from '../../context/AuthContext';
 
-const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner, onOpenAccountSwitcher }) => {
+const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner }) => {
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { isChildMode, toggleChildMode } = useChildMode();
   const { isInstalled, installApp } = usePwaInstall();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, openLoginModal } = useAuth();
   
   const [time, setTime] = useState(new Date());
 
@@ -53,7 +53,7 @@ const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner, o
             <span className="font-extrabold text-sm tracking-wider text-slate-100">
               SATYA<span className="text-[var(--accent)]">-GPT</span>
             </span>
-            <span className="text-[10px] text-[var(--accent)] font-bold">v8.0</span>
+            <span className="text-[10px] text-[var(--accent)] font-bold">v8.1</span>
           </div>
         </button>
 
@@ -103,9 +103,9 @@ const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner, o
           <span className="hidden md:inline">{isChildMode ? 'Guard Active' : 'Guard Off'}</span>
         </button>
 
-        {/* 👤 HIGH-VISIBILITY GUEST USER & ACCOUNT SWITCHER TRIGGER */}
+        {/* 👤 HIGH-VISIBILITY GUEST USER & ACCOUNT SWITCHER BUTTON */}
         <button
-          onClick={onOpenAccountSwitcher}
+          onClick={openLoginModal}
           className="flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-[#131B2E] border-2 border-emerald-500/60 text-emerald-400 hover:border-emerald-400 text-xs font-bold transition-all shadow-lg animate-pulse"
           title="Click to Switch Account or Login"
         >
