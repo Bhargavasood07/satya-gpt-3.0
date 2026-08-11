@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award, ShieldAlert, Heart, Share2, PhoneCall, Globe, CheckCircle2 } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award, ShieldAlert, Heart, Share2, PhoneCall, Globe, MapPin } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -24,6 +24,7 @@ import TrustBadgeModal from './components/common/TrustBadgeModal';
 import FamilyShareModal from './components/common/FamilyShareModal';
 import AccountSwitcherModal from './components/common/AccountSwitcherModal';
 import GovtVerificationModal from './components/common/GovtVerificationModal';
+import CyberThreatMapModal from './components/common/CyberThreatMapModal';
 
 // Auth
 import LoginModal from './components/auth/LoginModal';
@@ -69,6 +70,7 @@ export default function App() {
   const [isFamilyShareOpen, setIsFamilyShareOpen] = useState(false);
   const [isAccountSwitcherOpen, setIsAccountSwitcherOpen] = useState(false);
   const [isGovtVerificationOpen, setIsGovtVerificationOpen] = useState(false);
+  const [isThreatMapOpen, setIsThreatMapOpen] = useState(false);
   
   const mainScrollRef = useRef(null);
 
@@ -142,6 +144,7 @@ export default function App() {
         setIsFamilyShareOpen(false);
         setIsAccountSwitcherOpen(false);
         setIsGovtVerificationOpen(false);
+        setIsThreatMapOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -222,6 +225,7 @@ export default function App() {
         onOpenAdmin={handleOpenAdmin}
         onOpenPartner={handleOpenPartner}
         onOpenGovtVerification={() => setIsGovtVerificationOpen(true)}
+        onOpenThreatMap={() => setIsThreatMapOpen(true)}
       />
       
       {/* Real-Time Live Scam Alert Scrolling Ticker */}
@@ -285,12 +289,20 @@ export default function App() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+              <button
+                onClick={() => setIsThreatMapOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--accent-muted)] border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-slate-950 font-extrabold transition-all text-xs shadow-md"
+              >
+                <MapPin size={14} />
+                <span>Threat Map</span>
+              </button>
+
               <a
                 href="tel:1930"
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold transition-all text-xs shadow-md"
               >
                 <PhoneCall size={14} />
-                <span>Dial 1930 Helpline</span>
+                <span>Dial 1930</span>
               </a>
 
               <button
@@ -298,7 +310,7 @@ export default function App() {
                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 font-bold transition-all text-xs shadow-md"
               >
                 <Share2 size={13} className="text-amber-400" />
-                <span>Family Guard</span>
+                <span>Family Share</span>
               </button>
 
               <button
@@ -388,6 +400,11 @@ export default function App() {
         {/* Official Govt Accreditation Verification Modal */}
         <AnimatePresence>
           {isGovtVerificationOpen && <GovtVerificationModal onClose={() => setIsGovtVerificationOpen(false)} />}
+        </AnimatePresence>
+
+        {/* Live State-wise Indian Cyber Threat Heatmap Modal */}
+        <AnimatePresence>
+          {isThreatMapOpen && <CyberThreatMapModal onClose={() => setIsThreatMapOpen(false)} />}
         </AnimatePresence>
 
         {/* 15-Minute Emergency Bank Freeze Modal */}

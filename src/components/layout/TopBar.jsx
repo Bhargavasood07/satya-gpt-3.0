@@ -1,12 +1,12 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, Clock, HelpCircle, Bot, Baby, Globe, Sun, Moon, Download, User, Building2, ChevronDown, Sparkles, ShieldCheck, Award } from 'lucide-react';
+import { Shield, Clock, HelpCircle, Bot, Baby, Globe, Sun, Moon, Download, User, Building2, ChevronDown, Sparkles, ShieldCheck, Award, MapPin } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useChildMode } from '../../context/ChildModeContext';
 import { usePwaInstall } from '../../hooks/usePWAInstall';
 import { useAuth } from '../../context/AuthContext';
 
-const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner, onOpenGovtVerification }) => {
+const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner, onOpenGovtVerification, onOpenThreatMap }) => {
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { isChildMode, toggleChildMode } = useChildMode();
@@ -55,7 +55,7 @@ const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner, o
             </span>
             <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400 text-amber-300 font-extrabold tracking-widest uppercase flex items-center gap-1">
               <Award size={10} className="text-amber-400" />
-              v10.0 GOVT EDITION
+              v11.0 ULTIMATE
             </span>
           </div>
         </button>
@@ -73,6 +73,16 @@ const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner, o
 
       {/* Right Controls */}
       <div className="flex items-center space-x-2.5">
+        {/* Live Threat Heatmap Trigger */}
+        <button
+          onClick={onOpenThreatMap}
+          className="hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-[#0D1527] border border-[var(--accent)] hover:bg-[var(--accent-muted)] text-[var(--accent)] text-xs font-bold transition-all shadow-[0_0_12px_rgba(0,229,255,0.2)]"
+          title="Open State-wise Indian Cyber Threat Heatmap"
+        >
+          <MapPin className="w-3.5 h-3.5 text-[var(--accent)] animate-pulse" />
+          <span>Threat Map</span>
+        </button>
+
         {/* User Guide */}
         <button
           onClick={onToggleHelp}
@@ -86,10 +96,10 @@ const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner, o
         {/* KAVACH AI Header Action */}
         <button
           onClick={onToggleChat}
-          className="hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-[#0D1527] border border-[var(--accent)] hover:bg-[var(--accent-muted)] text-[var(--accent)] text-xs font-bold transition-all shadow-[0_0_12px_rgba(0,229,255,0.2)]"
+          className="hidden lg:flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-[#0D1527] border border-[var(--accent)] hover:bg-[var(--accent-muted)] text-[var(--accent)] text-xs font-bold transition-all shadow-sm"
           title="Open KAVACH AI Assistant (Ctrl+B)"
         >
-          <Bot className="w-3.5 h-3.5 text-[var(--accent)] animate-pulse" />
+          <Bot className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span>KAVACH AI</span>
         </button>
 
