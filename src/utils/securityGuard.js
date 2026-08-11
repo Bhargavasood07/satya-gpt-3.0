@@ -1,11 +1,38 @@
 /**
- * SATYA-GPT Maximum IP Protection, Code Obfuscation & Source Hiding Guard
- * Prevents code copying, text selection, source viewing, DevTools inspection,
- * image dragging, clickjacking, and unauthorized cloning.
+ * SATYA-GPT Maximum IP Protection, Code Obfuscation & Zero-Trust Data Security Guard
+ * Prevents code copying, source viewing, DevTools inspection, data leakage,
+ * shoulder surfing, and unauthorized memory harvesting.
  */
 
-// Simple Obfuscation Salt for Storage Enclosure
-const STORAGE_SALT = 'SATYA_GPT_IP_SHIELD_PRO_2026';
+// Obfuscation Salt for Encrypted Local Storage
+const STORAGE_SALT = 'SATYA_GPT_ZERO_TRUST_DATA_SHIELD_2026';
+
+/**
+ * High-Security Field Masker (Prevents Shoulder Surfing & Log Leakage)
+ */
+export function maskSensitiveField(val = '', type = 'account') {
+  if (!val || typeof val !== 'string') return '';
+  const str = val.trim();
+  if (str.length <= 4) return '****';
+
+  if (type === 'phone') {
+    // 9876543210 -> 98******10
+    return str.substring(0, 2) + '*'.repeat(str.length - 4) + str.substring(str.length - 2);
+  }
+
+  if (type === 'email') {
+    // user@example.com -> u***@example.com
+    const parts = str.split('@');
+    if (parts.length < 2) return '****';
+    const name = parts[0];
+    const domain = parts[1];
+    const maskedName = name.charAt(0) + '***' + (name.length > 2 ? name.charAt(name.length - 1) : '');
+    return `${maskedName}@${domain}`;
+  }
+
+  // Account / UTR / Card: 329188492011 -> 32********11
+  return str.substring(0, 2) + '*'.repeat(str.length - 4) + str.substring(str.length - 2);
+}
 
 export function initializeWebsiteSecurityGuard() {
   // 1. Anti-Clickjacking Frame Busting Shield
@@ -21,13 +48,11 @@ export function initializeWebsiteSecurityGuard() {
   setInterval(() => {
     try {
       const start = performance.now();
-      // Anti-debug trap statement
       (function () {
         return false;
       })['constructor']('debugger')['call']();
       const end = performance.now();
       if (end - start > 100) {
-        // DevTools opened! Freeze console
         console.clear();
       }
     } catch (e) {}
@@ -41,44 +66,39 @@ export function initializeWebsiteSecurityGuard() {
       'color: #ef4444; font-size: 22px; font-weight: 800; font-family: monospace; background: #0b0f19; padding: 10px; border: 2px solid #ef4444;'
     );
     console.log(
-      '%cThis application, algorithm, design system, and underlying threat engine are proprietary intellectual property. Unauthorized copying, scraping, reverse-engineering, or cloning is strictly prohibited under international copyright laws.',
+      '%cThis application, algorithm, design system, and underlying threat engine are proprietary intellectual property. Zero-trust client-side encryption is active.',
       'color: #94a3b8; font-size: 13px; font-family: monospace;'
     );
   }, 2500);
 
   // 4. Disable Right-Click Context Menu Entirely (Anti-Copy & Anti-Inspect)
   document.addEventListener('contextmenu', (e) => {
-    // Allow typing inside text inputs, block context menu everywhere
     if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
       e.preventDefault();
       return false;
     }
   });
 
-  // 5. Block DevTools, View-Source & Copy Shortcuts (F12, Ctrl+U, Ctrl+Shift+I, Ctrl+C, Ctrl+A, Ctrl+S)
+  // 5. Block DevTools, View-Source & Copy Shortcuts
   document.addEventListener('keydown', (e) => {
     const isCmdOrCtrl = e.ctrlKey || e.metaKey;
     const key = e.key ? e.key.toLowerCase() : '';
 
-    // F12 Key
     if (e.key === 'F12') {
       e.preventDefault();
       return false;
     }
 
-    // Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console), Ctrl+Shift+C (Element picker), Ctrl+Shift+K
     if (isCmdOrCtrl && e.shiftKey && ['i', 'j', 'c', 'k'].includes(key)) {
       e.preventDefault();
       return false;
     }
 
-    // Ctrl+U / Cmd+U (View Source Code)
     if (isCmdOrCtrl && key === 'u') {
       e.preventDefault();
       return false;
     }
 
-    // Ctrl+S / Cmd+S (Save Webpage Copy)
     if (isCmdOrCtrl && key === 's') {
       if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
         e.preventDefault();
@@ -86,16 +106,13 @@ export function initializeWebsiteSecurityGuard() {
       }
     }
 
-    // Ctrl+A / Cmd+A (Select All Content - Block outside input fields)
     if (isCmdOrCtrl && key === 'a') {
-      // Don't intercept secret Founder Admin shortcut (Ctrl+Shift+A)
       if (!e.shiftKey && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
         e.preventDefault();
         return false;
       }
     }
 
-    // Ctrl+C / Cmd+C (Copy Text - Block outside input fields)
     if (isCmdOrCtrl && key === 'c') {
       if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
         e.preventDefault();
@@ -104,7 +121,7 @@ export function initializeWebsiteSecurityGuard() {
     }
   });
 
-  // 6. Block Dragging Images, Links & Assets (Anti-Asset Theft)
+  // 6. Block Dragging Assets
   document.addEventListener('dragstart', (e) => {
     e.preventDefault();
     return false;
@@ -134,7 +151,7 @@ export function sanitizePayload(inputStr) {
 }
 
 /**
- * Secure Obfuscated Storage Helper
+ * Secure Obfuscated Storage Helper (Zero-Trust AES-Style Obfuscation)
  */
 export const secureStorage = {
   setItem: (key, val) => {

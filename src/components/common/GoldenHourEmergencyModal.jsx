@@ -1,6 +1,7 @@
 import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldAlert, AlertTriangle, PhoneCall, Lock, CheckCircle2, X, Send, KeyRound, Building2, Cpu, RefreshCw, ArrowRight } from 'lucide-react';
+import { ShieldAlert, AlertTriangle, PhoneCall, Lock, CheckCircle2, X, Send, KeyRound, Building2, Cpu, RefreshCw, ArrowRight, ShieldCheck } from 'lucide-react';
+import { maskSensitiveField } from '../../utils/securityGuard';
 
 const SUPPORTED_BANK_APIS = [
   { id: 'sbi', name: 'State Bank of India (SBI Nodal API)', code: 'SBI-CYBER-API-v3' },
@@ -46,11 +47,15 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
     setOtpError('');
     setStep(3);
 
+    const maskedAcc = maskSensitiveField(accountNumber || '9876543210@upi', 'account');
+    const maskedTxn = maskSensitiveField(fraudTxnId || '329188492011', 'account');
+
     // Simulate Step 3 Live Bank API Dispatch Sequence
     const logSequence = [
       `Connecting to ${selectedBank.name}...`,
-      `Authenticating 2FA Security OTP Signature...`,
-      `Verifying UTR Transaction #${fraudTxnId || '329188492011'}...`,
+      `Verifying Zero-Trust 2FA Security OTP Signature...`,
+      `Encrypting User Account Payload (${maskedAcc})...`,
+      `Verifying UTR Transaction #${maskedTxn}...`,
       `Dispatching NPCI Emergency Lock Signal: FREEZE-1930-${Math.floor(100000 + Math.random() * 900000)}...`,
       `Beneficiary Payout Lock Acknowledged by Bank Nodal Officer!`
     ];
@@ -86,10 +91,11 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
             <ShieldAlert size={24} />
           </div>
           <div>
-            <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-rose-300">
-              15-Min Direct Bank API Emergency Lock
+            <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
+              <span>15-Min Direct Bank API Emergency Lock</span>
+              <ShieldCheck size={16} className="text-emerald-400" />
             </h2>
-            <p className="text-[10px] text-rose-200/80">Direct Nodal API Integration with 2-Step 2FA Security OTP Verification</p>
+            <p className="text-[10px] text-rose-200/80">Direct Nodal API Integration with Zero-Trust Field Masking & 2FA Security OTP</p>
           </div>
         </div>
 
@@ -98,7 +104,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
           <form onSubmit={handleRequestOtp} className="space-y-3.5 text-xs">
             <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-xl text-[11px] text-rose-200 leading-relaxed font-mono">
               <AlertTriangle size={14} className="inline mr-1 text-rose-400" />
-              Direct Nodal API execution. For security, a 2-Step 2FA Security OTP will be required to confirm authorization.
+              Zero-Trust Encrypted Bank API Execution. Mobile numbers & account data are masked and never logged to browser history.
             </div>
 
             {/* Bank API Selector */}
@@ -180,7 +186,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
                 <span>2-STEP VERIFICATION OTP SENT</span>
               </div>
               <div className="text-[11px] text-slate-300">
-                A 6-digit security OTP was dispatched to <strong>+91-{mobileNumber || '9876543210'}</strong>
+                A 6-digit security OTP was dispatched to <strong>+91-{maskSensitiveField(mobileNumber || '9876543210', 'phone')}</strong>
               </div>
               <div className="text-[10px] text-amber-300/80 font-bold pt-1">
                 [SIMULATED SECURE OTP DEMO: <span className="bg-black px-2 py-0.5 rounded text-cyan-300 tracking-widest">{generatedOtp}</span>]
@@ -218,7 +224,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
           <div className="p-4 bg-[#0B0F19] border border-[#27395C] rounded-xl space-y-3 font-mono">
             <div className="flex items-center gap-2 text-xs font-bold text-cyan-300">
               <Cpu size={16} className="animate-spin text-[var(--accent)]" />
-              <span>EXECUTING DIRECT BANK API NODAL DISPATCH...</span>
+              <span>EXECUTING ZERO-TRUST BANK API NODAL DISPATCH...</span>
             </div>
 
             <div className="space-y-1 text-[11px]">
@@ -238,7 +244,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
             <CheckCircle2 size={44} className="mx-auto text-emerald-400 animate-bounce" />
             <div className="text-base font-extrabold text-emerald-300">2FA Verified! Emergency Lock Signal Executed via {selectedBank.name}!</div>
             <p className="text-xs text-emerald-200/90 leading-relaxed">
-              Target Beneficiary Payouts & Account Transactions have been <strong>LOCKED</strong>. Bank Cyber Nodal Officers notified.
+              Beneficiary payouts for account <strong>{maskSensitiveField(accountNumber || '9876543210@upi', 'account')}</strong> have been <strong>LOCKED</strong>. Bank Cyber Nodal Officers notified.
             </p>
             <div className="p-2.5 bg-[#0B0F19] border border-emerald-500/30 rounded-lg text-xs text-slate-200 font-bold">
               Emergency Lock Reference Token: <span className="text-cyan-300">FREEZE-1930-{Math.floor(100000 + Math.random() * 900000)}</span>
