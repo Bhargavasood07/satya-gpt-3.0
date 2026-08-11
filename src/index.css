@@ -5,58 +5,58 @@
 @tailwind utilities;
 
 /* ============================================
-   SATYA-GPT BRUTALIST FUNCTIONALISM COLOR SYSTEM
+   SATYA-GPT ULTIMATE CYBER SOC DESIGN SYSTEM
    Hex Palette:
-   - Deep Slate Background: #0B0F19
-   - Card Surface:          #131B2E
-   - Card Hover:            #1B2742
-   - Border Primary:        #1E2D4A
-   - Border Card:           #27395C
-   - Secure State:          #10B981 (Crisp Green)
-   - Warning State:         #F59E0B (High-Visibility Amber)
-   - Critical Breach:       #EF4444 (Precise Crimson)
-   - Primary Accent:        #00E5FF (Cyan Accent)
+   - Deepest Obsidian Surface:  #060913
+   - Card Panel Surface:        #0D1527
+   - Card Hover Surface:        #15213A
+   - Border Primary:            #1E2D4A
+   - Border Card Highlight:     #27395C
+   - Electric Cyan Accent:      #00E5FF
+   - Tactical Emerald Safe:     #10B981
+   - High-Visibility Amber:     #F59E0B
+   - Critical Emergency Red:    #EF4444
    ============================================ */
 
 :root,
 [data-theme="cyber-slate"] {
-  --bg-primary: #0b0f19;
-  --bg-secondary: #131b2e;
-  --bg-card: #131b2e;
-  --bg-card-hover: #1b2742;
-  --bg-input: #0b0f19;
+  --bg-primary: #060913;
+  --bg-secondary: #0d1527;
+  --bg-card: #0d1527;
+  --bg-card-hover: #15213a;
+  --bg-input: #060913;
 
   --border-color: #1e2d4a;
   --border-card: #27395c;
 
   --accent: #00e5ff;
-  --accent-glow: rgba(0, 229, 255, 0.2);
-  --accent-muted: rgba(0, 229, 255, 0.1);
+  --accent-glow: rgba(0, 229, 255, 0.25);
+  --accent-muted: rgba(0, 229, 255, 0.12);
   --accent-text: #00e5ff;
 
   --safe: #10b981;
-  --safe-glow: rgba(16, 185, 129, 0.2);
-  --safe-muted: rgba(16, 185, 129, 0.1);
+  --safe-glow: rgba(16, 185, 129, 0.25);
+  --safe-muted: rgba(16, 185, 129, 0.12);
 
   --threat: #ef4444;
-  --threat-glow: rgba(239, 68, 68, 0.2);
-  --threat-muted: rgba(239, 68, 68, 0.1);
+  --threat-glow: rgba(239, 68, 68, 0.25);
+  --threat-muted: rgba(239, 68, 68, 0.12);
 
   --warning: #f59e0b;
-  --warning-glow: rgba(245, 158, 11, 0.2);
+  --warning-glow: rgba(245, 158, 11, 0.25);
 
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
 
-  --glass-bg: rgba(19, 27, 46, 0.9);
-  --glass-border: rgba(39, 57, 92, 0.6);
+  --glass-bg: rgba(13, 21, 39, 0.88);
+  --glass-border: rgba(39, 57, 92, 0.7);
 
   --scrollbar-thumb: #27395c;
-  --scrollbar-track: #0b0f19;
+  --scrollbar-track: #060913;
 }
 
-/* Crisp High-Contrast Light Theme */
+/* High-Contrast Crisp Light Theme */
 [data-theme="light"] {
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
@@ -87,20 +87,22 @@
   --text-secondary: #334155;
   --text-muted: #64748b;
 
-  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-bg: rgba(255, 255, 255, 0.95);
   --glass-border: rgba(203, 213, 225, 0.8);
 
   --scrollbar-thumb: #cbd5e1;
   --scrollbar-track: #f8fafc;
 }
 
-/* Dynamic Light Mode Utility Overrides */
-[data-theme="light"] .bg-\[\#0B0F19\] {
+/* Light Theme Overrides */
+[data-theme="light"] .bg-\[\#0B0F19\],
+[data-theme="light"] .bg-\[\#060913\] {
   background-color: #F8FAFC !important;
   color: #0F172A !important;
 }
 
-[data-theme="light"] .bg-\[\#131B2E\] {
+[data-theme="light"] .bg-\[\#131B2E\],
+[data-theme="light"] .bg-\[\#0D1527\] {
   background-color: #FFFFFF !important;
   color: #0F172A !important;
   border-color: #CBD5E1 !important;
@@ -140,8 +142,50 @@
 }
 
 /* ============================================
+   CYBER SCANNING BEAM ANIMATION
+   ============================================ */
+@keyframes cyber-scan {
+  0% {
+    top: 0%;
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    top: 100%;
+    opacity: 0.2;
+  }
+}
+
+.animate-cyber-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+  box-shadow: 0 0 12px #00e5ff;
+  animation: cyber-scan 3s ease-in-out infinite;
+}
+
+/* ============================================
+   NEON PULSE GLOW
+   ============================================ */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(0, 229, 255, 0.6);
+  }
+}
+
+.neon-glow-accent {
+  animation: pulse-glow 3s infinite ease-in-out;
+}
+
+/* ============================================
    STRICT MOBILE FLUID & SECURITY CSS
-   Enforces 100% viewport width limits
    ============================================ */
 html, body, #root {
   max-width: 100vw;
@@ -230,13 +274,13 @@ html {
 .cyber-card {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
-  border-radius: 10px;
+  border-radius: 12px;
   transition: all 0.2s ease;
 }
 
 .cyber-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
 /* Monospace Utility */
