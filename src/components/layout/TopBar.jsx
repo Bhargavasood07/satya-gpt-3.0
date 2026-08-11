@@ -1,46 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Shield, Clock, HelpCircle, Bot, Baby, Globe, Sun, Moon, Lock, Download, User, Building2, LogOut, RefreshCw, KeyRound } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useChildMode } from '../../context/ChildModeContext';
+import { usePWAInstall } from '../../hooks/usePWAInstall';
 import { useAuth } from '../../context/AuthContext';
-import { usePwaInstall } from '../../hooks/usePwaInstall';
-import { Globe, Sun, Moon, Clock, Baby, Download, Bot, HelpCircle, User, LogOut, Building2, Award } from 'lucide-react';
-import SatyaGptLogo from '../common/SatyaGptLogo';
 
-export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner }) {
+const TopBar = memo(({ onToggleChat, onToggleHelp, onOpenAdmin, onOpenPartner }) => {
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { isChildMode, toggleChildMode } = useChildMode();
-  const { user, isAuthenticated, openLoginModal, logout } = useAuth();
-  const { isInstalled, installApp } = usePwaInstall();
+  const { isInstalled, installApp } = usePWAInstall();
+  const { user, isAuthenticated, logout, openLoginModal } = useAuth();
+  
   const [time, setTime] = useState(new Date());
   const [showUserMenu, setShowUserMenu] = useState(false);
-  
-  // Secret Founder Click Counter (Triple click logo to open Founder Admin Vault)
-  const [logoClickCount, setLogoClickCount] = useState(0);
+  const userMenuRef = useRef(null);
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const handleLogoClick = () => {
-    setLogoClickCount((prev) => {
-      const next = prev + 1;
-      if (next >= 3) {
-        onOpenAdmin();
-        return 0;
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
       }
-      return next;
-    });
-
-    setTimeout(() => {
-      setLogoClickCount(0);
-    }, 2000);
-  };
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const formatTime = (date) => {
-    return date.toLocaleTimeString(undefined, {
+    return date.toLocaleTimeString('en-US', {
       hour12: false,
       hour: '2-digit',
       minute: '2-digit',
@@ -49,71 +43,56 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin, onOpen
   };
 
   const handleLangToggle = () => {
-    const isHindi = i18n.language && i18n.language.startsWith('hi');
-    const nextLang = isHindi ? 'en' : 'hi';
-    i18n.changeLanguage(nextLang);
+    const currentLang = i18n.language || 'en';
+    const newLang = currentLang.startsWith('hi') ? 'en' : 'hi';
+    i18n.changeLanguage(newLang);
   };
 
   const isHindiActive = i18n.language && i18n.language.startsWith('hi');
 
   return (
-    <header className="glass-panel h-14 sm:h-16 w-full flex items-center justify-between px-3 sm:px-4 border-b border-[var(--border-card)] z-50 select-none overflow-hidden font-mono">
-      {/* Left Section: Logo & Title */}
-      <div className="flex items-center space-x-2.5 sm:space-x-3 shrink-0">
-        <div 
-          onClick={handleLogoClick}
-          className="flex items-center space-x-2 cursor-pointer group"
-          title="SATYA-GPT SOC (Founder Vault: Triple-Click Logo or Ctrl+Shift+A)"
-        >
-          <SatyaGptLogo size={32} className="drop-shadow-[0_0_8px_var(--accent-glow)] group-hover:scale-105 transition-transform" />
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[var(--text-primary)] font-extrabold text-sm sm:text-base leading-tight tracking-wider">
-                SATYA-GPT
-              </span>
-              <span className="hidden xl:inline-block px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-bold">
-                MeitY / CERT-In ALIGNED
-              </span>
-            </div>
-            <span className="text-[var(--text-muted)] text-[9px] sm:text-[10px] hidden sm:block">
-              {t('app.subtitle')}
-            </span>
-          </div>
-        </div>
-
-        <div className="h-5 w-px bg-[var(--border-color)] hidden md:block"></div>
-
-        <div className="hidden lg:flex items-center space-x-2 bg-[var(--bg-card)] px-2.5 py-0.5 rounded-md border border-[var(--border-card)]">
-          <div className="pulse-dot w-2 h-2 rounded-full bg-[var(--safe)]"></div>
-          <span className="text-[var(--text-secondary)] text-xs font-semibold">
-            {t('app.status')}
-          </span>
-        </div>
-      </div>
-
-      {/* Right Section: Enterprise Controls */}
-      <div className="flex items-center space-x-1.5 sm:space-x-2 font-mono">
-        {/* Government & Founder Partner Portal Button */}
+    <header className="h-12 bg-[#0B0F19] border-b border-[#1E2D4A] px-3 sm:px-4 flex items-center justify-between font-mono text-slate-200 z-40 select-none">
+      {/* Brand Logo & Name */}
+      <div className="flex items-center space-x-2.5">
         <button
-          onClick={onOpenPartner}
-          className="flex items-center space-x-1 px-2.5 py-1.5 sm:py-1 rounded-lg bg-amber-500/10 border border-amber-500/40 hover:bg-amber-500/20 text-amber-300 text-xs font-bold transition-all shadow-sm"
-          title="Government & Founder Partner Portal"
+          onClick={onOpenAdmin}
+          className="flex items-center space-x-2 group focus:outline-none"
+          title="Triple click or Ctrl+Shift+A for Founder Vault"
         >
-          <Building2 className="w-3.5 h-3.5 text-amber-400" />
-          <span className="hidden sm:inline">Govt / Founder Portal</span>
+          <div className="w-7 h-7 rounded-lg bg-[var(--accent-muted)] border border-[var(--accent)] flex items-center justify-center text-[var(--accent)] group-hover:scale-105 transition-transform shadow-sm">
+            <Shield className="w-4 h-4 text-[var(--accent)]" />
+          </div>
+          <div className="flex items-baseline space-x-1">
+            <span className="font-extrabold text-sm tracking-wider text-slate-100">
+              SATYA<span className="text-[var(--accent)]">-GPT</span>
+            </span>
+            <span className="text-[10px] text-[var(--accent)] font-bold">v7.8</span>
+          </div>
         </button>
 
+        {/* CERT-In & MeitY Alignment Badge */}
+        <button
+          onClick={onOpenPartner}
+          className="hidden lg:flex items-center space-x-1 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] font-bold hover:bg-amber-500/20 transition-all"
+        >
+          <Building2 size={12} className="text-amber-400" />
+          <span>MeitY/CERT-In Partner</span>
+        </button>
+      </div>
+
+      {/* Right Controls */}
+      <div className="flex items-center space-x-2">
         {/* User Guide */}
         <button
           onClick={onToggleHelp}
-          className="p-1.5 sm:px-2.5 sm:py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-semibold transition-all"
+          className="hidden sm:flex items-center space-x-1 px-2 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-semibold transition-all"
           title="User Guide"
         >
           <HelpCircle className="w-4 h-4 text-[var(--accent)]" />
           <span className="hidden xl:inline ml-1">User Guide</span>
         </button>
 
-        {/* KAVACH AI Header Action (Desktop/Tablet) */}
+        {/* KAVACH AI Header Action */}
         <button
           onClick={onToggleChat}
           className="hidden md:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--accent)] hover:bg-[var(--accent-muted)] text-[var(--accent)] text-xs font-bold transition-all shadow-sm"
@@ -123,7 +102,7 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin, onOpen
           <span>KAVACH AI</span>
         </button>
 
-        {/* Child Mode Toggle Button (Desktop/Tablet) */}
+        {/* Child Mode Toggle Button */}
         <button
           onClick={toggleChildMode}
           className={`hidden sm:flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all ${
@@ -137,49 +116,78 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin, onOpen
           <span className="hidden md:inline">{isChildMode ? 'Guard Active' : 'Guard Off'}</span>
         </button>
 
-        {/* User Auth Button */}
-        <div className="relative">
-          {isAuthenticated ? (
-            <button
-              onClick={() => setShowUserMenu((p) => !p)}
-              className="flex items-center space-x-1 px-2 py-1 rounded-lg bg-[var(--bg-card)] border border-emerald-500/40 text-emerald-400 text-xs font-semibold transition-all hover:bg-emerald-500/10"
-              title={user?.name || 'User'}
-            >
-              <div className="w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
-                <User className="w-2.5 h-2.5" />
-              </div>
-              <span className="hidden md:inline max-w-[70px] truncate">{user?.name}</span>
-            </button>
-          ) : (
-            <button
-              onClick={openLoginModal}
-              className="flex items-center space-x-1 px-2 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-semibold transition-all"
-              title="Login"
-            >
-              <User className="w-3.5 h-3.5 text-[var(--accent)]" />
-              <span className="hidden md:inline">Login</span>
-            </button>
-          )}
+        {/* 👤 GUEST USER & ACCOUNT SWITCHER BUTTON (Positioned Relative for Dropdown Alignment) */}
+        <div className="relative" ref={userMenuRef}>
+          <button
+            onClick={() => setShowUserMenu((prev) => !prev)}
+            className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-[#131B2E] border border-emerald-500/40 text-emerald-400 hover:border-emerald-400 text-xs font-bold transition-all shadow-md"
+            title="Click to Switch Account or Login"
+          >
+            <div className="w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
+              <User className="w-2.5 h-2.5 text-emerald-400" />
+            </div>
+            <span className="max-w-[90px] sm:max-w-[110px] truncate">
+              {isAuthenticated ? user?.name : 'Guest User'}
+            </span>
+          </button>
 
-          {/* User Dropdown Menu */}
-          {showUserMenu && isAuthenticated && (
-            <div className="absolute right-0 top-full mt-1 w-44 bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 p-1.5 text-xs">
-              <div className="px-2.5 py-1.5 border-b border-[#1E2D4A] mb-1">
-                <div className="font-bold text-[var(--text-primary)] truncate">{user?.name}</div>
-                <div className="text-[9px] text-[var(--text-muted)] truncate">{user?.email}</div>
+          {/* 🔽 ACCOUNT SWITCHER DROPDOWN (Aligned directly below Guest User button) */}
+          {showUserMenu && (
+            <div className="absolute right-0 top-full mt-2 w-60 bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-[100] p-2 text-xs font-mono space-y-2 text-slate-200">
+              {/* Account Status Header */}
+              <div className="px-3 py-2 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] space-y-0.5">
+                <div className="text-[10px] text-[var(--text-muted)] font-bold uppercase">Current Active Session</div>
+                <div className="font-bold text-emerald-400 text-xs truncate flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span>{isAuthenticated ? user?.name : 'Guest User (Default)'}</span>
+                </div>
+                {isAuthenticated && (
+                  <div className="text-[9px] text-slate-400 truncate">{user?.email}</div>
+                )}
               </div>
-              <button
-                onClick={() => { logout(); setShowUserMenu(false); }}
-                className="w-full flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-colors"
-              >
-                <LogOut size={13} />
-                <span>Logout</span>
-              </button>
+
+              {/* Account Switcher Options */}
+              <div className="space-y-1 pt-1">
+                <button
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    openLoginModal();
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--accent-muted)] border border-[var(--accent)] text-[var(--accent)] font-bold hover:bg-[var(--accent)] hover:text-slate-950 transition-all text-xs shadow-sm"
+                >
+                  <RefreshCw size={14} />
+                  <span>Switch Account / Login</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    onOpenAdmin();
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-[#0B0F19] border border-[#27395C] text-amber-300 hover:border-amber-400 transition-all text-xs font-semibold"
+                >
+                  <KeyRound size={14} className="text-amber-400" />
+                  <span>Founder Admin Vault</span>
+                </button>
+
+                {isAuthenticated && (
+                  <button
+                    onClick={() => {
+                      logout();
+                      setShowUserMenu(false);
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 transition-all text-xs font-bold mt-1"
+                  >
+                    <LogOut size={14} />
+                    <span>Log Out</span>
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Download App Button (Desktop) */}
+        {/* Download App Button */}
         <button
           onClick={installApp}
           className="hidden xl:flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-card)] hover:border-[var(--accent)] text-[var(--text-primary)] text-xs font-semibold transition-all"
@@ -189,13 +197,13 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin, onOpen
           <span>{isInstalled ? 'Installed' : 'App'}</span>
         </button>
 
-        {/* Live Clock (Desktop) */}
+        {/* Live Clock */}
         <div className="hidden xl:flex items-center space-x-1 text-[var(--text-secondary)]">
           <Clock className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span className="text-xs">{formatTime(time)}</span>
         </div>
 
-        {/* 100% Reliable English ↔ Hindi Language Switcher */}
+        {/* English ↔ Hindi Language Switcher */}
         <button
           onClick={handleLangToggle}
           className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg border transition-colors text-xs font-mono font-bold shadow-sm ${
@@ -218,10 +226,13 @@ export default function TopBar({ onToggleChat, onToggleHelp, onOpenAdmin, onOpen
           {theme === 'cyber-slate' ? (
             <Moon className="w-3.5 h-3.5 text-[var(--accent)]" />
           ) : (
-            <Sun className="w-3.5 h-3.5 text-[var(--accent)]" />
+            <Sun className="w-3.5 h-3.5 text-amber-500" />
           )}
         </button>
       </div>
     </header>
   );
-}
+});
+
+TopBar.displayName = 'TopBar';
+export default TopBar;
