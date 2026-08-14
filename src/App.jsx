@@ -16,7 +16,7 @@ import LiveScamTicker from './components/common/LiveScamTicker';
 // Chatbot
 import CyberAiChatbot from './components/chat/CyberAiChatbot';
 
-// Modals
+// Modals & Drawers
 import AdminPanelModal from './components/admin/AdminPanelModal';
 import EnterprisePartnershipModal from './components/common/EnterprisePartnershipModal';
 import GoldenHourEmergencyModal from './components/common/GoldenHourEmergencyModal';
@@ -26,6 +26,7 @@ import AccountSwitcherModal from './components/common/AccountSwitcherModal';
 import GovtVerificationModal from './components/common/GovtVerificationModal';
 import CyberThreatMapModal from './components/common/CyberThreatMapModal';
 import IpProtectionModal from './components/common/IpProtectionModal';
+import SlideOutDrawerSidebar from './components/common/SlideOutDrawerSidebar';
 
 // Auth
 import LoginModal from './components/auth/LoginModal';
@@ -55,11 +56,14 @@ import MetricDetailModal from './components/feed/MetricDetailModal';
 import { useSimulatedFeed } from './hooks/useSimulatedFeed';
 import { scanPayloadOffline } from './services/offlineAiEngine';
 import { detectFakeNews } from './services/fakeNewsDetector';
+import { usePwaInstall } from './hooks/usePWAInstall';
 
 export default function App() {
   const { t } = useTranslation();
   const { isChildMode } = useChildMode();
   const { isLoginModalOpen, closeLoginModal } = useAuth();
+  const { isInstalled, installApp } = usePwaInstall();
+  
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showHelpGuide, setShowHelpGuide] = useState(true);
@@ -74,6 +78,7 @@ export default function App() {
   const [isGovtVerificationOpen, setIsGovtVerificationOpen] = useState(false);
   const [isThreatMapOpen, setIsThreatMapOpen] = useState(false);
   const [isIpProtectionOpen, setIsIpProtectionOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   
   const mainScrollRef = useRef(null);
 
@@ -149,6 +154,7 @@ export default function App() {
         setIsGovtVerificationOpen(false);
         setIsThreatMapOpen(false);
         setIsIpProtectionOpen(false);
+        setIsDrawerOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -224,12 +230,8 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#060913]">
       <TopBar
-        onToggleChat={handleToggleChat}
-        onToggleHelp={handleToggleHelp}
         onOpenAdmin={handleOpenAdmin}
-        onOpenPartner={handleOpenPartner}
-        onOpenGovtVerification={() => setIsGovtVerificationOpen(true)}
-        onOpenThreatMap={() => setIsThreatMapOpen(true)}
+        onToggleDrawer={() => setIsDrawerOpen(true)}
       />
       
       {/* Real-Time Live Scam Alert Scrolling Ticker */}
@@ -523,6 +525,28 @@ export default function App() {
         {/* Intellectual Property Protection Seal Modal */}
         <AnimatePresence>
           {isIpProtectionOpen && <IpProtectionModal onClose={() => setIsIpProtectionOpen(false)} />}
+        </AnimatePresence>
+
+        {/* 3-Line Hamburger Slide-Out Drawer Sidebar */}
+        <AnimatePresence>
+          {isDrawerOpen && (
+            <SlideOutDrawerSidebar
+              isOpen={isDrawerOpen}
+              onClose={() => setIsDrawerOpen(false)}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              onOpenAdmin={handleOpenAdmin}
+              onOpenPartner={handleOpenPartner}
+              onOpenGovtVerification={() => setIsGovtVerificationOpen(true)}
+              onOpenThreatMap={() => setIsThreatMapOpen(true)}
+              onOpenBankFreeze={() => setIsEmergencyFreezeOpen(true)}
+              onOpenFamilyShare={() => setIsFamilyShareOpen(true)}
+              onOpenTrustBadge={() => setIsTrustBadgeOpen(true)}
+              onOpenChat={handleToggleChat}
+              onInstallApp={installApp}
+              isAppInstalled={isInstalled}
+            />
+          )}
         </AnimatePresence>
 
         {/* 15-Minute Emergency Bank Freeze Modal */}
