@@ -36,6 +36,7 @@ import AIHubView from './components/aihub/AIHubView';
 import AnalyticsView from './components/views/AnalyticsView';
 import ChildSafetyView from './components/views/ChildSafetyView';
 import KavachAcademyView from './components/views/KavachAcademyView';
+import GuideDocsView from './components/views/GuideDocsView';
 
 // Onboarding Guide & Auto Updater
 import UserOnboardingBanner from './components/common/UserOnboardingBanner';
@@ -89,7 +90,7 @@ export default function App() {
   }, []);
 
   const handleToggleHelp = useCallback(() => {
-    setShowHelpGuide((prev) => !prev);
+    setActiveTab('guidedocs');
   }, []);
 
   const handleOpenAdmin = useCallback(() => {
@@ -258,7 +259,7 @@ export default function App() {
             </div>
           )}
 
-          {showHelpGuide && <UserOnboardingBanner />}
+          {showHelpGuide && activeTab !== 'guidedocs' && <UserOnboardingBanner />}
 
           {/* National Government Defense Command Banner */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#0D1527] border-2 border-[#27395C] p-4 rounded-2xl shadow-2xl relative overflow-hidden">
@@ -371,6 +372,8 @@ export default function App() {
               <ScannerPanel onScanResult={handleScanResult} />
             </div>
           )}
+
+          {activeTab === 'guidedocs' && <GuideDocsView onSelectTab={setActiveTab} />}
 
           {activeTab === 'aihub' && <AIHubView />}
 

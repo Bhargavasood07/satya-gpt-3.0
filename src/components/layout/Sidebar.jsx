@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles, Building2, GraduationCap, ShieldAlert, Award } from 'lucide-react';
+import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles, Building2, GraduationCap, ShieldAlert, Award, BookOpen } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
 export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPartner }) {
@@ -10,6 +10,7 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
   const navItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: t('nav.dashboard', 'SOC Dashboard') },
     { id: 'scanner', icon: ScanLine, label: t('nav.scanner', 'AI Threat Scanner') },
+    { id: 'guidedocs', icon: BookOpen, label: 'Guide & Docs' },
     { id: 'aihub', icon: Sparkles, label: 'AI Intelligence Hub' },
     { id: 'academy', icon: GraduationCap, label: 'Kavach Cyber Academy' },
     { id: 'partner', icon: Building2, action: onOpenPartner, label: 'MeitY & Founder Portal' },
@@ -44,6 +45,8 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
                     ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
                     : item.id === 'aihub'
                     ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-[0_0_15px_rgba(139,92,246,0.2)]'
+                    : item.id === 'guidedocs'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
                     : 'bg-[var(--accent-muted)] text-[var(--accent)] border border-[var(--accent)] shadow-[0_0_15px_rgba(0,229,255,0.2)]'
                   : 'text-slate-400 hover:bg-[#131B2E] hover:text-slate-100 border border-transparent'
               }`}
@@ -56,6 +59,8 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
                       ? 'bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.8)]'
                       : item.id === 'aihub'
                       ? 'bg-violet-400 shadow-[0_0_8px_rgba(139,92,246,0.8)]'
+                      : item.id === 'guidedocs'
+                      ? 'bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]'
                       : 'bg-[var(--accent)] shadow-[0_0_8px_var(--accent)]'
                   }`}
                 />

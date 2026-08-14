@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles } from 'lucide-react';
+import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles, BookOpen } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
 export default function MobileNav({ activeTab, onTabChange }) {
@@ -10,9 +10,9 @@ export default function MobileNav({ activeTab, onTabChange }) {
   const mobileNavItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Home' },
     { id: 'scanner', icon: ScanLine, label: 'Scanner' },
+    { id: 'guidedocs', icon: BookOpen, label: 'Docs' },
     { id: 'aihub', icon: Sparkles, label: 'AI Hub' },
     { id: 'childSafety', icon: Baby, action: toggleChildMode, isToggle: true, label: 'Guard' },
-    { id: 'analytics', icon: BarChart3, label: 'Analytics' },
   ];
 
   return (
@@ -37,6 +37,8 @@ export default function MobileNav({ activeTab, onTabChange }) {
                   ? 'text-amber-400 bg-amber-500/10'
                   : item.id === 'aihub'
                   ? 'text-violet-400 bg-violet-500/10'
+                  : item.id === 'guidedocs'
+                  ? 'text-amber-300 bg-amber-500/10'
                   : 'text-[var(--accent)] bg-[var(--accent-muted)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
