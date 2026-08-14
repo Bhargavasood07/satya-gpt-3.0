@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award, ShieldAlert, Heart, Share2, PhoneCall, Globe, MapPin } from 'lucide-react';
+import { Baby, ShieldCheck, Activity, Server, RefreshCw, ArrowUpCircle, ScanLine, Lock, Building2, Award, ShieldAlert, Heart, Share2, PhoneCall, Globe, MapPin, ArrowRight, Sparkles, Bot, GraduationCap } from 'lucide-react';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -340,36 +340,140 @@ export default function App() {
 
           {/* ═══════════════ TAB CONTENT ═══════════════ */}
 
+          {/* MAIN PRODUCT LANDING PAGE / DASHBOARD */}
           {activeTab === 'dashboard' && (
-            <div className="space-y-5">
+            <div className="space-y-6">
+              {/* Product Hero Banner */}
+              <div className="p-6 bg-gradient-to-r from-[#0D1527] via-[#15213A] to-[#0D1527] border-2 border-[var(--accent)] rounded-2xl shadow-2xl relative overflow-hidden space-y-4">
+                <div className="animate-cyber-scan" />
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="space-y-1.5 max-w-2xl">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-muted)] border border-[var(--accent)] text-[var(--accent)] text-[10px] font-extrabold uppercase tracking-widest">
+                      <Sparkles size={12} className="animate-pulse" />
+                      <span>INDIA'S #1 AI CYBER DEFENSE PLATFORM</span>
+                    </div>
+                    <h1 className="text-lg sm:text-2xl font-extrabold text-slate-100 uppercase tracking-wider leading-tight">
+                      SATYA-GPT — Real-Time Threat Intelligence & Fraud Protection
+                    </h1>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      Powered by VirusTotal v3 90+ engine cross-verification, KAVACH AI voice assistant, and 15-Minute Emergency Bank Lock Nodal Protocols.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+                    <button
+                      onClick={() => setActiveTab('scanner')}
+                      className="px-5 py-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-extrabold rounded-xl text-xs flex items-center gap-2 transition-all shadow-lg hover:scale-105"
+                    >
+                      <ScanLine size={16} />
+                      <span>Launch AI Threat Scanner</span>
+                      <ArrowRight size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Metrics & Protection Stats */}
               <MetricsBar metrics={metrics} onCardClick={(type) => setActiveMetricModal(type)} isFounderSession={isFounderSession} />
 
-              <div className="cyber-card p-4.5 rounded-2xl border-2 border-[#27395C] bg-[#0D1527] space-y-3 shadow-xl relative overflow-hidden">
-                <div className="animate-cyber-scan" />
-                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3 font-mono">
-                  <div className="flex items-center gap-2.5">
-                    <ScanLine size={20} className="text-[var(--accent)] animate-pulse" />
-                    <h2 className="text-xs sm:text-sm font-extrabold text-slate-100 uppercase tracking-wider">
-                      SATYA AI Threat Scanner & VirusTotal Verification
-                    </h2>
-                  </div>
-                  <span className="text-[10px] font-mono text-[var(--accent)] bg-[#060913] px-2.5 py-1 rounded-lg border border-[#27395C] font-bold">
-                    92-ENGINE REAL-TIME CHECK
-                  </span>
+              {/* Product Core Modules Grid */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-2 font-mono">
+                  <h2 className="text-xs sm:text-sm font-extrabold text-slate-100 uppercase tracking-wider">
+                    Core Product Capabilities & Threat Engines
+                  </h2>
+                  <span className="text-[10px] text-[var(--accent)] font-bold">MODULE OVERVIEW</span>
                 </div>
-                <ScannerPanel onScanResult={handleScanResult} />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Card 1: Scanner */}
+                  <div
+                    onClick={() => setActiveTab('scanner')}
+                    className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#0D1527] space-y-2 cursor-pointer hover:border-[var(--accent)] transition-all group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="w-9 h-9 rounded-xl bg-[var(--accent-muted)] border border-[var(--accent)] flex items-center justify-center text-[var(--accent)]">
+                        <ScanLine size={18} />
+                      </div>
+                      <span className="text-[10px] font-bold text-[var(--accent)] group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                        <span>Open</span>
+                        <ArrowRight size={12} />
+                      </span>
+                    </div>
+                    <h3 className="font-extrabold text-xs text-slate-100">AI Threat Scanner</h3>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">
+                      Scan links, SMS texts, QR codes, and camera feeds against 90+ VirusTotal security engines.
+                    </p>
+                  </div>
+
+                  {/* Card 2: AI Hub */}
+                  <div
+                    onClick={() => setActiveTab('aihub')}
+                    className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#0D1527] space-y-2 cursor-pointer hover:border-purple-400 transition-all group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400">
+                        <Bot size={18} />
+                      </div>
+                      <span className="text-[10px] font-bold text-purple-300 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                        <span>Open</span>
+                        <ArrowRight size={12} />
+                      </span>
+                    </div>
+                    <h3 className="font-extrabold text-xs text-slate-100">KAVACH AI Multilingual Hub</h3>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">
+                      Voice chat assistant in Hindi and English with specialized AI security personas.
+                    </p>
+                  </div>
+
+                  {/* Card 3: Academy */}
+                  <div
+                    onClick={() => setActiveTab('academy')}
+                    className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#0D1527] space-y-2 cursor-pointer hover:border-amber-400 transition-all group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                        <GraduationCap size={18} />
+                      </div>
+                      <span className="text-[10px] font-bold text-amber-300 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                        <span>Open</span>
+                        <ArrowRight size={12} />
+                      </span>
+                    </div>
+                    <h3 className="font-extrabold text-xs text-slate-100">Kavach Cyber Academy</h3>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">
+                      Masterclass quiz with 10 real-world threat scenarios and Founder signed certificate.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
+          {/* DEDICATED AI THREAT SCANNER PAGE */}
           {activeTab === 'scanner' && (
-            <div className="max-w-4xl mx-auto space-y-4">
-              <div className="bg-[#0D1527] border-2 border-[#27395C] p-4.5 rounded-2xl font-mono shadow-xl relative overflow-hidden">
+            <div className="max-w-5xl mx-auto space-y-4">
+              <div className="bg-[#0D1527] border-2 border-[var(--accent)] p-5 rounded-2xl font-mono shadow-2xl relative overflow-hidden">
                 <div className="animate-cyber-scan" />
-                <h2 className="text-sm font-extrabold text-slate-100 uppercase tracking-wider">SATYA AI Dedicated Threat Scanner Hub</h2>
-                <p className="text-xs text-slate-400 mt-1">Scan links, messages, camera feeds, and QR codes with VirusTotal v3 verification</p>
+                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <ScanLine size={22} className="text-[var(--accent)] animate-pulse" />
+                    <h2 className="text-sm sm:text-base font-extrabold text-slate-100 uppercase tracking-wider">
+                      SATYA AI Dedicated Threat Scanner Hub
+                    </h2>
+                  </div>
+                  <span className="text-[10px] font-mono text-[var(--accent)] bg-[#060913] px-3 py-1 rounded-xl border border-[#27395C] font-extrabold">
+                    92-ENGINE REAL-TIME VERIFICATION
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 mt-2">
+                  Scan links, messages, camera feeds, and QR codes with VirusTotal v3 and KAVACH offline edge AI.
+                </p>
               </div>
-              <ScannerPanel onScanResult={handleScanResult} />
+
+              <div className="cyber-card p-4.5 rounded-2xl border-2 border-[#27395C] bg-[#0D1527] shadow-xl">
+                <ScannerPanel onScanResult={handleScanResult} />
+              </div>
             </div>
           )}
 
