@@ -39,8 +39,7 @@ import ChildSafetyView from './components/views/ChildSafetyView';
 import KavachAcademyView from './components/views/KavachAcademyView';
 import GuideDocsView from './components/views/GuideDocsView';
 
-// Onboarding Guide & Auto Updater
-import UserOnboardingBanner from './components/common/UserOnboardingBanner';
+// Auto Updater
 import { initAutoUpdater, reloadToLatestVersion } from './utils/autoUpdater';
 import { secureStorage } from './utils/securityGuard';
 
@@ -66,7 +65,6 @@ export default function App() {
   
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [showHelpGuide, setShowHelpGuide] = useState(true);
   const [activeMetricModal, setActiveMetricModal] = useState(null);
   const [hasNewVersion, setHasNewVersion] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -92,10 +90,6 @@ export default function App() {
 
   const handleToggleChat = useCallback(() => {
     setIsChatOpen((prev) => !prev);
-  }, []);
-
-  const handleToggleHelp = useCallback(() => {
-    setActiveTab('guidedocs');
   }, []);
 
   const handleOpenAdmin = useCallback(() => {
@@ -228,7 +222,7 @@ export default function App() {
   );
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#060913]">
+    <div className="flex flex-col h-screen overflow-hidden bg-[#060a14]">
       <TopBar
         onOpenAdmin={handleOpenAdmin}
         onToggleDrawer={() => setIsDrawerOpen(true)}
@@ -243,7 +237,7 @@ export default function App() {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} onOpenPartner={handleOpenPartner} />
 
-        <main ref={mainScrollRef} className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 space-y-4 pb-28 md:pb-6 text-xs sm:text-sm font-mono">
+        <main ref={mainScrollRef} className="flex-1 overflow-y-auto p-3 sm:p-5 space-y-5 pb-28 md:pb-6 text-xs sm:text-sm font-mono">
           {/* Auto-Update Banner */}
           {hasNewVersion && (
             <div className="bg-cyan-950/60 border border-cyan-400/60 p-3 rounded-xl flex items-center justify-between font-mono text-xs text-cyan-200 shadow-lg animate-pulse">
@@ -253,7 +247,7 @@ export default function App() {
               </div>
               <button
                 onClick={reloadToLatestVersion}
-                className="px-3 py-1 bg-[var(--accent)] text-slate-950 font-bold rounded-lg hover:bg-cyan-400 transition-all flex items-center gap-1 shadow-md"
+                className="px-3 py-1 bg-[var(--accent)] text-slate-950 font-bold rounded-lg hover:bg-cyan-400 transition-all flex items-center gap-1 shadow-md cursor-pointer"
               >
                 <RefreshCw size={14} />
                 <span>Update Now</span>
@@ -261,143 +255,103 @@ export default function App() {
             </div>
           )}
 
-          {showHelpGuide && activeTab !== 'guidedocs' && <UserOnboardingBanner />}
-
-          {/* National Government Defense Command Banner */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#0D1527] border-2 border-[#27395C] p-4 rounded-2xl shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 via-[var(--accent)] to-emerald-400" />
-
-            <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#060913] border-2 border-amber-500/60 flex items-center justify-center text-amber-400 font-mono font-bold text-xs shrink-0 shadow-lg">
-                <Building2 size={22} />
-              </div>
-              <div className="flex flex-col">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono font-extrabold text-xs sm:text-sm text-slate-100 uppercase tracking-wider">
-                    NATIONAL CYBER CRIME DEFENSE & THREAT SOC
-                  </span>
-                  <button
-                    onClick={() => setIsGovtVerificationOpen(true)}
-                    className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400 text-amber-300 text-[10px] font-extrabold flex items-center gap-1 hover:bg-amber-500/30 transition-all cursor-pointer"
-                  >
-                    <Award size={12} className="text-amber-400" />
-                    MeitY / CERT-In ALIGNED
-                  </button>
-                  <button
-                    onClick={() => setIsIpProtectionOpen(true)}
-                    className="px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/40 text-rose-400 text-[10px] font-extrabold flex items-center gap-1 hover:bg-rose-500/20 transition-all cursor-pointer"
-                  >
-                    <Lock size={11} className="text-rose-400" />
-                    IP FORTRESS SEALED
-                  </button>
-                </div>
-                <span className="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-0.5">
-                  Official Nodal Architecture • VirusTotal v3 90-Engine Verification • Founder: Bhargava Sood
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
-              <button
-                onClick={() => setIsThreatMapOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--accent-muted)] border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-slate-950 font-extrabold transition-all text-xs shadow-md"
-              >
-                <MapPin size={14} />
-                <span>Threat Map</span>
-              </button>
-
-              <a
-                href="tel:1930"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold transition-all text-xs shadow-md"
-              >
-                <PhoneCall size={14} />
-                <span>Dial 1930</span>
-              </a>
-
-              <button
-                onClick={() => setIsFamilyShareOpen(true)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 font-bold transition-all text-xs shadow-md"
-              >
-                <Share2 size={13} className="text-amber-400" />
-                <span>Family Share</span>
-              </button>
-
-              <button
-                onClick={() => setIsTrustBadgeOpen(true)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#060913] border border-[#27395C] text-emerald-400 hover:border-emerald-400 font-bold transition-all text-xs shadow-md"
-              >
-                <ShieldCheck size={13} className="text-emerald-400" />
-                <span>Trust Seal</span>
-              </button>
-
-              <button
-                onClick={() => setIsEmergencyFreezeOpen(true)}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold transition-all text-xs shadow-lg animate-pulse"
-              >
-                <ShieldAlert size={15} />
-                <span>15-Min Bank Freeze</span>
-              </button>
-            </div>
-          </div>
-
           {/* ═══════════════ TAB CONTENT ═══════════════ */}
 
           {/* MAIN PRODUCT LANDING PAGE / DASHBOARD */}
           {activeTab === 'dashboard' && (
             <div className="space-y-6">
-              {/* Product Hero Banner */}
-              <div className="p-6 bg-gradient-to-r from-[#0D1527] via-[#15213A] to-[#0D1527] border-2 border-[var(--accent)] rounded-2xl shadow-2xl relative overflow-hidden space-y-4">
+              {/* Sleek Ultra-Clean Liquid Crystal Master Hero Banner */}
+              <div className="p-5 sm:p-6 bg-gradient-to-r from-[#0d1629] via-[#14203a] to-[#0d1629] border-2 border-[var(--accent)] rounded-2xl shadow-[0_0_30px_rgba(0,229,255,0.15)] relative overflow-hidden space-y-4">
                 <div className="animate-cyber-scan" />
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="space-y-1.5 max-w-2xl">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-muted)] border border-[var(--accent)] text-[var(--accent)] text-[10px] font-extrabold uppercase tracking-widest">
-                      <Sparkles size={12} className="animate-pulse" />
-                      <span>INDIA'S #1 AI CYBER DEFENSE PLATFORM</span>
+                
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div className="space-y-2 max-w-3xl">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-muted)] border border-[var(--accent)] text-[var(--accent)] text-[10px] font-extrabold uppercase tracking-widest">
+                        <Sparkles size={12} className="animate-pulse" />
+                        <span>INDIA'S #1 AI CYBER DEFENSE PLATFORM</span>
+                      </div>
+
+                      <button
+                        onClick={() => setIsGovtVerificationOpen(true)}
+                        className="px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-400 text-amber-300 text-[10px] font-extrabold flex items-center gap-1 hover:bg-amber-500/30 transition-all cursor-pointer"
+                      >
+                        <Award size={12} className="text-amber-400" />
+                        <span>MeitY / CERT-In Accredited</span>
+                      </button>
                     </div>
+
                     <h1 className="text-lg sm:text-2xl font-extrabold text-slate-100 uppercase tracking-wider leading-tight">
                       SATYA-GPT — Real-Time Threat Intelligence & Fraud Protection
                     </h1>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      Powered by VirusTotal v3 90+ engine cross-verification, KAVACH AI voice assistant, and 15-Minute Emergency Bank Lock Nodal Protocols.
+                    
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      Powered by VirusTotal v3 90+ engine cross-verification, KAVACH AI voice assistant, and 15-Minute Emergency Bank Lock Nodal Protocols. Founder: Bhargava Sood.
                     </p>
                   </div>
 
+                  {/* Clean Action Button Row */}
                   <div className="flex flex-wrap items-center gap-2.5 shrink-0">
                     <button
                       onClick={() => setActiveTab('scanner')}
-                      className="px-5 py-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-extrabold rounded-xl text-xs flex items-center gap-2 transition-all shadow-lg hover:scale-105"
+                      className="px-4 py-2.5 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-extrabold rounded-xl text-xs flex items-center gap-2 transition-all shadow-lg hover:scale-105 cursor-pointer"
                     >
                       <ScanLine size={16} />
-                      <span>Launch AI Threat Scanner</span>
+                      <span>Launch Threat Scanner</span>
                       <ArrowRight size={14} />
                     </button>
+
+                    <button
+                      onClick={() => setIsEmergencyFreezeOpen(true)}
+                      className="px-3.5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-extrabold rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-lg animate-pulse cursor-pointer"
+                    >
+                      <ShieldAlert size={15} />
+                      <span>15-Min Bank Freeze</span>
+                    </button>
+
+                    <button
+                      onClick={() => setIsThreatMapOpen(true)}
+                      className="px-3.5 py-2.5 bg-[#060a14] border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent-muted)] font-extrabold rounded-xl text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <MapPin size={15} />
+                      <span>Threat Map</span>
+                    </button>
+
+                    <a
+                      href="tel:1930"
+                      className="px-3.5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <PhoneCall size={15} />
+                      <span>Dial 1930</span>
+                    </a>
                   </div>
                 </div>
               </div>
 
-              {/* Metrics & Protection Stats */}
+              {/* Metrics & Protection Stats Bar */}
               <MetricsBar metrics={metrics} onCardClick={(type) => setActiveMetricModal(type)} isFounderSession={isFounderSession} />
 
-              {/* Product Core Modules Grid */}
+              {/* Core Product Capabilities Grid */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-2 font-mono">
-                  <h2 className="text-xs sm:text-sm font-extrabold text-slate-100 uppercase tracking-wider">
-                    Core Product Capabilities & Threat Engines
+                <div className="flex items-center justify-between border-b border-[#1b2a47] pb-2.5 font-mono">
+                  <h2 className="text-xs sm:text-sm font-extrabold text-slate-100 uppercase tracking-wider flex items-center gap-2">
+                    <Sparkles size={16} className="text-[var(--accent)]" />
+                    <span>Core Product Capabilities & Engines</span>
                   </h2>
-                  <span className="text-[10px] text-[var(--accent)] font-bold">MODULE OVERVIEW</span>
+                  <span className="text-[10px] text-[var(--accent)] font-extrabold">MODULE OVERVIEW</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {/* Card 1: Scanner */}
                   <div
                     onClick={() => setActiveTab('scanner')}
-                    className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#0D1527] space-y-2 cursor-pointer hover:border-[var(--accent)] transition-all group"
+                    className="cyber-card p-5 rounded-2xl border border-[#24375b] bg-[#0d1629] space-y-2.5 cursor-pointer hover:border-[var(--accent)] transition-all group"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-xl bg-[var(--accent-muted)] border border-[var(--accent)] flex items-center justify-center text-[var(--accent)]">
-                        <ScanLine size={18} />
+                      <div className="w-10 h-10 rounded-xl bg-[var(--accent-muted)] border border-[var(--accent)] flex items-center justify-center text-[var(--accent)] shadow-sm">
+                        <ScanLine size={20} />
                       </div>
-                      <span className="text-[10px] font-bold text-[var(--accent)] group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                      <span className="text-[10px] font-extrabold text-[var(--accent)] group-hover:translate-x-1 transition-transform flex items-center gap-1">
                         <span>Open</span>
                         <ArrowRight size={12} />
                       </span>
@@ -411,13 +365,13 @@ export default function App() {
                   {/* Card 2: AI Hub */}
                   <div
                     onClick={() => setActiveTab('aihub')}
-                    className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#0D1527] space-y-2 cursor-pointer hover:border-purple-400 transition-all group"
+                    className="cyber-card p-5 rounded-2xl border border-[#24375b] bg-[#0d1629] space-y-2.5 cursor-pointer hover:border-purple-400 transition-all group"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400">
-                        <Bot size={18} />
+                      <div className="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 shadow-sm">
+                        <Bot size={20} />
                       </div>
-                      <span className="text-[10px] font-bold text-purple-300 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                      <span className="text-[10px] font-extrabold text-purple-300 group-hover:translate-x-1 transition-transform flex items-center gap-1">
                         <span>Open</span>
                         <ArrowRight size={12} />
                       </span>
@@ -431,13 +385,13 @@ export default function App() {
                   {/* Card 3: Academy */}
                   <div
                     onClick={() => setActiveTab('academy')}
-                    className="cyber-card p-4 rounded-xl border border-[#27395C] bg-[#0D1527] space-y-2 cursor-pointer hover:border-amber-400 transition-all group"
+                    className="cyber-card p-5 rounded-2xl border border-[#24375b] bg-[#0d1629] space-y-2.5 cursor-pointer hover:border-amber-400 transition-all group"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-                        <GraduationCap size={18} />
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-sm">
+                        <GraduationCap size={20} />
                       </div>
-                      <span className="text-[10px] font-bold text-amber-300 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                      <span className="text-[10px] font-extrabold text-amber-300 group-hover:translate-x-1 transition-transform flex items-center gap-1">
                         <span>Open</span>
                         <ArrowRight size={12} />
                       </span>
@@ -455,16 +409,16 @@ export default function App() {
           {/* DEDICATED AI THREAT SCANNER PAGE */}
           {activeTab === 'scanner' && (
             <div className="max-w-5xl mx-auto space-y-4">
-              <div className="bg-[#0D1527] border-2 border-[var(--accent)] p-5 rounded-2xl font-mono shadow-2xl relative overflow-hidden">
+              <div className="bg-[#0d1629] border-2 border-[var(--accent)] p-5 rounded-2xl font-mono shadow-2xl relative overflow-hidden">
                 <div className="animate-cyber-scan" />
-                <div className="flex items-center justify-between border-b border-[#1E2D4A] pb-3">
+                <div className="flex items-center justify-between border-b border-[#1b2a47] pb-3">
                   <div className="flex items-center gap-2.5">
                     <ScanLine size={22} className="text-[var(--accent)] animate-pulse" />
                     <h2 className="text-sm sm:text-base font-extrabold text-slate-100 uppercase tracking-wider">
                       SATYA AI Dedicated Threat Scanner Hub
                     </h2>
                   </div>
-                  <span className="text-[10px] font-mono text-[var(--accent)] bg-[#060913] px-3 py-1 rounded-xl border border-[#27395C] font-extrabold">
+                  <span className="text-[10px] font-mono text-[var(--accent)] bg-[#060a14] px-3 py-1 rounded-xl border border-[#24375b] font-extrabold">
                     92-ENGINE REAL-TIME VERIFICATION
                   </span>
                 </div>
@@ -473,7 +427,7 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="cyber-card p-4.5 rounded-2xl border-2 border-[#27395C] bg-[#0D1527] shadow-xl">
+              <div className="cyber-card p-4.5 rounded-2xl border-2 border-[#24375b] bg-[#0d1629] shadow-xl">
                 <ScannerPanel onScanResult={handleScanResult} />
               </div>
             </div>
