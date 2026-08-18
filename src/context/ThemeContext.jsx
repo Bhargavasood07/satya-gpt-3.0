@@ -6,9 +6,9 @@ const ThemeContext = createContext();
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
-      return secureStorage.getItem('theme_profile') || 'cyber-slate';
+      return secureStorage.getItem('theme_profile') || 'light';
     } catch {
-      return 'cyber-slate';
+      return 'light';
     }
   });
 

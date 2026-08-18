@@ -5,14 +5,55 @@
 @tailwind utilities;
 
 /* ============================================
-   SATYA-GPT LIQUID CRYSTAL DESIGN SYSTEM
-   - Theme: Liquid Crystal, Pridescent Glass, Holographic Refractions & Light Beams
-   - Palette: Luminous Obsidian, Iridescent Cyan, Prismatic Violet, Holographic Amber
+   SATYA-GPT LIGHT LIQUID CRYSTAL DESIGN SYSTEM
+   - Aesthetic: Light-Based Luminous Porcelain, Crystal White Glass, Prismatic Sky Cyan, Refractive Animations
    ============================================ */
 
 :root,
-[data-theme="cyber-slate"],
+[data-theme="light"],
 [data-theme="liquid-crystal"] {
+  --bg-primary: #f4f7fc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-input: #ffffff;
+
+  --border-color: #cbd5e1;
+  --border-card: #e2e8f0;
+
+  --accent: #0284c7;
+  --accent-glow: rgba(2, 132, 199, 0.25);
+  --accent-muted: rgba(2, 132, 199, 0.1);
+  --accent-text: #0284c7;
+
+  --crystal-violet: #8b5cf6;
+  --crystal-pink: #ec4899;
+  --crystal-blue: #2563eb;
+
+  --safe: #059669;
+  --safe-glow: rgba(5, 150, 105, 0.25);
+  --safe-muted: rgba(5, 150, 105, 0.1);
+
+  --threat: #dc2626;
+  --threat-glow: rgba(220, 38, 38, 0.25);
+  --threat-muted: rgba(220, 38, 38, 0.1);
+
+  --warning: #d97706;
+  --warning-glow: rgba(217, 119, 6, 0.25);
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(203, 213, 225, 0.9);
+
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-track: #f4f7fc;
+}
+
+/* Dark Obsidian Theme (Available via toggle) */
+[data-theme="cyber-slate"] {
   --bg-primary: #060a14;
   --bg-secondary: #0d1527;
   --bg-card: #0d1629;
@@ -53,61 +94,27 @@
   --scrollbar-track: #060a14;
 }
 
-/* Luminous Crisp Light Theme */
-[data-theme="light"] {
-  --bg-primary: #f0f4f8;
-  --bg-secondary: #ffffff;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f8fafc;
-  --bg-input: #ffffff;
-
-  --border-color: #cbd5e1;
-  --border-card: #cbd5e1;
-
-  --accent: #0284c7;
-  --accent-glow: rgba(2, 132, 199, 0.25);
-  --accent-muted: rgba(2, 132, 199, 0.12);
-  --accent-text: #0284c7;
-
-  --safe: #059669;
-  --safe-glow: rgba(5, 150, 105, 0.25);
-  --safe-muted: rgba(5, 150, 105, 0.12);
-
-  --threat: #dc2626;
-  --threat-glow: rgba(220, 38, 38, 0.25);
-  --threat-muted: rgba(220, 38, 38, 0.12);
-
-  --warning: #d97706;
-  --warning-glow: rgba(217, 119, 6, 0.25);
-
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-
-  --glass-bg: rgba(255, 255, 255, 0.92);
-  --glass-border: rgba(203, 213, 225, 0.9);
-
-  --scrollbar-thumb: #cbd5e1;
-  --scrollbar-track: #f0f4f8;
-}
-
-/* Light Theme Overrides */
+/* Dynamic Light Mode Color Utility Overrides */
 [data-theme="light"] .bg-\[\#0B0F19\],
-[data-theme="light"] .bg-\[\#060913\] {
-  background-color: #F0F4F8 !important;
+[data-theme="light"] .bg-\[\#060913\],
+[data-theme="light"] .bg-\[\#060a14\] {
+  background-color: #F4F7FC !important;
   color: #0F172A !important;
 }
 
 [data-theme="light"] .bg-\[\#131B2E\],
-[data-theme="light"] .bg-\[\#0D1527\] {
+[data-theme="light"] .bg-\[\#0D1527\],
+[data-theme="light"] .bg-\[\#0d1629\] {
   background-color: #FFFFFF !important;
   color: #0F172A !important;
-  border-color: #CBD5E1 !important;
+  border-color: #E2E8F0 !important;
 }
 
 [data-theme="light"] .border-\[\#27395C\],
-[data-theme="light"] .border-\[\#1E2D4A\] {
-  border-color: #CBD5E1 !important;
+[data-theme="light"] .border-\[\#1E2D4A\],
+[data-theme="light"] .border-\[\#24375b\],
+[data-theme="light"] .border-\[\#1b2a47\] {
+  border-color: #E2E8F0 !important;
 }
 
 [data-theme="light"] .text-slate-100,
@@ -116,11 +123,11 @@
 }
 
 /* ============================================
-   LIQUID CRYSTAL ANIMATIONS & REFRACTIONS
+   LIGHT LIQUID CRYSTAL ANIMATIONS & REFRACTIONS
    ============================================ */
 
-/* 1. Liquid Shimmer Fluid Flow */
-@keyframes liquid-flow {
+/* 1. Fluid Light Gradient Sweep */
+@keyframes liquid-light-flow {
   0% {
     background-position: 0% 50%;
   }
@@ -133,19 +140,19 @@
 }
 
 .animate-liquid-gradient {
-  background: linear-gradient(120deg, #00e5ff, #a855f7, #ec4899, #00e5ff);
+  background: linear-gradient(120deg, #0284c7, #8b5cf6, #ec4899, #0284c7);
   background-size: 300% 300%;
-  animation: liquid-flow 8s ease infinite;
+  animation: liquid-light-flow 8s ease infinite;
 }
 
-/* 2. Prismatic Light Beam Sweep */
-@keyframes crystal-sweep {
+/* 2. Prismatic Light Reflection Sweep */
+@keyframes crystal-light-sweep {
   0% {
     transform: translateX(-150%) rotate(25deg);
     opacity: 0;
   }
   50% {
-    opacity: 0.6;
+    opacity: 0.7;
   }
   100% {
     transform: translateX(250%) rotate(25deg);
@@ -162,31 +169,17 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.25),
-    rgba(0, 229, 255, 0.4),
-    rgba(168, 85, 247, 0.3),
+    rgba(255, 255, 255, 0.6),
+    rgba(2, 132, 199, 0.3),
+    rgba(139, 92, 246, 0.2),
     transparent
   );
   transform: rotate(25deg);
-  animation: crystal-sweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: crystal-light-sweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   pointer-events: none;
 }
 
-/* 3. Holographic Pulse Glow */
-@keyframes crystal-pulse {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2), 0 0 30px rgba(168, 85, 247, 0.1);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(0, 229, 255, 0.5), 0 0 50px rgba(168, 85, 247, 0.3);
-  }
-}
-
-.crystal-pulse-glow {
-  animation: crystal-pulse 4s infinite ease-in-out;
-}
-
-/* 4. Floating Micro-Animation */
+/* 3. Floating Micro-Animation */
 @keyframes float-liquid {
   0%, 100% {
     transform: translateY(0px);
@@ -201,7 +194,7 @@
 }
 
 /* ============================================
-   SEAMLESS CONTINUOUS MARQUEE ANIMATION
+   SEAMLESS MARQUEE ANIMATION
    ============================================ */
 @keyframes marquee {
   0% {
@@ -245,8 +238,8 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #00e5ff, #a855f7, transparent);
-  box-shadow: 0 0 14px #00e5ff;
+  background: linear-gradient(90deg, transparent, #0284c7, #8b5cf6, transparent);
+  box-shadow: 0 0 12px #0284c7;
   animation: cyber-scan 3.5s ease-in-out infinite;
 }
 
@@ -266,7 +259,7 @@ body {
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
 
-  /* Anti-Selection & Anti-Copy Guard */
+  /* Anti-Selection Guard */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -303,7 +296,7 @@ html {
 }
 
 /* ============================================
-   CUSTOM LIQUID SCROLLBAR
+   LIGHT LIQUID SCROLLBAR
    ============================================ */
 ::-webkit-scrollbar {
   width: 6px;
@@ -315,28 +308,28 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00e5ff, #a855f7);
+  background: linear-gradient(180deg, #0284c7, #8b5cf6);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00e5ff;
+  background: #0284c7;
 }
 
 /* ============================================
-   LIQUID CRYSTAL GLASSMORPHISM UTILITY
+   LIGHT LIQUID CRYSTAL GLASSMORPHISM UTILITY
    ============================================ */
 .glass-panel {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(148, 163, 184, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================
-   LIQUID CRYSTAL CARD STYLES
+   LIGHT LIQUID CRYSTAL CARD STYLES
    ============================================ */
 .cyber-card {
   background: var(--bg-card);
@@ -344,12 +337,13 @@ html {
   border-radius: 16px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(148, 163, 184, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .cyber-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 12px 35px rgba(0, 229, 255, 0.15), 0 0 20px rgba(168, 85, 247, 0.1);
+  box-shadow: 0 12px 35px rgba(2, 132, 199, 0.15), 0 0 20px rgba(139, 92, 246, 0.1);
   transform: translateY(-2px);
 }
 
