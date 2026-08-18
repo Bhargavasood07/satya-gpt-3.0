@@ -19,10 +19,10 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
   ];
 
   return (
-    <aside className="sidebar-nav hidden md:flex flex-col w-16 lg:w-56 h-full bg-[#0B0F19] border-r border-[#1E2D4A] py-4 items-center lg:items-stretch z-40 font-mono select-none">
+    <aside className="sidebar-nav hidden md:flex flex-col w-16 lg:w-56 h-full bg-[#060a14] border-r border-[#1b2a47] py-4 items-center lg:items-stretch z-40 font-mono select-none backdrop-blur-md">
       <div className="flex flex-col space-y-1.5 w-full px-2">
         <div className="hidden lg:block px-3 py-2 text-[10px] font-extrabold text-[var(--accent)] uppercase tracking-wider">
-          Enterprise Cyber Navigation
+          Liquid Crystal Navigation
         </div>
 
         {navItems.map((item) => {
@@ -39,16 +39,16 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
                   onTabChange(item.id);
                 }
               }}
-              className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-xs font-bold ${
+              className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-xs font-bold cursor-pointer ${
                 isActive
                   ? item.isToggle
-                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
+                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-[0_0_18px_rgba(168,85,247,0.25)]'
                     : item.id === 'aihub'
-                    ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-[0_0_15px_rgba(139,92,246,0.2)]'
+                    ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-[0_0_18px_rgba(139,92,246,0.25)]'
                     : item.id === 'guidedocs'
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
-                    : 'bg-[var(--accent-muted)] text-[var(--accent)] border border-[var(--accent)] shadow-[0_0_15px_rgba(0,229,255,0.2)]'
-                  : 'text-slate-400 hover:bg-[#131B2E] hover:text-slate-100 border border-transparent'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_18px_rgba(245,158,11,0.25)]'
+                    : 'bg-[var(--accent-muted)] text-[var(--accent)] border border-[var(--accent)] shadow-[0_0_18px_rgba(0,229,255,0.25)]'
+                  : 'text-slate-400 hover:bg-[#0d1629] hover:text-slate-100 border border-transparent'
               }`}
               title={item.label}
             >
@@ -56,12 +56,12 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
                 <div
                   className={`absolute left-0 top-1/2 -translate-y-1/2 w-[3.5px] h-3/4 rounded-r-md ${
                     item.isToggle
-                      ? 'bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.8)]'
+                      ? 'bg-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.9)]'
                       : item.id === 'aihub'
-                      ? 'bg-violet-400 shadow-[0_0_8px_rgba(139,92,246,0.8)]'
+                      ? 'bg-violet-400 shadow-[0_0_10px_rgba(139,92,246,0.9)]'
                       : item.id === 'guidedocs'
-                      ? 'bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]'
-                      : 'bg-[var(--accent)] shadow-[0_0_8px_var(--accent)]'
+                      ? 'bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.9)]'
+                      : 'bg-[var(--accent)] shadow-[0_0_10px_var(--accent)]'
                   }`}
                 />
               )}
@@ -69,7 +69,7 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
               <span className="hidden lg:inline truncate">{item.label}</span>
 
               {/* Tooltip for Icon-only Mode */}
-              <div className="lg:hidden absolute left-14 px-2.5 py-1 bg-[#131B2E] border border-[#27395C] text-slate-100 text-xs rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl pointer-events-none font-bold">
+              <div className="lg:hidden absolute left-14 px-2.5 py-1 bg-[#0d1629] border border-[#24375b] text-slate-100 text-xs rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl pointer-events-none font-bold">
                 {item.label}
               </div>
             </button>
@@ -79,7 +79,7 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
 
       {/* Sidebar Footer Enterprise Badge */}
       <div className="mt-auto px-3 pt-4 hidden lg:block">
-        <div className="p-3 bg-[#131B2E] border border-[#27395C] rounded-xl text-center space-y-1.5">
+        <div className="p-3 bg-[#0d1629] border border-[#24375b] rounded-xl text-center space-y-1.5 glass-panel">
           <div className="flex items-center justify-center gap-1 text-[10px] text-amber-300 font-bold uppercase">
             <Award size={13} className="text-amber-400" />
             <span>CERT-In & MeitY Aligned</span>

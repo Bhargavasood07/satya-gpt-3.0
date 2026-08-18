@@ -5,99 +5,96 @@
 @tailwind utilities;
 
 /* ============================================
-   SATYA-GPT ULTIMATE CYBER SOC DESIGN SYSTEM
-   Hex Palette:
-   - Deepest Obsidian Surface:  #060913
-   - Card Panel Surface:        #0D1527
-   - Card Hover Surface:        #15213A
-   - Border Primary:            #1E2D4A
-   - Border Card Highlight:     #27395C
-   - Electric Cyan Accent:      #00E5FF
-   - Tactical Emerald Safe:     #10B981
-   - High-Visibility Amber:     #F59E0B
-   - Critical Emergency Red:    #EF4444
+   SATYA-GPT LIQUID CRYSTAL DESIGN SYSTEM
+   - Theme: Liquid Crystal, Pridescent Glass, Holographic Refractions & Light Beams
+   - Palette: Luminous Obsidian, Iridescent Cyan, Prismatic Violet, Holographic Amber
    ============================================ */
 
 :root,
-[data-theme="cyber-slate"] {
-  --bg-primary: #060913;
+[data-theme="cyber-slate"],
+[data-theme="liquid-crystal"] {
+  --bg-primary: #060a14;
   --bg-secondary: #0d1527;
-  --bg-card: #0d1527;
-  --bg-card-hover: #15213a;
-  --bg-input: #060913;
+  --bg-card: #0d1629;
+  --bg-card-hover: #14203a;
+  --bg-input: #080e1c;
 
-  --border-color: #1e2d4a;
-  --border-card: #27395c;
+  --border-color: #1b2a47;
+  --border-card: #24375b;
 
   --accent: #00e5ff;
-  --accent-glow: rgba(0, 229, 255, 0.25);
-  --accent-muted: rgba(0, 229, 255, 0.12);
+  --accent-glow: rgba(0, 229, 255, 0.35);
+  --accent-muted: rgba(0, 229, 255, 0.14);
   --accent-text: #00e5ff;
 
+  --crystal-violet: #a855f7;
+  --crystal-pink: #ec4899;
+  --crystal-blue: #3b82f6;
+
   --safe: #10b981;
-  --safe-glow: rgba(16, 185, 129, 0.25);
-  --safe-muted: rgba(16, 185, 129, 0.12);
+  --safe-glow: rgba(16, 185, 129, 0.3);
+  --safe-muted: rgba(16, 185, 129, 0.14);
 
   --threat: #ef4444;
-  --threat-glow: rgba(239, 68, 68, 0.25);
-  --threat-muted: rgba(239, 68, 68, 0.12);
+  --threat-glow: rgba(239, 68, 68, 0.3);
+  --threat-muted: rgba(239, 68, 68, 0.14);
 
   --warning: #f59e0b;
-  --warning-glow: rgba(245, 158, 11, 0.25);
+  --warning-glow: rgba(245, 158, 11, 0.3);
 
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
 
-  --glass-bg: rgba(13, 21, 39, 0.88);
-  --glass-border: rgba(39, 57, 92, 0.7);
+  --glass-bg: rgba(13, 22, 41, 0.82);
+  --glass-border: rgba(0, 229, 255, 0.25);
 
-  --scrollbar-thumb: #27395c;
-  --scrollbar-track: #060913;
+  --scrollbar-thumb: #24375b;
+  --scrollbar-track: #060a14;
 }
 
-/* High-Contrast Crisp Light Theme */
+/* Luminous Crisp Light Theme */
 [data-theme="light"] {
-  --bg-primary: #f8fafc;
+  --bg-primary: #f0f4f8;
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-hover: #f1f5f9;
+  --bg-card-hover: #f8fafc;
   --bg-input: #ffffff;
 
   --border-color: #cbd5e1;
   --border-card: #cbd5e1;
 
   --accent: #0284c7;
-  --accent-glow: rgba(2, 132, 199, 0.2);
-  --accent-muted: rgba(2, 132, 199, 0.1);
+  --accent-glow: rgba(2, 132, 199, 0.25);
+  --accent-muted: rgba(2, 132, 199, 0.12);
   --accent-text: #0284c7;
 
   --safe: #059669;
-  --safe-glow: rgba(5, 150, 105, 0.2);
-  --safe-muted: rgba(5, 150, 105, 0.1);
+  --safe-glow: rgba(5, 150, 105, 0.25);
+  --safe-muted: rgba(5, 150, 105, 0.12);
 
   --threat: #dc2626;
-  --threat-glow: rgba(220, 38, 38, 0.2);
-  --threat-muted: rgba(220, 38, 38, 0.1);
+  --threat-glow: rgba(220, 38, 38, 0.25);
+  --threat-muted: rgba(220, 38, 38, 0.12);
 
   --warning: #d97706;
-  --warning-glow: rgba(217, 119, 6, 0.2);
+  --warning-glow: rgba(217, 119, 6, 0.25);
 
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-muted: #64748b;
 
-  --glass-bg: rgba(255, 255, 255, 0.95);
-  --glass-border: rgba(203, 213, 225, 0.8);
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(203, 213, 225, 0.9);
 
   --scrollbar-thumb: #cbd5e1;
-  --scrollbar-track: #f8fafc;
+  --scrollbar-track: #f0f4f8;
 }
 
 /* Light Theme Overrides */
 [data-theme="light"] .bg-\[\#0B0F19\],
 [data-theme="light"] .bg-\[\#060913\] {
-  background-color: #F8FAFC !important;
+  background-color: #F0F4F8 !important;
   color: #0F172A !important;
 }
 
@@ -116,6 +113,91 @@
 [data-theme="light"] .text-slate-100,
 [data-theme="light"] .text-slate-200 {
   color: #0F172A !important;
+}
+
+/* ============================================
+   LIQUID CRYSTAL ANIMATIONS & REFRACTIONS
+   ============================================ */
+
+/* 1. Liquid Shimmer Fluid Flow */
+@keyframes liquid-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-liquid-gradient {
+  background: linear-gradient(120deg, #00e5ff, #a855f7, #ec4899, #00e5ff);
+  background-size: 300% 300%;
+  animation: liquid-flow 8s ease infinite;
+}
+
+/* 2. Prismatic Light Beam Sweep */
+@keyframes crystal-sweep {
+  0% {
+    transform: translateX(-150%) rotate(25deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(250%) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+.animate-crystal-beam {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    rgba(0, 229, 255, 0.4),
+    rgba(168, 85, 247, 0.3),
+    transparent
+  );
+  transform: rotate(25deg);
+  animation: crystal-sweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+/* 3. Holographic Pulse Glow */
+@keyframes crystal-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2), 0 0 30px rgba(168, 85, 247, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.5), 0 0 50px rgba(168, 85, 247, 0.3);
+  }
+}
+
+.crystal-pulse-glow {
+  animation: crystal-pulse 4s infinite ease-in-out;
+}
+
+/* 4. Floating Micro-Animation */
+@keyframes float-liquid {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-float {
+  animation: float-liquid 3s ease-in-out infinite;
 }
 
 /* ============================================
@@ -163,25 +245,9 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #00e5ff, transparent);
-  box-shadow: 0 0 12px #00e5ff;
-  animation: cyber-scan 3s ease-in-out infinite;
-}
-
-/* ============================================
-   NEON PULSE GLOW
-   ============================================ */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 22px rgba(0, 229, 255, 0.6);
-  }
-}
-
-.neon-glow-accent {
-  animation: pulse-glow 3s infinite ease-in-out;
+  background: linear-gradient(90deg, transparent, #00e5ff, #a855f7, transparent);
+  box-shadow: 0 0 14px #00e5ff;
+  animation: cyber-scan 3.5s ease-in-out infinite;
 }
 
 /* ============================================
@@ -198,7 +264,7 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 
   /* Anti-Selection & Anti-Copy Guard */
   -webkit-user-select: none;
@@ -237,11 +303,11 @@ html {
 }
 
 /* ============================================
-   CUSTOM SCROLLBAR
+   CUSTOM LIQUID SCROLLBAR
    ============================================ */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -249,38 +315,42 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 2px;
+  background: linear-gradient(180deg, #00e5ff, #a855f7);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: #00e5ff;
 }
 
 /* ============================================
-   GLASSMORPHISM UTILITY
+   LIQUID CRYSTAL GLASSMORPHISM UTILITY
    ============================================ */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
-  transition: all 0.2s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================
-   BRUTALIST CARD STYLES
+   LIQUID CRYSTAL CARD STYLES
    ============================================ */
 .cyber-card {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .cyber-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 229, 255, 0.15), 0 0 20px rgba(168, 85, 247, 0.1);
+  transform: translateY(-2px);
 }
 
 /* Monospace Utility */
