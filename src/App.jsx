@@ -16,7 +16,7 @@ import LiveScamTicker from './components/common/LiveScamTicker';
 // Chatbot
 import CyberAiChatbot from './components/chat/CyberAiChatbot';
 
-// Modals & Drawers
+// Modals & Drawers & Testimonials
 import AdminPanelModal from './components/admin/AdminPanelModal';
 import EnterprisePartnershipModal from './components/common/EnterprisePartnershipModal';
 import GoldenHourEmergencyModal from './components/common/GoldenHourEmergencyModal';
@@ -27,6 +27,7 @@ import GovtVerificationModal from './components/common/GovtVerificationModal';
 import CyberThreatMapModal from './components/common/CyberThreatMapModal';
 import IpProtectionModal from './components/common/IpProtectionModal';
 import SlideOutDrawerSidebar from './components/common/SlideOutDrawerSidebar';
+import TestimonialsSection from './components/common/TestimonialsSection';
 
 // Auth
 import LoginModal from './components/auth/LoginModal';
@@ -405,6 +406,9 @@ export default function App() {
                     </div>
                   </div>
                 </div>
+
+                {/* Verified Defense Reviews & Citizen Trust Section */}
+                <TestimonialsSection />
               </div>
             )}
 
