@@ -5,18 +5,60 @@
 @tailwind utilities;
 
 /* ============================================
-   SATYA-GPT NEO-LUMINA CYBER GLASS DESIGN SYSTEM
-   - Aesthetic: Futuristic Bento-Mesh, Translucent Lumina Glass, Radiant Aurora Glows
+   SATYA-GPT CYBER-NEUMORPHIC PRISM DESIGN SYSTEM
+   - Aesthetic: Soft Extruded Neumorphic Cards, Luminous Titanium Surface, Electric Neon Accents
    ============================================ */
 
 :root,
-[data-theme="cyber-slate"],
+[data-theme="light"],
 [data-theme="liquid-crystal"] {
-  --bg-primary: #040711;
-  --bg-secondary: #0a0f24;
-  --bg-card: rgba(13, 22, 45, 0.78);
-  --bg-card-hover: rgba(20, 32, 60, 0.88);
-  --bg-input: #060a17;
+  --bg-primary: #eaeff5;
+  --bg-secondary: #f4f8fc;
+  --bg-card: #f0f4f9;
+  --bg-card-hover: #ffffff;
+  --bg-input: #ffffff;
+
+  --border-color: #cbd5e1;
+  --border-card: rgba(255, 255, 255, 0.8);
+
+  --accent: #0284c7;
+  --accent-glow: rgba(2, 132, 199, 0.25);
+  --accent-muted: rgba(2, 132, 199, 0.1);
+  --accent-text: #0284c7;
+
+  --crystal-violet: #7c3aed;
+  --crystal-pink: #ec4899;
+  --crystal-blue: #2563eb;
+
+  --safe: #059669;
+  --safe-glow: rgba(5, 150, 105, 0.25);
+  --safe-muted: rgba(5, 150, 105, 0.1);
+
+  --threat: #e11d48;
+  --threat-glow: rgba(225, 29, 72, 0.25);
+  --threat-muted: rgba(225, 29, 72, 0.1);
+
+  --warning: #d97706;
+  --warning-glow: rgba(217, 119, 6, 0.25);
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+
+  --glass-bg: rgba(240, 244, 249, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.9);
+
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-track: #eaeff5;
+}
+
+/* Dark Obsidian Neumorphic Variant */
+[data-theme="cyber-slate"] {
+  --bg-primary: #070c18;
+  --bg-secondary: #0e1628;
+  --bg-card: #0d1526;
+  --bg-card-hover: #142038;
+  --bg-input: #070c18;
 
   --border-color: #1b2845;
   --border-card: rgba(0, 240, 255, 0.22);
@@ -45,78 +87,38 @@
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
 
-  --glass-bg: rgba(10, 15, 36, 0.82);
+  --glass-bg: rgba(13, 21, 38, 0.88);
   --glass-border: rgba(0, 240, 255, 0.28);
 
   --scrollbar-thumb: #1b2845;
-  --scrollbar-track: #040711;
-}
-
-/* Luminous Crisp Light Theme Mode */
-[data-theme="light"] {
-  --bg-primary: #f1f5f9;
-  --bg-secondary: #ffffff;
-  --bg-card: rgba(255, 255, 255, 0.92);
-  --bg-card-hover: #ffffff;
-  --bg-input: #ffffff;
-
-  --border-color: #cbd5e1;
-  --border-card: #e2e8f0;
-
-  --accent: #0284c7;
-  --accent-glow: rgba(2, 132, 199, 0.25);
-  --accent-muted: rgba(2, 132, 199, 0.1);
-  --accent-text: #0284c7;
-
-  --crystal-violet: #8b5cf6;
-  --crystal-pink: #ec4899;
-  --crystal-blue: #2563eb;
-
-  --safe: #059669;
-  --safe-glow: rgba(5, 150, 105, 0.25);
-  --safe-muted: rgba(5, 150, 105, 0.1);
-
-  --threat: #e11d48;
-  --threat-glow: rgba(225, 29, 72, 0.25);
-  --threat-muted: rgba(225, 29, 72, 0.1);
-
-  --warning: #d97706;
-  --warning-glow: rgba(217, 119, 6, 0.25);
-
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-
-  --glass-bg: rgba(255, 255, 255, 0.92);
-  --glass-border: rgba(203, 213, 225, 0.9);
-
-  --scrollbar-thumb: #cbd5e1;
-  --scrollbar-track: #f1f5f9;
+  --scrollbar-track: #070c18;
 }
 
 /* Light Mode Overrides */
 [data-theme="light"] .bg-\[\#0B0F19\],
 [data-theme="light"] .bg-\[\#060913\],
 [data-theme="light"] .bg-\[\#040711\],
+[data-theme="light"] .bg-\[\#070c18\],
 [data-theme="light"] .bg-\[\#060a14\] {
-  background-color: #F1F5F9 !important;
+  background-color: #EAEFF5 !important;
   color: #0F172A !important;
 }
 
 [data-theme="light"] .bg-\[\#131B2E\],
 [data-theme="light"] .bg-\[\#0D1527\],
 [data-theme="light"] .bg-\[\#0a0f24\],
+[data-theme="light"] .bg-\[\#0e1628\],
 [data-theme="light"] .bg-\[\#0d1629\] {
-  background-color: #FFFFFF !important;
+  background-color: #F0F4F9 !important;
   color: #0F172A !important;
-  border-color: #E2E8F0 !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
 }
 
 [data-theme="light"] .border-\[\#27395C\],
 [data-theme="light"] .border-\[\#1E2D4A\],
 [data-theme="light"] .border-\[\#24375b\],
 [data-theme="light"] .border-\[\#1b2845\] {
-  border-color: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
 }
 
 [data-theme="light"] .text-slate-100,
@@ -125,63 +127,35 @@
 }
 
 /* ============================================
-   AURORA & MESH ANIMATIONS
+   NEUMORPHIC 3D EMBOSSED CARDS & SHADOWS
    ============================================ */
 
-/* 1. Ambient Shifting Aurora Glow Background */
-@keyframes aurora-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.cyber-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 8px 8px 24px rgba(166, 180, 200, 0.45), -8px -8px 24px rgba(255, 255, 255, 0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.aurora-bg {
-  background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.15), rgba(168, 85, 247, 0.12), transparent 70%),
-              radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.08), transparent 50%),
-              #040711;
+.cyber-card:hover {
+  border-color: var(--accent);
+  box-shadow: 12px 12px 30px rgba(166, 180, 200, 0.6), -12px -12px 30px rgba(255, 255, 255, 1), 0 0 20px rgba(2, 132, 199, 0.15);
+  transform: translateY(-3px);
 }
 
-/* 2. Prismatic Border Glow Reflection Sweep */
-@keyframes border-sweep {
-  0% {
-    transform: translateX(-150%) rotate(25deg);
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateX(250%) rotate(25deg);
-    opacity: 0;
-  }
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 6px 6px 20px rgba(166, 180, 200, 0.3), -6px -6px 20px rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.animate-crystal-beam {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 50%;
-  height: 200%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.4),
-    rgba(0, 240, 255, 0.35),
-    rgba(168, 85, 247, 0.25),
-    transparent
-  );
-  transform: rotate(25deg);
-  animation: border-sweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  pointer-events: none;
-}
-
-/* 3. Floating Micro-Animation */
+/* Floating Micro-Animation */
 @keyframes float-gentle {
   0%, 100% {
     transform: translateY(0px);
@@ -195,9 +169,7 @@
   animation: float-gentle 3.5s ease-in-out infinite;
 }
 
-/* ============================================
-   SEAMLESS MARQUEE ANIMATION
-   ============================================ */
+/* Marquee Animation */
 @keyframes marquee {
   0% {
     transform: translateX(0%);
@@ -218,16 +190,14 @@
   animation-play-state: paused;
 }
 
-/* ============================================
-   CYBER SCANNING BEAM ANIMATION
-   ============================================ */
+/* Cyber Scanning Beam */
 @keyframes cyber-scan {
   0% {
     top: 0%;
     opacity: 0.2;
   }
   50% {
-    opacity: 0.95;
+    opacity: 0.9;
   }
   100% {
     top: 100%;
@@ -240,14 +210,12 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #00f0ff, #a855f7, transparent);
-  box-shadow: 0 0 16px #00f0ff;
+  background: linear-gradient(90deg, transparent, #0284c7, #7c3aed, transparent);
+  box-shadow: 0 0 14px #0284c7;
   animation: cyber-scan 3.5s ease-in-out infinite;
 }
 
-/* ============================================
-   STRICT MOBILE FLUID & SECURITY CSS
-   ============================================ */
+/* Strict Mobile Fluid */
 html, body, #root {
   max-width: 100vw;
   overflow-x: hidden;
@@ -261,7 +229,6 @@ body {
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
 
-  /* Anti-Selection Guard */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -269,7 +236,6 @@ body {
   -webkit-touch-callout: none;
 }
 
-/* Re-enable selection ONLY inside text input fields */
 input, textarea {
   -webkit-user-select: text !important;
   -moz-user-select: text !important;
@@ -277,7 +243,6 @@ input, textarea {
   user-select: text !important;
 }
 
-/* Prevent Image Dragging */
 img, svg {
   -webkit-user-drag: none;
   -khtml-user-drag: none;
@@ -297,9 +262,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* ============================================
-   CUSTOM LUMINA SCROLLBAR
-   ============================================ */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -310,45 +272,14 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00f0ff, #a855f7);
+  background: linear-gradient(180deg, #0284c7, #7c3aed);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00f0ff;
+  background: #0284c7;
 }
 
-/* ============================================
-   GLASSMORPHISM BENTO CARDS UTILITY
-   ============================================ */
-.glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.cyber-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-card);
-  border-radius: 20px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.cyber-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 14px 40px rgba(0, 240, 255, 0.2), 0 0 25px rgba(168, 85, 247, 0.15);
-  transform: translateY(-3px);
-}
-
-/* Monospace Utility */
 .font-mono {
   font-family: 'JetBrains Mono', monospace;
 }
