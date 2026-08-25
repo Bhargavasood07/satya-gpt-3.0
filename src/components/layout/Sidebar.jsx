@@ -1,90 +1,138 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles, Building2, GraduationCap, ShieldAlert, Award, BookOpen } from 'lucide-react';
+import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles, Building2, GraduationCap, BookOpen, Award } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
+
+const NAV_ITEMS = [
+  {
+    group: 'Main',
+    items: [
+      { id: 'dashboard',   icon: LayoutDashboard, label: 'SOC Dashboard',        key: 'nav.dashboard' },
+      { id: 'scanner',     icon: ScanLine,        label: 'Threat Scanner',        key: 'nav.scanner' },
+      { id: 'aihub',       icon: Sparkles,        label: 'AI Intelligence Hub',   key: 'nav.aihub' },
+    ],
+  },
+  {
+    group: 'Tools',
+    items: [
+      { id: 'academy',     icon: GraduationCap,   label: 'Cyber Academy',         key: 'nav.academy' },
+      { id: 'childSafety', icon: Baby,            label: 'Child Safety Guard',    key: 'nav.childSafety', isToggle: true },
+      { id: 'analytics',   icon: BarChart3,       label: 'Security Analytics',    key: 'nav.analytics' },
+    ],
+  },
+  {
+    group: 'Resources',
+    items: [
+      { id: 'guidedocs',   icon: BookOpen,        label: 'Guide & Docs',          key: 'nav.guidedocs' },
+      { id: 'partner',     icon: Building2,       label: 'MeitY & Founder Portal', key: 'nav.partner', isAction: true },
+    ],
+  },
+];
 
 export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPartner }) {
   const { t } = useTranslation();
   const { isChildMode, toggleChildMode } = useChildMode();
 
-  const navItems = [
-    { id: 'dashboard', icon: LayoutDashboard, label: t('nav.dashboard', 'SOC Dashboard') },
-    { id: 'scanner', icon: ScanLine, label: t('nav.scanner', 'AI Threat Scanner') },
-    { id: 'guidedocs', icon: BookOpen, label: 'Guide & Docs' },
-    { id: 'aihub', icon: Sparkles, label: 'AI Intelligence Hub' },
-    { id: 'academy', icon: GraduationCap, label: 'Kavach Cyber Academy' },
-    { id: 'partner', icon: Building2, action: onOpenPartner, label: 'MeitY & Founder Portal' },
-    { id: 'childSafety', icon: Baby, action: toggleChildMode, isToggle: true, label: t('nav.childSafety', 'Child & Family Guard') },
-    { id: 'analytics', icon: BarChart3, label: t('nav.analytics', 'Security Analytics') },
-  ];
-
   return (
-    <aside className="sidebar-nav hidden md:flex flex-col w-16 lg:w-56 h-full bg-[#060a14] border-r border-[#1b2a47] py-4 items-center lg:items-stretch z-40 font-mono select-none backdrop-blur-md">
-      <div className="flex flex-col space-y-1.5 w-full px-2">
-        <div className="hidden lg:block px-3 py-2 text-[10px] font-extrabold text-[var(--accent)] uppercase tracking-wider">
-          Liquid Crystal Navigation
-        </div>
-
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id || (item.isToggle && isChildMode);
-
-          return (
-            <button
-              key={item.id}
-              onClick={() => {
-                if (item.action) {
-                  item.action();
-                } else {
-                  onTabChange(item.id);
-                }
-              }}
-              className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-xs font-bold cursor-pointer ${
-                isActive
-                  ? item.isToggle
-                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-[0_0_18px_rgba(168,85,247,0.25)]'
-                    : item.id === 'aihub'
-                    ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-[0_0_18px_rgba(139,92,246,0.25)]'
-                    : item.id === 'guidedocs'
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_18px_rgba(245,158,11,0.25)]'
-                    : 'bg-[var(--accent-muted)] text-[var(--accent)] border border-[var(--accent)] shadow-[0_0_18px_rgba(0,229,255,0.25)]'
-                  : 'text-slate-400 hover:bg-[#0d1629] hover:text-slate-100 border border-transparent'
-              }`}
-              title={item.label}
+    <aside
+      className="hidden md:flex flex-col w-14 lg:w-52 h-full py-4 shrink-0 select-none z-40"
+      style={{
+        background: 'var(--surface-raised)',
+        borderRight: '1px solid var(--border-subtle)',
+      }}
+    >
+      <div className="flex flex-col gap-6 flex-1 overflow-y-auto px-2">
+        {NAV_ITEMS.map(({ group, items }) => (
+          <div key={group}>
+            {/* Group label — desktop only */}
+            <div
+              className="hidden lg:block px-3 pb-1.5 text-caption uppercase tracking-widest font-semibold"
+              style={{ color: 'var(--text-muted)' }}
             >
-              {isActive && (
-                <div
-                  className={`absolute left-0 top-1/2 -translate-y-1/2 w-[3.5px] h-3/4 rounded-r-md ${
-                    item.isToggle
-                      ? 'bg-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.9)]'
-                      : item.id === 'aihub'
-                      ? 'bg-violet-400 shadow-[0_0_10px_rgba(139,92,246,0.9)]'
-                      : item.id === 'guidedocs'
-                      ? 'bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.9)]'
-                      : 'bg-[var(--accent)] shadow-[0_0_10px_var(--accent)]'
-                  }`}
-                />
-              )}
-              <Icon className="w-5 h-5 shrink-0" />
-              <span className="hidden lg:inline truncate">{item.label}</span>
+              {group}
+            </div>
 
-              {/* Tooltip for Icon-only Mode */}
-              <div className="lg:hidden absolute left-14 px-2.5 py-1 bg-[#0d1629] border border-[#24375b] text-slate-100 text-xs rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl pointer-events-none font-bold">
-                {item.label}
-              </div>
-            </button>
-          );
-        })}
+            <div className="flex flex-col gap-0.5">
+              {items.map((item) => {
+                const Icon = item.icon;
+                const isActive = item.isToggle
+                  ? isChildMode
+                  : activeTab === item.id;
+
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      if (item.isAction) onOpenPartner?.();
+                      else if (item.isToggle) toggleChildMode();
+                      else onTabChange(item.id);
+                    }}
+                    className="group relative flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-150 cursor-pointer w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    style={{
+                      background: isActive ? 'var(--primary-muted)' : 'transparent',
+                      color: isActive ? 'var(--primary)' : 'var(--text-secondary)',
+                      fontWeight: isActive ? 600 : 400,
+                    }}
+                    onMouseEnter={e => {
+                      if (!isActive) {
+                        e.currentTarget.style.background = 'var(--surface-overlay)';
+                        e.currentTarget.style.color = 'var(--text-primary)';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isActive) {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.color = 'var(--text-secondary)';
+                      }
+                    }}
+                    title={item.label}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {/* Active indicator bar */}
+                    {isActive && (
+                      <div
+                        className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4/5 rounded-r-full"
+                        style={{ background: 'var(--primary)' }}
+                      />
+                    )}
+
+                    <Icon size={17} className="shrink-0" />
+                    <span className="hidden lg:block text-small truncate">
+                      {t(item.key, item.label)}
+                    </span>
+
+                    {/* Tooltip — icon-only mode */}
+                    <div
+                      className="lg:hidden absolute left-12 px-2.5 py-1.5 rounded-md text-small font-semibold whitespace-nowrap z-50 pointer-events-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-lg"
+                      style={{
+                        background: 'var(--surface-overlay)',
+                        border: '1px solid var(--border-default)',
+                        color: 'var(--text-primary)',
+                      }}
+                    >
+                      {t(item.key, item.label)}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Sidebar Footer Enterprise Badge */}
-      <div className="mt-auto px-3 pt-4 hidden lg:block">
-        <div className="p-3 bg-[#0d1629] border border-[#24375b] rounded-xl text-center space-y-1.5 glass-panel">
-          <div className="flex items-center justify-center gap-1 text-[10px] text-amber-300 font-bold uppercase">
-            <Award size={13} className="text-amber-400" />
-            <span>CERT-In & MeitY Aligned</span>
+      {/* Footer */}
+      <div className="hidden lg:block px-3 pt-4 mt-2" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+        <div
+          className="px-3 py-2.5 rounded-lg"
+          style={{ background: 'var(--surface-overlay)', border: '1px solid var(--border-subtle)' }}
+        >
+          <div className="flex items-center gap-1.5 text-caption font-semibold" style={{ color: 'var(--warning)' }}>
+            <Award size={12} />
+            <span>MeitY / CERT-In Aligned</span>
           </div>
-          <p className="text-[9px] text-[var(--text-muted)]">National AI Threat Intelligence Engine</p>
+          <p className="text-caption mt-0.5" style={{ color: 'var(--text-muted)' }}>
+            National Threat Intelligence
+          </p>
         </div>
       </div>
     </aside>

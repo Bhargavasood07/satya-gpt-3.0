@@ -1,50 +1,54 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, BarChart3, Baby, Sparkles, BookOpen } from 'lucide-react';
+import { LayoutDashboard, ScanLine, Sparkles, Baby, BookOpen, BarChart3 } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
+
+const MOBILE_NAV = [
+  { id: 'dashboard',   icon: LayoutDashboard, label: 'Home' },
+  { id: 'scanner',     icon: ScanLine,        label: 'Scan' },
+  { id: 'aihub',       icon: Sparkles,        label: 'AI Hub' },
+  { id: 'analytics',   icon: BarChart3,       label: 'Reports' },
+  { id: 'guidedocs',   icon: BookOpen,        label: 'Guide' },
+];
 
 export default function MobileNav({ activeTab, onTabChange }) {
   const { t } = useTranslation();
-  const { isChildMode, toggleChildMode } = useChildMode();
-
-  const mobileNavItems = [
-    { id: 'dashboard', icon: LayoutDashboard, label: 'Home' },
-    { id: 'scanner', icon: ScanLine, label: 'Scanner' },
-    { id: 'guidedocs', icon: BookOpen, label: 'Docs' },
-    { id: 'aihub', icon: Sparkles, label: 'AI Hub' },
-    { id: 'childSafety', icon: Baby, action: toggleChildMode, isToggle: true, label: 'Guard' },
-  ];
+  const { isChildMode } = useChildMode();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#131B2E] border-t border-[#27395C] z-40 px-1 flex items-center justify-around shadow-2xl font-mono">
-      {mobileNavItems.map((item) => {
-        const Icon = item.icon;
-        const isActive = activeTab === item.id || (item.isToggle && isChildMode);
-
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around px-2"
+      style={{
+        height: '60px',
+        background: 'var(--surface-raised)',
+        borderTop: '1px solid var(--border-subtle)',
+      }}
+      aria-label="Mobile navigation"
+    >
+      {MOBILE_NAV.map(({ id, icon: Icon, label, key }) => {
+        const isActive = activeTab === id;
         return (
           <button
-            key={item.id}
-            onClick={() => {
-              if (item.action) {
-                item.action();
-              } else {
-                onTabChange(item.id);
-              }
+            key={id}
+            onClick={() => onTabChange(id)}
+            className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 rounded-lg transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            style={{
+              color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+              background: 'transparent',
             }}
-            className={`flex flex-col items-center justify-center py-1 px-3 rounded-lg transition-all font-mono ${
-              isActive
-                ? item.isToggle
-                  ? 'text-amber-400 bg-amber-500/10'
-                  : item.id === 'aihub'
-                  ? 'text-violet-400 bg-violet-500/10'
-                  : item.id === 'guidedocs'
-                  ? 'text-amber-300 bg-amber-500/10'
-                  : 'text-[var(--accent)] bg-[var(--accent-muted)]'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-            }`}
+            aria-current={isActive ? 'page' : undefined}
+            aria-label={label}
           >
-            <Icon size={20} />
-            <span className="text-[9px] font-bold mt-0.5">{item.label}</span>
+            <Icon
+              size={20}
+              strokeWidth={isActive ? 2.5 : 1.8}
+            />
+            <span
+              className="text-caption"
+              style={{ fontWeight: isActive ? 700 : 400 }}
+            >
+              {label}
+            </span>
           </button>
         );
       })}

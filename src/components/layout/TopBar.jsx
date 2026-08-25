@@ -1,121 +1,109 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, Clock, Globe, Sun, Moon, User, ChevronDown, Award, Menu, Sparkles } from 'lucide-react';
+import { Shield, Globe, Sun, Moon, User, ChevronDown, Menu, Zap } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
-import { usePwaInstall } from '../../hooks/usePWAInstall';
 import { useAuth } from '../../context/AuthContext';
 
 const TopBar = memo(({ onOpenAdmin, onToggleDrawer }) => {
   const { i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, openLoginModal } = useAuth();
-  
-  const [time, setTime] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatTime = (date) => {
-    return date.toLocaleTimeString('en-US', {
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
-  };
 
   const handleLangToggle = () => {
-    const currentLang = i18n.language || 'en';
-    const newLang = currentLang.startsWith('hi') ? 'en' : 'hi';
-    i18n.changeLanguage(newLang);
+    const lang = i18n.language || 'en';
+    i18n.changeLanguage(lang.startsWith('hi') ? 'en' : 'hi');
   };
-
-  const isHindiActive = i18n.language && i18n.language.startsWith('hi');
+  const isHindi = i18n.language?.startsWith('hi');
 
   return (
-    <header className="h-14 bg-[#eaeff5] border-b border-[#cbd5e1] px-3 sm:px-5 flex items-center justify-between font-mono text-slate-800 z-40 select-none relative shadow-sm">
-      {/* Left: 3-Line Hamburger Drawer Button & Logo */}
-      <div className="flex items-center space-x-3">
-        {/* ☰ 3-Line Hamburger Menu Button */}
+    <header
+      className="h-14 flex items-center justify-between px-4 sm:px-6 select-none z-40 relative"
+      style={{
+        background: 'var(--surface-raised)',
+        borderBottom: '1px solid var(--border-subtle)',
+      }}
+    >
+      {/* ── Left: Menu + Brand ── */}
+      <div className="flex items-center gap-3">
+        {/* Hamburger */}
         <button
           onClick={onToggleDrawer}
-          className="p-2 rounded-xl bg-[#f0f4f9] border border-white text-[var(--accent)] hover:bg-[#0284c7] hover:text-white transition-all shadow-[4px_4px_10px_rgba(166,180,200,0.5),-4px_-4px_10px_rgba(255,255,255,0.9)] focus:outline-none flex items-center justify-center shrink-0 cursor-pointer"
-          title="Open Menu & Tools (3-Line Sidebar)"
+          className="btn btn--ghost p-2"
+          aria-label="Open navigation menu"
+          title="Menu"
         >
-          <Menu size={20} className="font-extrabold" />
+          <Menu size={18} />
         </button>
 
-        {/* Brand Logo & Name */}
+        {/* Brand */}
         <button
           onClick={onOpenAdmin}
-          className="flex items-center space-x-2.5 group focus:outline-none cursor-pointer"
-          title="SATYA-GPT AI Cyber Security Platform"
+          className="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg"
+          aria-label="SATYA-GPT — Admin"
         >
-          <div className="w-9 h-9 rounded-xl bg-[#0284c7] text-white flex items-center justify-center group-hover:scale-105 transition-transform shadow-[3px_3px_8px_rgba(2,132,199,0.3)] shrink-0">
-            <Shield className="w-5 h-5 text-white" />
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+            style={{ background: 'var(--primary)', color: '#fff' }}
+          >
+            <Shield size={16} strokeWidth={2.5} />
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-baseline space-y-0.5 sm:space-y-0 sm:space-x-2">
-            <span className="font-extrabold text-sm sm:text-lg tracking-wider text-slate-900 leading-none">
-              SATYA<span className="text-[#0284c7]">-GPT</span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-[15px] font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+              SATYA<span style={{ color: 'var(--primary)' }}>-GPT</span>
             </span>
-            <span className="text-[8px] sm:text-[9px] px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-400 text-cyan-700 font-extrabold tracking-widest uppercase flex items-center gap-1 shadow-sm shrink-0">
-              <Sparkles size={10} className="text-cyan-600 animate-pulse" />
-              <span>NEUMORPHIC PRISM v14.0</span>
+            <span
+              className="hidden sm:inline-flex items-center gap-1 text-caption badge badge--primary"
+            >
+              <Zap size={9} />
+              SOC v15
             </span>
           </div>
         </button>
       </div>
 
-      {/* Right Controls: Clean, Uncluttered Essential Cluster */}
-      <div className="flex items-center space-x-2 sm:space-x-3">
-        {/* Live Clock (Desktop) */}
-        <div className="hidden xl:flex items-center space-x-1.5 text-slate-600 text-xs font-bold">
-          <Clock className="w-3.5 h-3.5 text-[#0284c7]" />
-          <span>{formatTime(time)}</span>
-        </div>
-
-        {/* 👤 GUEST USER & ACCOUNT SWITCHER BUTTON */}
-        <button
-          onClick={openLoginModal}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#f0f4f9] border border-white text-emerald-700 hover:border-emerald-500 text-xs font-extrabold transition-all shadow-[3px_3px_8px_rgba(166,180,200,0.4),-3px_-3px_8px_rgba(255,255,255,0.9)] cursor-pointer"
-          title="Click to Switch Account or Login"
-        >
-          <div className="w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-500/60 flex items-center justify-center shrink-0">
-            <User className="w-2.5 h-2.5 text-emerald-600" />
-          </div>
-          <span className="max-w-[75px] sm:max-w-[120px] truncate">
-            {isAuthenticated ? user?.name : 'Guest'}
-          </span>
-          <ChevronDown size={14} className="text-emerald-600" />
-        </button>
-
-        {/* English ↔ Hindi Language Switcher */}
+      {/* ── Right: Controls ── */}
+      <div className="flex items-center gap-2">
+        {/* Lang */}
         <button
           onClick={handleLangToggle}
-          className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border transition-colors text-xs font-mono font-extrabold shadow-sm cursor-pointer ${
-            isHindiActive
-              ? 'bg-amber-500/20 border-amber-400 text-amber-800'
-              : 'bg-[#f0f4f9] border-white text-slate-700 hover:border-[#0284c7]'
-          }`}
-          title="Switch Language (English / हिंदी)"
+          className="btn btn--ghost py-1.5 px-3 text-small"
+          title="Toggle language"
+          aria-label={isHindi ? 'Switch to English' : 'Switch to Hindi'}
         >
-          <Globe className="w-3.5 h-3.5 text-[#0284c7]" />
-          <span className="uppercase">{isHindiActive ? 'हिंदी' : 'EN'}</span>
+          <Globe size={14} style={{ color: 'var(--primary)' }} />
+          <span className="font-semibold">{isHindi ? 'हिंदी' : 'EN'}</span>
         </button>
 
-        {/* Theme Toggle */}
+        {/* Theme */}
         <button
           onClick={toggleTheme}
-          className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#f0f4f9] border border-white text-slate-700 hover:border-[#0284c7] transition-colors cursor-pointer shadow-[3px_3px_8px_rgba(166,180,200,0.4),-3px_-3px_8px_rgba(255,255,255,0.9)]"
-          title="Toggle Dark / Neumorphic Theme"
+          className="btn btn--ghost p-2"
+          title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          aria-label="Toggle theme"
         >
-          {theme === 'cyber-slate' ? (
-            <Moon className="w-3.5 h-3.5 text-[#0284c7]" />
-          ) : (
-            <Sun className="w-3.5 h-3.5 text-amber-500" />
-          )}
+          {theme === 'light'
+            ? <Moon size={15} style={{ color: 'var(--text-secondary)' }} />
+            : <Sun size={15} style={{ color: 'var(--warning)' }} />
+          }
+        </button>
+
+        {/* Account */}
+        <button
+          onClick={openLoginModal}
+          className="btn btn--ghost py-1.5 px-3 gap-1.5"
+          title="Account"
+          aria-label="Account switcher"
+        >
+          <div
+            className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+            style={{ background: 'var(--success-muted)', border: '1px solid var(--success)' }}
+          >
+            <User size={11} style={{ color: 'var(--success)' }} />
+          </div>
+          <span className="text-small font-semibold max-w-[80px] truncate" style={{ color: 'var(--text-secondary)' }}>
+            {isAuthenticated ? user?.name : 'Guest'}
+          </span>
+          <ChevronDown size={13} style={{ color: 'var(--text-muted)' }} />
         </button>
       </div>
     </header>
