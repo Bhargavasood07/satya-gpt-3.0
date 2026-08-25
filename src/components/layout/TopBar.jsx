@@ -21,6 +21,7 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer }) => {
       style={{
         background: 'var(--surface-raised)',
         borderBottom: '1px solid var(--border-subtle)',
+        boxShadow: '0 1px 0 rgba(59,130,246,0.06)',
       }}
     >
       {/* ── Left: Menu + Brand ── */}

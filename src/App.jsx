@@ -57,144 +57,140 @@ import { usePwaInstall } from './hooks/usePWAInstall';
 function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
   return (
     <section
-      className="rounded-2xl p-6 sm:p-8 relative overflow-hidden animate-fade-in"
+      className="rounded-2xl relative overflow-hidden animate-fade-in dot-grid"
       style={{
-        background: 'var(--surface-raised)',
-        border: '1px solid var(--border-subtle)',
+        background: 'linear-gradient(135deg, var(--surface-raised) 0%, #0f1e38 100%)',
+        border: '1px solid var(--border-brand)',
+        boxShadow: '0 0 60px rgba(59,130,246,0.08), 0 20px 60px rgba(0,0,0,0.35)',
       }}
     >
-      {/* Scan line animation */}
       <div className="animate-cyber-scan pointer-events-none" />
 
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        {/* Left: Brand Message — #1 Visual Priority */}
-        <div className="space-y-4 max-w-2xl">
-          {/* Badge row — secondary context */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="badge badge--primary">
-              <Sparkles size={10} />
-              India's #1 AI Cyber Defense
-            </span>
-            <button
-              className="badge badge--warning hover:opacity-80 transition-opacity cursor-pointer"
-              style={{ border: '1px solid rgba(245,158,11,0.35)' }}
-            >
-              <Award size={10} />
-              MeitY / CERT-In
+      {/* Ambient glow */}
+      <div
+        className="absolute top-0 right-0 w-80 h-80 pointer-events-none"
+        style={{ background: 'radial-gradient(circle at top right, rgba(59,130,246,0.13), transparent 68%)' }}
+      />
+      <div
+        className="absolute bottom-0 left-0 w-64 h-64 pointer-events-none"
+        style={{ background: 'radial-gradient(circle at bottom left, rgba(168,85,247,0.06), transparent 70%)' }}
+      />
+
+      <div className="relative p-6 sm:p-8 lg:p-10">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+
+          {/* Left: Brand message */}
+          <div className="space-y-5 max-w-2xl">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="badge badge--primary">
+                <Sparkles size={9} />
+                India's #1 AI Cyber Defense
+              </span>
+              <span className="badge badge--warning">
+                <Award size={9} />
+                MeitY / CERT-In Aligned
+              </span>
+            </div>
+
+            <div>
+              <h1 className="text-h1 font-sans leading-tight" style={{ color: 'var(--text-primary)' }}>
+                Real-Time Threat<br />
+                <span style={{
+                  background: 'linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #818cf8 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>
+                  Intelligence & Protection
+                </span>
+              </h1>
+              <p className="text-small mt-3" style={{ color: 'var(--text-secondary)', maxWidth: '500px', lineHeight: '1.75' }}>
+                92-engine VirusTotal v3 cross-verification · KAVACH AI voice assistant ·
+                15-minute emergency bank lock protocols. Founder: Bhargava Sood.
+              </p>
+            </div>
+
+            {/* Live indicator */}
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full" style={{
+                  background: 'var(--success)',
+                  animation: 'ping-slow 1.8s cubic-bezier(0,0,0.2,1) infinite',
+                }} />
+                <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: 'var(--success)' }} />
+              </span>
+              <span className="text-caption font-semibold" style={{ color: 'var(--success)' }}>
+                All 92 engines active
+              </span>
+              <span className="text-caption" style={{ color: 'var(--text-muted)' }}>·</span>
+              <span className="text-caption" style={{ color: 'var(--text-muted)' }}>0 threats in last 5 min</span>
+            </div>
+          </div>
+
+          {/* Right: CTAs */}
+          <div className="flex flex-col gap-3 shrink-0 w-full sm:w-auto lg:w-[200px]">
+            <button onClick={onScanClick} className="btn btn--primary" style={{ fontSize: '14px', padding: '12px 20px', justifyContent: 'center' }}>
+              <ScanLine size={16} />
+              Scan a Threat
+              <ArrowRight size={14} />
+            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button onClick={onFreezeClick} className="btn btn--danger" style={{ fontSize: '12px', padding: '10px 12px', justifyContent: 'center' }}>
+                <ShieldAlert size={14} />
+                Freeze
+              </button>
+              <a href="tel:1930" className="btn btn--ghost" style={{ fontSize: '12px', padding: '10px 12px', justifyContent: 'center', color: 'var(--warning)', borderColor: 'rgba(245,158,11,0.3)' }}>
+                <PhoneCall size={14} />
+                1930
+              </a>
+            </div>
+            <button onClick={onMapClick} className="btn btn--ghost" style={{ fontSize: '12px', padding: '10px 12px', justifyContent: 'center' }}>
+              <MapPin size={13} />
+              Live Threat Map
             </button>
           </div>
-
-          {/* H1 — highest visual weight on screen */}
-          <div>
-            <h1 className="text-h2 sm:text-h1 font-sans" style={{ color: 'var(--text-primary)' }}>
-              Real-Time Threat Intelligence
-              <span style={{ color: 'var(--primary)' }}> & Fraud Protection</span>
-            </h1>
-            <p className="text-small mt-2" style={{ color: 'var(--text-secondary)', maxWidth: '560px', lineHeight: '1.7' }}>
-              Powered by 92-engine VirusTotal v3 cross-verification, KAVACH AI voice assistant,
-              and 15-minute emergency bank lock protocols.
-            </p>
-          </div>
-        </div>
-
-        {/* Right: Primary CTAs — action hierarchy */}
-        <div className="flex flex-wrap items-center gap-3 shrink-0">
-          <button
-            onClick={onScanClick}
-            className="btn btn--primary"
-            style={{ fontSize: '14px', padding: '10px 20px', gap: '8px' }}
-          >
-            <ScanLine size={16} />
-            Scan a Threat
-            <ArrowRight size={14} />
-          </button>
-
-          <button
-            onClick={onFreezeClick}
-            className="btn btn--danger"
-            style={{ fontSize: '14px', padding: '10px 20px' }}
-          >
-            <ShieldAlert size={16} />
-            Bank Freeze
-          </button>
-
-          <button
-            onClick={onMapClick}
-            className="btn btn--ghost"
-            style={{ fontSize: '14px', padding: '10px 16px' }}
-          >
-            <MapPin size={15} />
-            Threat Map
-          </button>
-
-          <a
-            href="tel:1930"
-            className="btn btn--ghost"
-            style={{ fontSize: '14px', padding: '10px 16px', color: 'var(--warning)', borderColor: 'var(--warning-muted)' }}
-          >
-            <PhoneCall size={15} />
-            1930
-          </a>
         </div>
       </div>
     </section>
   );
 }
 
-function StatCard({ icon: Icon, label, value, color, trend }) {
+function StatCard({ icon: Icon, label, value, color, accentBg }) {
   return (
     <div
-      className="card p-5 animate-fade-in"
-      style={{ '--card-accent': color }}
+      className="stat-card p-4 sm:p-5"
+      style={{ '--card-accent': color, '--card-accent-muted': accentBg }}
     >
-      <div className="flex items-start justify-between mb-3">
-        <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-          style={{ background: `${color}18`, border: `1px solid ${color}35` }}
-        >
+      <div className="flex items-center justify-between mb-4">
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: accentBg, border: `1px solid ${color}40` }}>
           <Icon size={17} style={{ color }} />
         </div>
-        {trend && (
-          <div className="flex items-center gap-1 text-caption" style={{ color: 'var(--success)' }}>
-            <TrendingUp size={11} />
-            {trend}
-          </div>
-        )}
+        <div className="w-1.5 h-1.5 rounded-full" style={{ background: color, boxShadow: `0 0 6px ${color}` }} />
       </div>
-      <div className="text-h2 font-bold font-mono" style={{ color: 'var(--text-primary)' }}>
+      <div className="text-h2 font-bold font-mono" style={{ color: 'var(--text-primary)', lineHeight: 1.1 }}>
         {value}
       </div>
-      <div className="text-caption mt-1 uppercase tracking-wide" style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
+      <div className="text-caption uppercase tracking-wider mt-1.5" style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
         {label}
       </div>
-      <div className="mt-3 h-px" style={{ background: `linear-gradient(90deg, ${color}60, transparent)` }} />
+      <div className="mt-4 h-px rounded-full" style={{ background: `linear-gradient(90deg, ${color}70, ${color}20, transparent)` }} />
     </div>
   );
 }
 
-function ModuleCard({ icon: Icon, title, description, accent, onClick }) {
+function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick }) {
   return (
-    <button
-      onClick={onClick}
-      className="card card--interactive p-5 text-left group w-full animate-slide-up"
-    >
-      <div className="flex items-start justify-between mb-3">
-        <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-          style={{ background: `${accent}18`, border: `1px solid ${accent}35` }}
-        >
-          <Icon size={20} style={{ color: accent }} />
+    <button onClick={onClick} className="card card--interactive p-5 text-left w-full group">
+      <div className="flex items-start justify-between mb-4">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: accentBg, border: `1px solid ${accent}35` }}>
+          <Icon size={21} style={{ color: accent }} />
         </div>
-        <ChevronRight
-          size={16}
-          className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-150"
-          style={{ color: accent }}
-        />
+        <ArrowRight size={14} className="mt-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-150" style={{ color: accent }} />
       </div>
-      <h3 className="text-[15px] font-semibold mb-1.5" style={{ color: 'var(--text-primary)' }}>
+      <h3 className="text-[14px] font-semibold mb-1.5" style={{ color: 'var(--text-primary)' }}>
         {title}
       </h3>
-      <p className="text-small leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+      <p className="text-small" style={{ color: 'var(--text-secondary)', lineHeight: '1.65' }}>
         {description}
       </p>
     </button>
@@ -372,47 +368,47 @@ export default function App() {
 
                 {/* 2. Stats — secondary context, 2×2 on mobile, 4-col on desktop */}
                 <section>
-                  <h2 className="text-small font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-muted)' }}>
+                  <h2 className="text-caption font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-muted)' }}>
                     Live Protection Stats
                   </h2>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    <StatCard icon={Shield}   label="Total Scans"       value={metrics?.totalScans?.toLocaleString() ?? '1,442'}  color="var(--primary)"  trend="+12%" />
-                    <StatCard icon={ShieldAlert} label="Threats Blocked" value={metrics?.threatsBlocked?.toLocaleString() ?? '99'} color="var(--danger)"  />
-                    <StatCard icon={Users}    label="Child Guard Blocks" value={metrics?.childBlocks?.toLocaleString() ?? '47'}     color="#a855f7" />
-                    <StatCard icon={Activity} label="System Integrity"   value={`${Math.floor(metrics?.systemIntegrity ?? 99)}%`}   color="var(--success)" trend="Stable" />
+                    <StatCard icon={Shield}     label="Total Scans"        value={metrics?.totalScans?.toLocaleString() ?? '1,442'}      color="#3b82f6" accentBg="rgba(59,130,246,0.12)" />
+                    <StatCard icon={ShieldAlert} label="Threats Blocked"   value={metrics?.threatsBlocked?.toLocaleString() ?? '99'}      color="#ef4444" accentBg="rgba(239,68,68,0.12)" />
+                    <StatCard icon={Users}       label="Child Guard Blocks" value={metrics?.childBlocks?.toLocaleString() ?? '47'}         color="#a855f7" accentBg="rgba(168,85,247,0.12)" />
+                    <StatCard icon={Activity}    label="System Integrity"   value={`${Math.floor(metrics?.systemIntegrity ?? 99)}%`}       color="#10b981" accentBg="rgba(16,185,129,0.12)" />
                   </div>
                 </section>
 
-                {/* 3. Core modules — tertiary navigation */}
+                {/* 3. Core modules */}
                 <section>
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-small font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
+                    <h2 className="text-caption font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
                       Core Modules
                     </h2>
-                    <span className="text-caption" style={{ color: 'var(--text-muted)' }}>
-                      {3} modules
-                    </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <ModuleCard
                       icon={ScanLine}
                       title="AI Threat Scanner"
-                      description="Scan links, SMS, QR codes against 92 VirusTotal detection engines."
-                      accent="var(--primary)"
+                      description="Scan links, SMS, QR codes against 92 VirusTotal detection engines in real time."
+                      accent="#3b82f6"
+                      accentBg="rgba(59,130,246,0.10)"
                       onClick={() => setActiveTab('scanner')}
                     />
                     <ModuleCard
                       icon={Bot}
                       title="KAVACH AI Hub"
-                      description="Multilingual voice assistant with cybersecurity-focused AI personas."
+                      description="Multilingual voice assistant with Hindi/English cybersecurity-focused AI personas."
                       accent="#a855f7"
+                      accentBg="rgba(168,85,247,0.10)"
                       onClick={() => setActiveTab('aihub')}
                     />
                     <ModuleCard
                       icon={GraduationCap}
                       title="Cyber Academy"
-                      description="10 real-world threat scenarios and a founder-signed completion certificate."
-                      accent="var(--warning)"
+                      description="10 real-world threat scenarios with a founder-signed completion certificate."
+                      accent="#f59e0b"
+                      accentBg="rgba(245,158,11,0.10)"
                       onClick={() => setActiveTab('academy')}
                     />
                   </div>
