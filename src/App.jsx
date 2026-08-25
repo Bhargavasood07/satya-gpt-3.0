@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useCardTilt } from './hooks/useCardTilt';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -52,101 +53,153 @@ import { scanPayloadOffline } from './services/offlineAiEngine';
 import { detectFakeNews } from './services/fakeNewsDetector';
 import { usePwaInstall } from './hooks/usePWAInstall';
 
-// ── Dashboard Section Components ───────────────────────────────
+// ── Dashboard Section Components ─────────────────────────────
+
+/* Floating 3D geometry for hero backdrop */
+function FloatingOrb({ size, color, style }) {
+  return (
+    <div
+      className="absolute pointer-events-none rounded-full"
+      style={{
+        width: size, height: size,
+        background: `radial-gradient(circle at 35% 35%, ${color}55, ${color}10 60%, transparent 80%)`,
+        border: `1px solid ${color}25`,
+        filter: `blur(0.5px)`,
+        ...style,
+      }}
+    />
+  );
+}
 
 function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
+  const heroRef = useRef(null);
+
+  // Mouse-parallax on hero background layers
+  const handleMouseMove = useCallback((e) => {
+    const el = heroRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
+    el.style.setProperty('--mx', x.toFixed(3));
+    el.style.setProperty('--my', y.toFixed(3));
+    // Subtle whole-card tilt
+    const rotX = y * -4;
+    const rotY = x * 6;
+    el.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    el.style.transition = 'transform 0.05s ease';
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    el.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+    el.style.transition = 'transform 0.6s cubic-bezier(.03,.98,.52,.99)';
+  }, []);
+
   return (
     <section
+      ref={heroRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="rounded-2xl relative overflow-hidden animate-fade-in dot-grid"
       style={{
-        background: 'linear-gradient(135deg, var(--surface-raised) 0%, #0f1e38 100%)',
-        border: '1px solid var(--border-brand)',
-        boxShadow: '0 0 60px rgba(59,130,246,0.08), 0 20px 60px rgba(0,0,0,0.35)',
+        background: 'linear-gradient(135deg, #0b1527 0%, #0d1e40 60%, #091530 100%)',
+        border: '1px solid rgba(59,130,246,0.35)',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.4), 0 20px 60px rgba(0,0,0,0.5), 0 0 80px rgba(59,130,246,0.07)',
+        transformStyle: 'preserve-3d',
+        willChange: 'transform',
       }}
     >
       <div className="animate-cyber-scan pointer-events-none" />
 
-      {/* Ambient glow */}
+      {/* ── 3D Floating Geometry ── */}
+      <FloatingOrb size="280px" color="#3b82f6" style={{ top: '-60px', right: '-40px', animation: 'float-a 7s ease-in-out infinite', opacity: 0.7 }} />
+      <FloatingOrb size="160px" color="#a855f7" style={{ bottom: '-30px', left: '10%', animation: 'float-b 9s ease-in-out infinite', opacity: 0.5 }} />
+      <FloatingOrb size="100px" color="#06b6d4" style={{ top: '30%', right: '28%', animation: 'float-c 11s ease-in-out infinite', opacity: 0.4 }} />
+
+      {/* Rotating wireframe hexagon */}
       <div
-        className="absolute top-0 right-0 w-80 h-80 pointer-events-none"
-        style={{ background: 'radial-gradient(circle at top right, rgba(59,130,246,0.13), transparent 68%)' }}
+        className="absolute pointer-events-none spin-slow"
+        style={{
+          width: '200px', height: '200px',
+          right: '60px', top: '-30px',
+          background: 'transparent',
+          border: '1px solid rgba(59,130,246,0.12)',
+          borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
+          boxShadow: 'inset 0 0 40px rgba(59,130,246,0.06)',
+        }}
       />
       <div
-        className="absolute bottom-0 left-0 w-64 h-64 pointer-events-none"
-        style={{ background: 'radial-gradient(circle at bottom left, rgba(168,85,247,0.06), transparent 70%)' }}
+        className="absolute pointer-events-none"
+        style={{
+          width: '120px', height: '120px',
+          right: '100px', top: '20px',
+          border: '1px dashed rgba(168,85,247,0.15)',
+          borderRadius: '50%',
+          animation: 'spin-slow 30s linear infinite reverse',
+        }}
       />
 
-      <div className="relative p-6 sm:p-8 lg:p-10">
+      {/* ── Content ── */}
+      <div className="relative p-6 sm:p-8 lg:p-10" style={{ transformStyle: 'preserve-3d' }}>
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
 
-          {/* Left: Brand message */}
-          <div className="space-y-5 max-w-2xl">
+          {/* Left */}
+          <div className="space-y-5 max-w-xl" style={{ transform: 'translateZ(20px)', transformStyle: 'preserve-3d' }}>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="badge badge--primary">
-                <Sparkles size={9} />
-                India's #1 AI Cyber Defense
-              </span>
-              <span className="badge badge--warning">
-                <Award size={9} />
-                MeitY / CERT-In Aligned
-              </span>
+              <span className="badge badge--primary"><Sparkles size={9} />India's #1 AI Cyber Defense</span>
+              <span className="badge badge--warning"><Award size={9} />MeitY / CERT-In Aligned</span>
             </div>
 
             <div>
               <h1 className="text-h1 font-sans leading-tight" style={{ color: 'var(--text-primary)' }}>
                 Real-Time Threat<br />
                 <span style={{
-                  background: 'linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #818cf8 100%)',
+                  background: 'linear-gradient(100deg, #93c5fd 0%, #60a5fa 30%, #3b82f6 60%, #818cf8 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
+                  filter: 'drop-shadow(0 0 20px rgba(96,165,250,0.4))',
                 }}>
                   Intelligence & Protection
                 </span>
               </h1>
-              <p className="text-small mt-3" style={{ color: 'var(--text-secondary)', maxWidth: '500px', lineHeight: '1.75' }}>
-                92-engine VirusTotal v3 cross-verification · KAVACH AI voice assistant ·
-                15-minute emergency bank lock protocols. Founder: Bhargava Sood.
+              <p className="text-small mt-3" style={{ color: 'var(--text-secondary)', lineHeight: '1.75', maxWidth: '480px' }}>
+                92-engine VirusTotal v3 · KAVACH AI voice assistant ·
+                15-min emergency bank lock protocol. <br />
+                <span style={{ color: 'var(--text-muted)' }}>Founder: Bhargava Sood.</span>
               </p>
             </div>
 
-            {/* Live indicator */}
-            <div className="flex items-center gap-2.5">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full rounded-full" style={{
-                  background: 'var(--success)',
-                  animation: 'ping-slow 1.8s cubic-bezier(0,0,0.2,1) infinite',
-                }} />
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-2 w-2 shrink-0">
+                <span className="absolute inline-flex h-full w-full rounded-full"
+                  style={{ background: 'var(--success)', animation: 'ping-slow 1.8s cubic-bezier(0,0,0.2,1) infinite' }} />
                 <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: 'var(--success)' }} />
               </span>
-              <span className="text-caption font-semibold" style={{ color: 'var(--success)' }}>
-                All 92 engines active
-              </span>
+              <span className="text-caption font-semibold" style={{ color: 'var(--success)' }}>All 92 engines active</span>
               <span className="text-caption" style={{ color: 'var(--text-muted)' }}>·</span>
-              <span className="text-caption" style={{ color: 'var(--text-muted)' }}>0 threats in last 5 min</span>
+              <span className="text-caption" style={{ color: 'var(--text-muted)' }}>0 threats / 5 min</span>
             </div>
           </div>
 
-          {/* Right: CTAs */}
-          <div className="flex flex-col gap-3 shrink-0 w-full sm:w-auto lg:w-[200px]">
-            <button onClick={onScanClick} className="btn btn--primary" style={{ fontSize: '14px', padding: '12px 20px', justifyContent: 'center' }}>
-              <ScanLine size={16} />
-              Scan a Threat
-              <ArrowRight size={14} />
+          {/* Right: CTAs — lifted in Z */}
+          <div className="flex flex-col gap-3 shrink-0 w-full sm:w-auto lg:w-[210px]"
+            style={{ transform: 'translateZ(30px)', transformStyle: 'preserve-3d' }}>
+            <button onClick={onScanClick} className="btn btn--primary" style={{ fontSize: '14px', padding: '13px 20px', justifyContent: 'center' }}>
+              <ScanLine size={16} />Scan a Threat<ArrowRight size={14} />
             </button>
             <div className="grid grid-cols-2 gap-2">
-              <button onClick={onFreezeClick} className="btn btn--danger" style={{ fontSize: '12px', padding: '10px 12px', justifyContent: 'center' }}>
-                <ShieldAlert size={14} />
-                Freeze
+              <button onClick={onFreezeClick} className="btn btn--danger" style={{ fontSize: '12px', padding: '10px 10px', justifyContent: 'center' }}>
+                <ShieldAlert size={14} />Freeze
               </button>
-              <a href="tel:1930" className="btn btn--ghost" style={{ fontSize: '12px', padding: '10px 12px', justifyContent: 'center', color: 'var(--warning)', borderColor: 'rgba(245,158,11,0.3)' }}>
-                <PhoneCall size={14} />
-                1930
+              <a href="tel:1930" className="btn btn--ghost" style={{ fontSize: '12px', padding: '10px 10px', justifyContent: 'center', color: 'var(--warning)', borderColor: 'rgba(245,158,11,0.3)' }}>
+                <PhoneCall size={14} />1930
               </a>
             </div>
             <button onClick={onMapClick} className="btn btn--ghost" style={{ fontSize: '12px', padding: '10px 12px', justifyContent: 'center' }}>
-              <MapPin size={13} />
-              Live Threat Map
+              <MapPin size={13} />Live Threat Map
             </button>
           </div>
         </div>
@@ -156,48 +209,84 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
 }
 
 function StatCard({ icon: Icon, label, value, color, accentBg }) {
+  const { ref, onMouseMove, onMouseLeave } = useCardTilt({ max: 12, scale: 1.04 });
   return (
     <div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
       className="stat-card p-4 sm:p-5"
-      style={{ '--card-accent': color, '--card-accent-muted': accentBg }}
+      style={{ '--card-accent': color, '--card-accent-muted': accentBg, transformStyle: 'preserve-3d' }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: accentBg, border: `1px solid ${color}40` }}>
+      {/* Shine overlay */}
+      <div className="tilt-shine" data-tilt-shine="true" />
+
+      <div className="flex items-center justify-between mb-4" style={{ transform: 'translateZ(8px)' }}>
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+          style={{ background: accentBg, border: `1px solid ${color}50`, boxShadow: `0 4px 12px ${color}25` }}>
           <Icon size={17} style={{ color }} />
         </div>
-        <div className="w-1.5 h-1.5 rounded-full" style={{ background: color, boxShadow: `0 0 6px ${color}` }} />
+        <div className="w-2 h-2 rounded-full" style={{ background: color, boxShadow: `0 0 8px ${color}, 0 0 16px ${color}60` }} />
       </div>
-      <div className="text-h2 font-bold font-mono" style={{ color: 'var(--text-primary)', lineHeight: 1.1 }}>
+
+      <div className="text-h2 font-bold font-mono" style={{ color: 'var(--text-primary)', lineHeight: 1.1, transform: 'translateZ(12px)' }}>
         {value}
       </div>
       <div className="text-caption uppercase tracking-wider mt-1.5" style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
         {label}
       </div>
-      <div className="mt-4 h-px rounded-full" style={{ background: `linear-gradient(90deg, ${color}70, ${color}20, transparent)` }} />
+      <div className="mt-4 h-px rounded-full"
+        style={{ background: `linear-gradient(90deg, ${color}80, ${color}25, transparent)` }} />
     </div>
   );
 }
 
 function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick }) {
+  const { ref, onMouseMove, onMouseLeave } = useCardTilt({ max: 10, scale: 1.035 });
   return (
-    <button onClick={onClick} className="card card--interactive p-5 text-left w-full group">
-      <div className="flex items-start justify-between mb-4">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: accentBg, border: `1px solid ${accent}35` }}>
-          <Icon size={21} style={{ color: accent }} />
+    <button
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      onClick={onClick}
+      className="module-card-3d p-5 text-left w-full"
+      style={{ transformStyle: 'preserve-3d' }}
+      onFocus={e => e.currentTarget.style.outline = '2px solid var(--border-focus)'}
+      onBlur={e => e.currentTarget.style.outline = 'none'}
+    >
+      {/* Shine */}
+      <div className="tilt-shine" data-tilt-shine="true" />
+
+      <div className="flex items-start justify-between mb-4" style={{ transform: 'translateZ(10px)' }}>
+        <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
+          style={{
+            background: `linear-gradient(135deg, ${accentBg} 0%, ${accent}18 100%)`,
+            border: `1px solid ${accent}40`,
+            boxShadow: `0 8px 20px ${accent}20, inset 0 1px 0 ${accent}30`,
+          }}>
+          <Icon size={22} style={{ color: accent, filter: `drop-shadow(0 0 6px ${accent}80)` }} />
         </div>
-        <ArrowRight size={14} className="mt-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-150" style={{ color: accent }} />
+        <ArrowRight size={14} className="mt-1.5 transition-all duration-200"
+          style={{ color: accent, opacity: 0.3 }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+        />
       </div>
-      <h3 className="text-[14px] font-semibold mb-1.5" style={{ color: 'var(--text-primary)' }}>
+
+      <h3 className="text-[14px] font-semibold mb-2" style={{ color: 'var(--text-primary)', transform: 'translateZ(6px)' }}>
         {title}
       </h3>
       <p className="text-small" style={{ color: 'var(--text-secondary)', lineHeight: '1.65' }}>
         {description}
       </p>
+
+      {/* Bottom accent line */}
+      <div className="absolute bottom-0 left-0 right-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${accent}50, transparent)` }} />
     </button>
   );
 }
 
-// ── Main App Component ─────────────────────────────────────────
+
 export default function App() {
   const { t } = useTranslation();
   const { isChildMode } = useChildMode();
