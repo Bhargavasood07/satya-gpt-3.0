@@ -20,26 +20,27 @@ const ScannerPanel = ({ onScanResult }) => {
   ], [t]);
 
   return (
-    <div className="w-full flex flex-col bg-[#131B2E] border border-[#27395C] rounded-xl overflow-hidden shadow-2xl p-3.5 sm:p-4 font-mono space-y-3.5">
-      {/* Formal Header & Child Mode Status */}
-      <div className="flex flex-col gap-2.5 border-b border-[#1E2D4A] pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[var(--text-primary)]">
-            <ScanLine className="text-[var(--accent)] shrink-0" size={18} />
-            <h3 className="text-xs sm:text-sm font-bold tracking-wide uppercase text-[var(--text-primary)]">
-              {t('scanner.title', 'SATYA AI Threat Scanner')}
-            </h3>
-          </div>
-          {isChildMode && (
-            <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-purple-300 text-[10px] font-bold">
-              <Shield size={12} className="text-purple-400" />
-              <span>CHILD GUARD ACTIVE</span>
-            </div>
-          )}
+    <div className="w-full flex flex-col bg-[var(--surface-card)] border border-[var(--border-subtle)] rounded-xl overflow-hidden shadow-2xl p-3.5 sm:p-4 font-mono space-y-4">
+      
+      {/* Child Mode Banner */}
+      {isChildMode && (
+        <div className="flex items-center gap-2 p-2 rounded bg-[var(--emerald-500)]/10 border border-[var(--emerald-500)]/30 text-[var(--emerald-500)] text-xs font-bold w-full">
+          <Shield size={16} className="text-[var(--emerald-500)] shrink-0" />
+          <span>Child Safety Guard Active — Adult and scam content blocked</span>
+        </div>
+      )}
+
+      {/* Header */}
+      <div className="flex flex-col gap-3 border-b border-[var(--border-default)] pb-4">
+        <div className="flex items-center gap-2 text-[var(--text-primary)]">
+          <ScanLine className="text-[var(--cyan-500)] shrink-0" size={20} />
+          <h3 className="text-sm sm:text-base font-bold tracking-wide uppercase text-[var(--text-primary)]">
+            SATYA-GPT Scanner
+          </h3>
         </div>
 
-        {/* Tab Selection Row */}
-        <div className="grid grid-cols-4 gap-1 bg-[#0B0F19] p-1 rounded-lg border border-[#1E2D4A]">
+        {/* Tab Selection Row - Pill Tabs */}
+        <div className="flex gap-2 bg-[var(--surface-raised)] p-1 rounded-full border border-[var(--border-subtle)] overflow-x-auto">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -48,22 +49,31 @@ const ScannerPanel = ({ onScanResult }) => {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-[11px] font-bold transition-all ${
+                className={`flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-bold transition-all whitespace-nowrap flex-1 ${
                   isActive
-                    ? 'bg-[var(--accent)] text-slate-950 shadow-md'
-                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[#131B2E]'
+                    ? 'bg-[var(--primary)] text-[var(--text-primary)] shadow-md'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-card)]'
                 }`}
               >
                 <Icon size={14} />
-                <span className="truncate">{tab.label}</span>
+                <span>{tab.label}</span>
               </button>
             );
           })}
         </div>
       </div>
 
+      <div className="flex flex-col gap-2">
+        <div className="text-[var(--text-secondary)] text-xs flex items-center gap-1">
+          💡 Paste any link, UPI ID, or forward a suspicious SMS
+        </div>
+        <div className="text-[var(--text-secondary)] opacity-70 text-xs italic bg-[var(--surface-raised)] border border-[var(--border-subtle)] p-2 rounded">
+          Try: http://sbi-kyc-update.tk/verify
+        </div>
+      </div>
+
       {/* Tab Content Panel */}
-      <div className="min-h-[200px]">
+      <div className="min-h-[200px] mt-2">
         {activeTab === 'link' && <LinkChecker onScanResult={onScanResult} />}
         {activeTab === 'text' && <TextChecker onScanResult={onScanResult} />}
         {activeTab === 'qr' && <QRScanner onScanResult={onScanResult} />}

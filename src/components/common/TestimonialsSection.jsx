@@ -34,50 +34,50 @@ const TESTIMONIALS = [
 const TestimonialsSection = memo(() => {
   return (
     <div className="space-y-4 font-mono">
-      <div className="flex items-center justify-between border-b border-[#1b2845] pb-3">
+      <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3">
         <div className="flex items-center gap-2">
-          <Quote size={18} className="text-[var(--accent)]" />
-          <h2 className="text-sm sm:text-base font-extrabold text-slate-100 uppercase tracking-wider">
+          <Quote size={18} className="text-[var(--primary)]" />
+          <h2 className="text-sm sm:text-base font-extrabold text-[var(--text-primary)] uppercase tracking-wider">
             Verified Defense Reviews & Citizen Trust Seals
           </h2>
         </div>
-        <span className="text-xs text-emerald-400 font-extrabold flex items-center gap-1">
+        <span className="text-xs text-[var(--emerald-500)] font-extrabold flex items-center gap-1">
           <UserCheck size={14} />
           <span>100% VERIFIED SUCCESS</span>
         </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {TESTIMONIALS.map((t) => (
           <div
             key={t.id}
-            className="cyber-card p-5 rounded-3xl border border-[#1b2845] bg-[#0a0f24]/80 space-y-3 shadow-xl hover:border-[var(--accent)] transition-all flex flex-col justify-between"
+            className="p-5 rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] space-y-3 shadow-lg hover:border-[var(--primary)] transition-all flex flex-col justify-between"
           >
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400 text-emerald-300 text-[9px] font-extrabold">
+                <span className="px-2.5 py-0.5 rounded-full bg-[var(--emerald-muted)] border border-[var(--emerald-500)]/40 text-[var(--emerald-500)] text-[9px] font-extrabold">
                   {t.tag}
                 </span>
-                <div className="flex items-center gap-1 text-amber-400">
+                <div className="flex text-[var(--amber-500)]">
                   {[...Array(t.rating)].map((_, i) => (
-                    <Star key={i} size={12} fill="currentColor" />
+                    <Star key={i} size={11} fill="currentColor" />
                   ))}
                 </div>
               </div>
-
-              <p className="text-xs text-slate-300 leading-relaxed italic">
+              <p className="text-xs text-[var(--text-secondary)] italic leading-relaxed">
                 "{t.comment}"
               </p>
             </div>
 
-            <div className="pt-3 border-t border-[#1b2845] flex items-center gap-3">
-              <div className="w-9 h-9 rounded-2xl bg-[#040711] border border-[#1b2845] flex items-center justify-center text-lg shrink-0">
-                {t.avatar}
+            <div className="pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{t.avatar}</span>
+                <div>
+                  <h4 className="text-xs font-bold text-[var(--text-primary)]">{t.name}</h4>
+                  <p className="text-[10px] text-[var(--text-muted)]">{t.role}</p>
+                </div>
               </div>
-              <div>
-                <div className="font-extrabold text-xs text-slate-100">{t.name}</div>
-                <div className="text-[10px] text-slate-400">{t.role}</div>
-              </div>
+              <CheckCircle2 size={15} className="text-[var(--emerald-500)] shrink-0" />
             </div>
           </div>
         ))}
@@ -86,5 +86,4 @@ const TestimonialsSection = memo(() => {
   );
 });
 
-TestimonialsSection.displayName = 'TestimonialsSection';
 export default TestimonialsSection;

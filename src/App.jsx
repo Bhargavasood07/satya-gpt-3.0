@@ -32,6 +32,9 @@ import GovtVerificationModal from './components/common/GovtVerificationModal';
 import CyberThreatMapModal from './components/common/CyberThreatMapModal';
 import IpProtectionModal from './components/common/IpProtectionModal';
 import SlideOutDrawerSidebar from './components/common/SlideOutDrawerSidebar';
+import HowItWorks from './components/common/HowItWorks';
+import RecentThreatsSection from './components/common/RecentThreatsSection';
+import TestimonialsSection from './components/common/TestimonialsSection';
 import LoginModal from './components/auth/LoginModal';
 import { useAuth } from './context/AuthContext';
 
@@ -461,10 +464,10 @@ export default function App() {
                     Live Protection Stats
                   </h2>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    <StatCard icon={Shield}     label="Total Scans"        value={metrics?.totalScans?.toLocaleString() ?? '1,442'}      color="#3b82f6" accentBg="rgba(59,130,246,0.12)" />
-                    <StatCard icon={ShieldAlert} label="Threats Blocked"   value={metrics?.threatsBlocked?.toLocaleString() ?? '99'}      color="#ef4444" accentBg="rgba(239,68,68,0.12)" />
-                    <StatCard icon={Users}       label="Child Guard Blocks" value={metrics?.childBlocks?.toLocaleString() ?? '47'}         color="#a855f7" accentBg="rgba(168,85,247,0.12)" />
-                    <StatCard icon={Activity}    label="System Integrity"   value={`${Math.floor(metrics?.systemIntegrity ?? 99)}%`}       color="#10b981" accentBg="rgba(16,185,129,0.12)" />
+                    <StatCard icon={Shield}     label="Total Scans"        value={metrics?.totalScans?.toLocaleString() ?? '1,442'}  color="#1a6cf9" accentBg="rgba(26,108,249,0.12)" />
+                    <StatCard icon={ShieldAlert} label="Threats Blocked"   value={metrics?.threatsBlocked?.toLocaleString() ?? '99'}  color="#ff2d4f" accentBg="rgba(255,45,79,0.12)" />
+                    <StatCard icon={Users}       label="Child Guard Blocks" value={metrics?.childBlocks?.toLocaleString() ?? '47'}     color="#7c5cfc" accentBg="rgba(124,92,252,0.12)" />
+                    <StatCard icon={Activity}    label="System Integrity"   value={`${Math.floor(metrics?.systemIntegrity ?? 99)}%`}  color="#00c896" accentBg="rgba(0,200,150,0.12)" />
                   </div>
                 </section>
 
@@ -502,6 +505,15 @@ export default function App() {
                     />
                   </div>
                 </section>
+
+                {/* 4. Recent Threats Caught Live Feed */}
+                <RecentThreatsSection />
+
+                {/* 5. How It Works - 3 Step Flow */}
+                <HowItWorks onTryItClick={() => setActiveTab('scanner')} />
+
+                {/* 6. Citizen Trust Reviews & Testimonials */}
+                <TestimonialsSection />
               </div>
             )}
 
