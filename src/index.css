@@ -5,112 +5,227 @@
 @tailwind utilities;
 
 /* ============================================================
-   SATYA-GPT DESIGN SYSTEM v16.0 — 3D DEPTH EDITION
-   CSS 3D Transforms · Perspective Layers · Floating Geometry
-   Tilt Cards · Depth Shadows · Isometric Accents
+   SATYA-GPT — MIDNIGHT OPS PALETTE v17.0
+   ──────────────────────────────────────
+   TRUST  → Electric Blue  #1a6cf9   brand, actions, links
+   INTEL  → Cyber Cyan     #00c8ef   live data, scan, AI feed
+   STATUS → Emerald / Amber / Crimson  safe / warn / threat
+   AI     → Violet         #7c5cfc   KAVACH AI features only
    ============================================================ */
 
 :root {
-  /* ── Surfaces ── */
-  --surface-base:    #060b18;
-  --surface-raised:  #0b1527;
-  --surface-overlay: #102040;
-  --surface-inset:   #040a15;
-  --surface-glass:   rgba(11, 21, 39, 0.82);
 
-  /* ── Borders ── */
-  --border-subtle:   rgba(255,255,255,0.05);
-  --border-default:  rgba(255,255,255,0.09);
-  --border-strong:   rgba(255,255,255,0.16);
-  --border-focus:    #3b82f6;
-  --border-brand:    rgba(59,130,246,0.45);
+  /* ──────────────────────────────────────────────
+     SURFACE  — Navy depth scale (8 levels)
+     Ensures perceptible depth in dark mode
+     ────────────────────────────────────────────── */
+  --surface-void:    #02060f;   /* deepest void — deep insets only      */
+  --surface-base:    #040d1c;   /* page background                      */
+  --surface-inset:   #060f22;   /* sunken wells, code blocks            */
+  --surface-card:    #081428;   /* default card surface                 */
+  --surface-raised:  #0a1a34;   /* elevated cards, dropdowns            */
+  --surface-overlay: #0d1f3c;   /* modals, drawers, tooltips            */
+  --surface-glass:   rgba(8,20,40,0.85);
 
-  /* ── Brand ── */
-  --primary:         #3b82f6;
-  --primary-hover:   #2563eb;
-  --primary-muted:   rgba(59,130,246,0.10);
-  --primary-glow:    rgba(59,130,246,0.30);
-  --primary-strong:  rgba(59,130,246,0.20);
+  /* ──────────────────────────────────────────────
+     BORDER  — 3-level + focus + brand
+     ────────────────────────────────────────────── */
+  --border-subtle:   rgba(255,255,255,0.055);
+  --border-default:  rgba(255,255,255,0.10);
+  --border-strong:   rgba(255,255,255,0.18);
+  --border-focus:    #1a6cf9;
+  --border-brand:    rgba(26,108,249,0.40);
+  --border-card:     rgba(255,255,255,0.055);
 
-  /* ── Semantic ── */
-  --success:         #10b981;
-  --success-muted:   rgba(16,185,129,0.10);
-  --warning:         #f59e0b;
-  --warning-muted:   rgba(245,158,11,0.10);
-  --danger:          #ef4444;
-  --danger-muted:    rgba(239,68,68,0.10);
-  --purple:          #a855f7;
-  --purple-muted:    rgba(168,85,247,0.10);
-  --cyan:            #06b6d4;
-  --cyan-muted:      rgba(6,182,212,0.10);
+  /* ──────────────────────────────────────────────
+     BLUE — Electric / Primary Brand (TRUST)
+     Authority · Action · Navigation
+     ────────────────────────────────────────────── */
+  --blue-600:        #1245c4;
+  --blue-500:        #1a6cf9;   /* ← PRIMARY */
+  --blue-400:        #3d84ff;
+  --blue-300:        #6ba3ff;
+  --blue-100:        #ccdeff;
+  --blue-glow:       rgba(26,108,249,0.32);
+  --blue-muted:      rgba(26,108,249,0.10);
+  --blue-border:     rgba(26,108,249,0.38);
 
-  /* ── Text ── */
-  --text-primary:    #f0f6ff;
-  --text-secondary:  #8ba0be;
-  --text-muted:      #3d5270;
-  --text-inverse:    #060b18;
+  --primary:         #1a6cf9;
+  --primary-hover:   #3d84ff;
+  --primary-muted:   rgba(26,108,249,0.10);
+  --primary-glow:    rgba(26,108,249,0.32);
+  --primary-strong:  rgba(26,108,249,0.20);
+  --accent:          #1a6cf9;
+  --accent-muted:    rgba(26,108,249,0.10);
+  --accent-glow:     rgba(26,108,249,0.32);
 
-  /* ── Legacy ── */
-  --bg-primary:      var(--surface-base);
-  --bg-secondary:    var(--surface-raised);
-  --bg-card:         var(--surface-raised);
-  --accent:          var(--primary);
-  --accent-muted:    var(--primary-muted);
-  --accent-glow:     var(--primary-glow);
-  --safe:            var(--success);
-  --safe-muted:      var(--success-muted);
-  --safe-glow:       rgba(16,185,129,0.25);
-  --threat:          var(--danger);
-  --threat-muted:    var(--danger-muted);
-  --threat-glow:     rgba(239,68,68,0.25);
-  --border-color:    var(--border-default);
-  --border-card:     var(--border-subtle);
-  --glass-bg:        var(--surface-glass);
-  --glass-border:    var(--border-default);
-  --scrollbar-track: var(--surface-inset);
-  --scrollbar-thumb: var(--surface-overlay);
+  /* ──────────────────────────────────────────────
+     CYAN — Cyber Intel (INTEL)
+     Scan lines · Live feed · Active indicators
+     ────────────────────────────────────────────── */
+  --cyan-500:        #00c8ef;
+  --cyan-400:        #33d6f5;
+  --cyan-300:        #66e3f8;
+  --cyan-glow:       rgba(0,200,239,0.30);
+  --cyan-muted:      rgba(0,200,239,0.09);
+  --cyan-border:     rgba(0,200,239,0.35);
+  --scan-color:      #00c8ef;
+
+  /* ──────────────────────────────────────────────
+     EMERALD — Safe / Success / Verified
+     Clean scan · Secure result · Online
+     ────────────────────────────────────────────── */
+  --emerald-500:     #00c896;
+  --emerald-400:     #1ad4a5;
+  --emerald-300:     #5de0bb;
+  --emerald-glow:    rgba(0,200,150,0.28);
+  --emerald-muted:   rgba(0,200,150,0.09);
+
+  --success:         #00c896;
+  --success-muted:   rgba(0,200,150,0.09);
+  --safe:            #00c896;
+  --safe-muted:      rgba(0,200,150,0.09);
+  --safe-glow:       rgba(0,200,150,0.28);
+
+  /* ──────────────────────────────────────────────
+     AMBER — Warning / Caution / MeitY
+     Suspicious · Unverified · Partial risk
+     ────────────────────────────────────────────── */
+  --amber-500:       #f5a623;
+  --amber-400:       #f8bc55;
+  --amber-300:       #fbd087;
+  --amber-glow:      rgba(245,166,35,0.28);
+  --amber-muted:     rgba(245,166,35,0.09);
+
+  --warning:         #f5a623;
+  --warning-muted:   rgba(245,166,35,0.09);
+
+  /* ──────────────────────────────────────────────
+     CRIMSON — Threat / Danger / Emergency
+     Malicious · Blocked · Freeze alert
+     ────────────────────────────────────────────── */
+  --crimson-600:     #c4162a;
+  --crimson-500:     #ff2d4f;
+  --crimson-400:     #ff5c77;
+  --crimson-300:     #ff8fa0;
+  --crimson-glow:    rgba(255,45,79,0.32);
+  --crimson-muted:   rgba(255,45,79,0.09);
+
+  --danger:          #ff2d4f;
+  --danger-muted:    rgba(255,45,79,0.09);
+  --threat:          #ff2d4f;
+  --threat-muted:    rgba(255,45,79,0.09);
+  --threat-glow:     rgba(255,45,79,0.32);
+
+  /* ──────────────────────────────────────────────
+     VIOLET — AI / KAVACH / Intelligence Only
+     Never used for generic UI — AI-exclusive
+     ────────────────────────────────────────────── */
+  --violet-500:      #7c5cfc;
+  --violet-400:      #9b80fd;
+  --violet-300:      #baa8fe;
+  --violet-glow:     rgba(124,92,252,0.30);
+  --violet-muted:    rgba(124,92,252,0.09);
+
+  --purple:          #7c5cfc;
+  --purple-muted:    rgba(124,92,252,0.09);
+
+  /* ──────────────────────────────────────────────
+     TEXT — 4-level hierarchy
+     Slightly blue-tinted for digital feel
+     ────────────────────────────────────────────── */
+  --text-primary:    #e8f2ff;   /* headings, metric values              */
+  --text-secondary:  #6a96d4;   /* body copy, descriptions              */
+  --text-muted:      #2a4f8f;   /* captions, labels, dividers           */
+  --text-inverse:    #040d1c;   /* text on light surfaces               */
+  --text-accent:     #1a6cf9;   /* inline links, active nav items       */
+
+  /* ──────────────────────────────────────────────
+     LEGACY ALIASES (keep components working)
+     ────────────────────────────────────────────── */
+  --bg-primary:      #040d1c;
+  --bg-secondary:    #081428;
+  --bg-card:         #081428;
+  --glass-bg:        rgba(8,20,40,0.85);
+  --glass-border:    rgba(255,255,255,0.10);
+  --border-color:    rgba(255,255,255,0.10);
+  --scrollbar-track: #060f22;
+  --scrollbar-thumb: #0d1f3c;
 }
 
-/* ── Light Theme ── */
+/* ════════════════════════════════════════════════════════════
+   LIGHT THEME — "Arctic Ops"
+   Crisp blue-white surfaces · Deep navy typography
+   Same semantic roles, adapted for light backgrounds
+   ════════════════════════════════════════════════════════════ */
 [data-theme="light"] {
-  --surface-base:    #eff3fa;
-  --surface-raised:  #ffffff;
-  --surface-overlay: #f5f8ff;
-  --surface-inset:   #e4eaf5;
-  --surface-glass:   rgba(255,255,255,0.92);
-  --border-subtle:   rgba(0,0,0,0.05);
-  --border-default:  rgba(0,0,0,0.09);
-  --border-strong:   rgba(0,0,0,0.16);
-  --border-brand:    rgba(37,99,235,0.35);
-  --primary:         #2563eb;
-  --primary-hover:   #1d4ed8;
-  --primary-muted:   rgba(37,99,235,0.07);
-  --primary-glow:    rgba(37,99,235,0.18);
+  --surface-void:    #d4e2f5;
+  --surface-base:    #edf3fc;
+  --surface-inset:   #e2ecf8;
+  --surface-card:    #ffffff;
+  --surface-raised:  #f7faff;
+  --surface-overlay: #eef4ff;
+  --surface-glass:   rgba(255,255,255,0.94);
+
+  --border-subtle:   rgba(0,0,0,0.055);
+  --border-default:  rgba(0,0,0,0.10);
+  --border-strong:   rgba(0,0,0,0.18);
+  --border-focus:    #1a6cf9;
+  --border-brand:    rgba(26,108,249,0.35);
+  --border-card:     rgba(0,0,0,0.055);
+
+  --primary:         #1a6cf9;
+  --primary-hover:   #3d84ff;
+  --primary-muted:   rgba(26,108,249,0.08);
+  --primary-glow:    rgba(26,108,249,0.18);
+  --primary-strong:  rgba(26,108,249,0.12);
+  --accent:          #1a6cf9;
+  --accent-muted:    rgba(26,108,249,0.08);
+  --accent-glow:     rgba(26,108,249,0.18);
+
+  --cyan-500:        #0891b2;
+  --cyan-muted:      rgba(8,145,178,0.08);
+  --scan-color:      #0891b2;
+
   --success:         #059669;
   --success-muted:   rgba(5,150,105,0.08);
+  --safe:            #059669;
+  --safe-muted:      rgba(5,150,105,0.08);
+  --safe-glow:       rgba(5,150,105,0.18);
+
   --warning:         #d97706;
   --warning-muted:   rgba(217,119,6,0.08);
+  --amber-500:       #d97706;
+  --amber-muted:     rgba(217,119,6,0.08);
+
   --danger:          #dc2626;
   --danger-muted:    rgba(220,38,38,0.08);
-  --purple:          #7c3aed;
-  --purple-muted:    rgba(124,58,237,0.08);
-  --text-primary:    #0d1b33;
-  --text-secondary:  #4b6080;
-  --text-muted:      #8fa3bf;
-  --bg-primary:      var(--surface-base);
-  --bg-secondary:    var(--surface-raised);
-  --bg-card:         var(--surface-raised);
-  --accent:          var(--primary);
-  --accent-muted:    var(--primary-muted);
-  --safe:            var(--success);
-  --safe-muted:      var(--success-muted);
-  --threat:          var(--danger);
-  --threat-muted:    var(--danger-muted);
-  --border-color:    var(--border-default);
-  --border-card:     var(--border-subtle);
-  --glass-bg:        var(--surface-glass);
-  --scrollbar-track: var(--surface-overlay);
-  --scrollbar-thumb: var(--surface-inset);
+  --threat:          #dc2626;
+  --threat-muted:    rgba(220,38,38,0.08);
+  --threat-glow:     rgba(220,38,38,0.18);
+  --crimson-500:     #dc2626;
+  --crimson-muted:   rgba(220,38,38,0.08);
+
+  --purple:          #6d28d9;
+  --purple-muted:    rgba(109,40,217,0.08);
+  --violet-500:      #6d28d9;
+  --violet-muted:    rgba(109,40,217,0.08);
+  --violet-glow:     rgba(109,40,217,0.16);
+
+  --text-primary:    #0a1628;
+  --text-secondary:  #2d4a6e;
+  --text-muted:      #6a8db8;
+  --text-inverse:    #ffffff;
+  --text-accent:     #1a6cf9;
+
+  --bg-primary:      #edf3fc;
+  --bg-secondary:    #ffffff;
+  --bg-card:         #ffffff;
+  --glass-bg:        rgba(255,255,255,0.94);
+  --glass-border:    rgba(0,0,0,0.10);
+  --border-color:    rgba(0,0,0,0.10);
+  --scrollbar-track: #eef4ff;
+  --scrollbar-thumb: #e2ecf8;
 }
 
 /* Light overrides for hardcoded legacy colors */
