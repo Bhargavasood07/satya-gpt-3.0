@@ -58,7 +58,7 @@ import { useChildMode } from './context/ChildModeContext';
 import { useSimulatedFeed } from './hooks/useSimulatedFeed';
 import { scanPayloadOffline } from './services/offlineAiEngine';
 import { detectFakeNews } from './services/fakeNewsDetector';
-import { usePwaInstall } from './hooks/usePWAInstall';
+import { usePwaInstall } from './hooks/usePwaInstall';
 
 // ── Dashboard Section Components ─────────────────────────────
 
