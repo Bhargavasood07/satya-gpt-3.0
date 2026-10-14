@@ -36,8 +36,11 @@ It cross-validates suspicious links, SMS messages, and QR codes against **92 det
 
 | Design Layer | Implementation |
 |---|---|
+| **SOC Defense Grid & HUD** | Tactical crosshair corner brackets (`.cyber-bracket`), live DEFCON-4 telemetry stream, animated radar sweep line, and cyber matrix background |
+| **Universal Box Containment** | Strict letter & ligature containment (`overflow-wrap`, `break-word`, flex shrink guard) ensuring zero text spillover across English and Hindi |
 | **Glassmorphic Hierarchy** | Translucent frosted-glass layout panels with network grid mesh overlays isolate high-priority tracking indicators without visual clutter |
 | **Neon Status Signaling** | Active ambient glow maps and pulsing alert rings — emerald (safe), amber (warning), crimson (threat) — signal dynamic payload states instantly |
+| **Accessible Hindi Localization** | 100% end-to-end senior-citizen friendly Hindi translation across all detection tools, charts, and Golden Hour emergency modules |
 | **Responsive Information Density** | Adapts fluidly across mobile (360px+), PWA standalone mode, tablet, and dedicated desktop operational matrices |
 | **Developer-First Typography** | JetBrains Mono and Plus Jakarta Sans optimized for scanning complex cryptographic hashes, URI payloads, and real-time telemetry feeds |
 | **Neumorphic Prism Cards** | Soft 3D-embossed bento cards with directional shadow extrusion, maintaining depth perception across dark and light operational modes |

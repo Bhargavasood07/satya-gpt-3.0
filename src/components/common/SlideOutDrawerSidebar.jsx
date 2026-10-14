@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, BookOpen, Sparkles, GraduationCap, Building2, Baby, BarChart3, ShieldAlert, Share2, ShieldCheck, MapPin, KeyRound, Download, X, Bot, Award, PhoneCall } from 'lucide-react';
+import { LayoutDashboard, ScanLine, BookOpen, Sparkles, GraduationCap, Building2, Baby, BarChart3, ShieldAlert, Share2, ShieldCheck, MapPin, KeyRound, Download, X, Bot, Award, PhoneCall, ExternalLink } from 'lucide-react';
+import { GitHubIcon } from './GitHubIcon';
 import { useChildMode } from '../../context/ChildModeContext';
 
 const SlideOutDrawerSidebar = memo(({
@@ -222,6 +223,19 @@ const SlideOutDrawerSidebar = memo(({
             <KeyRound size={16} className="text-amber-400 shrink-0" />
             <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'संस्थापक एडमिन वॉल्ट' : 'Founder Admin Vault'}</span>
           </button>
+
+          <a
+            href="https://github.com/Bhargavasood07/satya-gpt-3.0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-slate-300 hover:text-white hover:bg-slate-800 border border-[#24375b] transition-all cursor-pointer group"
+          >
+            <GitHubIcon size={16} className="text-white shrink-0 group-hover:scale-110 transition-transform" />
+            <span className="break-words min-w-0 flex-1 text-left">
+              {isHindi ? 'गिटहब रिपॉजिटरी (ओपन सोर्स)' : 'GitHub Repository'}
+            </span>
+            <ExternalLink size={12} className="text-slate-400 shrink-0" />
+          </a>
         </div>
 
         {/* Quick Footer Action */}

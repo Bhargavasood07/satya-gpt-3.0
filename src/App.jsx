@@ -7,6 +7,7 @@ import {
   MapPin, Sparkles, Bot, GraduationCap, ArrowRight, Award, Shield,
   Activity, TrendingUp, Users, Zap, ChevronRight,
 } from 'lucide-react';
+import { GitHubIcon } from './components/common/GitHubIcon';
 
 // Layout
 import TopBar from './components/layout/TopBar';
@@ -600,6 +601,34 @@ export default function App() {
 
                 {/* 6. Citizen Trust Reviews & Testimonials */}
                 <TestimonialsSection />
+
+                {/* 7. SOC Defense Grid Footer & Open Source GitHub Link */}
+                <footer className="mt-10 pt-8 pb-12 border-t border-[var(--border-subtle)] text-center text-xs space-y-4">
+                  <div className="flex items-center justify-center gap-3 flex-wrap">
+                    <a
+                      href="https://github.com/Bhargavasood07/satya-gpt-3.0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-[var(--border-default)] bg-[var(--surface-card)] text-[var(--text-primary)] hover:border-blue-500 hover:shadow-md transition-all font-mono text-xs font-semibold"
+                    >
+                      <GitHubIcon size={15} className="text-white" />
+                      <span>github.com/Bhargavasood07/satya-gpt-3.0</span>
+                    </a>
+                    <a
+                      href="https://satya-gpt-30.vercel.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-all font-mono text-xs font-semibold"
+                    >
+                      <span>🌐 Live SOC Deployment</span>
+                    </a>
+                  </div>
+                  <p className="text-[var(--text-muted)] text-[11px] font-mono">
+                    {isHindi
+                      ? '© 2025 SATYA-GPT 3.0 • भारत का AI-संचालित साइबर अपराध सुरक्षा ग्रिड • ओपन सोर्स रिपॉजिटरी'
+                      : '© 2025 SATYA-GPT 3.0 • India’s AI-Powered Cyber Defense & Fraud Protection Grid • Open Source'}
+                  </p>
+                </footer>
               </div>
             )}
 

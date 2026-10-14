@@ -4,6 +4,7 @@ import {
   Shield, Globe, Sun, Moon, User, ChevronDown, Menu, Zap,
   Search, Radio, Bell
 } from 'lucide-react';
+import { GitHubIcon } from '../common/GitHubIcon';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -128,6 +129,18 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
             : <Sun size={15} style={{ color: 'var(--warning)' }} />
           }
         </button>
+
+        {/* GitHub Repository Link */}
+        <a
+          href="https://github.com/Bhargavasood07/satya-gpt-3.0"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn--ghost p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:text-white transition-colors"
+          title="GitHub Repository (Bhargavasood07/satya-gpt-3.0)"
+          aria-label="GitHub Repository"
+        >
+          <GitHubIcon size={16} />
+        </a>
 
         {/* Account Button */}
         <button
