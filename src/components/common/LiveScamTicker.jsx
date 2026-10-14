@@ -14,10 +14,16 @@ const LiveScamTicker = memo(() => {
   const tickerItems = [...LIVE_ALERTS, ...LIVE_ALERTS];
 
   return (
-    <div className="w-full bg-[#070A14] border-b border-[#1E2D4A] py-1.5 px-3 overflow-hidden select-none font-mono text-xs flex items-center gap-2">
+    <div
+      className="w-full py-1.5 px-3 overflow-hidden select-none font-mono text-xs flex items-center gap-2 border-b"
+      style={{
+        background: 'var(--surface-raised)',
+        borderColor: 'var(--border-subtle)',
+      }}
+    >
       {/* Static Badge */}
-      <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 text-[10px] font-bold shrink-0 z-10 shadow-md">
-        <Activity size={12} className="text-rose-400 animate-pulse" />
+      <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/35 text-rose-500 text-[10px] font-bold shrink-0 z-10 shadow-sm">
+        <Activity size={12} className="text-rose-500 animate-pulse" />
         <span>LIVE SCAM RADAR</span>
       </div>
 
@@ -25,7 +31,11 @@ const LiveScamTicker = memo(() => {
       <div className="overflow-hidden flex-1 relative w-full">
         <div className="animate-marquee flex w-max cursor-pointer">
           {tickerItems.map((alertText, idx) => (
-            <span key={idx} className="mr-8 text-amber-300 text-[11px] font-bold shrink-0">
+            <span
+              key={idx}
+              className="mr-8 text-[11px] font-bold shrink-0 tracking-wide"
+              style={{ color: 'var(--warning)' }}
+            >
               {alertText}
             </span>
           ))}

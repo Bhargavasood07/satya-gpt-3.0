@@ -65,7 +65,7 @@ import { usePwaInstall } from './hooks/usePWAInstall';
 function FloatingOrb({ size, color, style }) {
   return (
     <div
-      className="absolute pointer-events-none rounded-full"
+      className="floating-orb absolute pointer-events-none rounded-full"
       style={{
         width: size, height: size,
         background: `radial-gradient(circle at 35% 35%, ${color}55, ${color}10 60%, transparent 80%)`,
@@ -108,11 +108,8 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
       ref={heroRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="rounded-2xl relative overflow-hidden animate-fade-in dot-grid"
+      className="hero-banner rounded-2xl relative overflow-hidden animate-fade-in dot-grid transition-colors duration-300"
       style={{
-        background: 'linear-gradient(135deg, #0b1527 0%, #0d1e40 60%, #091530 100%)',
-        border: '1px solid rgba(59,130,246,0.35)',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.4), 0 20px 60px rgba(0,0,0,0.5), 0 0 80px rgba(59,130,246,0.07)',
         transformStyle: 'preserve-3d',
         willChange: 'transform',
       }}
@@ -126,7 +123,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
 
       {/* Rotating wireframe hexagon */}
       <div
-        className="absolute pointer-events-none spin-slow"
+        className="hero-wireframe-blob absolute pointer-events-none spin-slow"
         style={{
           width: '200px', height: '200px',
           right: '60px', top: '-30px',
@@ -137,7 +134,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
         }}
       />
       <div
-        className="absolute pointer-events-none"
+        className="hero-wireframe-ring absolute pointer-events-none"
         style={{
           width: '120px', height: '120px',
           right: '100px', top: '20px',
@@ -161,17 +158,11 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
             <div>
               <h1 className="text-h1 font-sans leading-tight" style={{ color: 'var(--text-primary)' }}>
                 Real-Time Threat<br />
-                <span style={{
-                  background: 'linear-gradient(100deg, #93c5fd 0%, #60a5fa 30%, #3b82f6 60%, #818cf8 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  filter: 'drop-shadow(0 0 20px rgba(96,165,250,0.4))',
-                }}>
+                <span className="hero-gradient-text">
                   Intelligence & Protection
                 </span>
               </h1>
-              <p className="text-small mt-3" style={{ color: 'var(--text-secondary)', lineHeight: '1.75', maxWidth: '480px' }}>
+              <p className="text-small mt-3 font-medium" style={{ color: 'var(--text-secondary)', lineHeight: '1.75', maxWidth: '480px' }}>
                 92-engine VirusTotal v3 · KAVACH AI voice assistant ·
                 15-min emergency bank lock protocol. <br />
                 <span style={{ color: 'var(--text-muted)' }}>Founder: Bhargava Sood.</span>
@@ -184,9 +175,9 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
                   style={{ background: 'var(--success)', animation: 'ping-slow 1.8s cubic-bezier(0,0,0.2,1) infinite' }} />
                 <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: 'var(--success)' }} />
               </span>
-              <span className="text-caption font-semibold" style={{ color: 'var(--success)' }}>All 92 engines active</span>
+              <span className="text-caption font-bold" style={{ color: 'var(--success)' }}>All 92 engines active</span>
               <span className="text-caption" style={{ color: 'var(--text-muted)' }}>·</span>
-              <span className="text-caption" style={{ color: 'var(--text-muted)' }}>0 threats / 5 min</span>
+              <span className="text-caption font-medium" style={{ color: 'var(--text-muted)' }}>0 threats / 5 min</span>
             </div>
           </div>
 
@@ -200,12 +191,34 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
               <button onClick={onFreezeClick} className="btn btn--danger" style={{ fontSize: '12px', padding: '10px 10px', justifyContent: 'center' }}>
                 <ShieldAlert size={14} />Freeze
               </button>
-              <a href="tel:1930" className="btn btn--ghost" style={{ fontSize: '12px', padding: '10px 10px', justifyContent: 'center', color: 'var(--warning)', borderColor: 'rgba(245,158,11,0.3)' }}>
+              <a
+                href="tel:1930"
+                className="btn btn--ghost"
+                style={{
+                  fontSize: '12px',
+                  padding: '10px 10px',
+                  justifyContent: 'center',
+                  color: 'var(--warning)',
+                  borderColor: 'var(--warning)',
+                  background: 'var(--warning-muted)',
+                  fontWeight: 700,
+                }}
+              >
                 <PhoneCall size={14} />1930
               </a>
             </div>
-            <button onClick={onMapClick} className="btn btn--ghost" style={{ fontSize: '12px', padding: '10px 12px', justifyContent: 'center' }}>
-              <MapPin size={13} />Live Threat Map
+            <button
+              onClick={onMapClick}
+              className="btn btn--ghost"
+              style={{
+                fontSize: '12px',
+                padding: '10px 12px',
+                justifyContent: 'center',
+                fontWeight: 600,
+              }}
+            >
+              <MapPin size={13} className="text-[var(--primary)]" />
+              <span>Live Threat Map</span>
             </button>
           </div>
         </div>
