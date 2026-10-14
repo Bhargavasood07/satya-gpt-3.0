@@ -8,7 +8,8 @@ import TextChecker from './TextChecker';
 import { useChildMode } from '../../context/ChildModeContext';
 
 const ScannerPanel = ({ onScanResult }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
   const { isChildMode } = useChildMode();
   const [activeTab, setActiveTab] = useState('link');
 
@@ -26,7 +27,7 @@ const ScannerPanel = ({ onScanResult }) => {
       {isChildMode && (
         <div className="flex items-center gap-2 p-2 rounded bg-[var(--emerald-500)]/10 border border-[var(--emerald-500)]/30 text-[var(--emerald-500)] text-xs font-bold w-full">
           <Shield size={16} className="text-[var(--emerald-500)] shrink-0" />
-          <span>Child Safety Guard Active — Adult and scam content blocked</span>
+          <span>{t('childMode.activeBanner', 'Child Safety Guard Active — Adult and scam content blocked')}</span>
         </div>
       )}
 
@@ -35,7 +36,7 @@ const ScannerPanel = ({ onScanResult }) => {
         <div className="flex items-center gap-2 text-[var(--text-primary)]">
           <ScanLine className="text-[var(--cyan-500)] shrink-0" size={20} />
           <h3 className="text-sm sm:text-base font-bold tracking-wide uppercase text-[var(--text-primary)]">
-            SATYA-GPT Scanner
+            {t('scanner.title', 'SATYA-GPT Scanner')}
           </h3>
         </div>
 
@@ -65,10 +66,10 @@ const ScannerPanel = ({ onScanResult }) => {
 
       <div className="flex flex-col gap-2">
         <div className="text-[var(--text-secondary)] text-xs flex items-center gap-1">
-          💡 Paste any link, UPI ID, or forward a suspicious SMS
+          💡 {isHindi ? 'कोई भी संदिग्ध लिंक, UPI ID या बैंक SMS यहाँ पेस्ट करें' : 'Paste any link, UPI ID, or forward a suspicious SMS'}
         </div>
         <div className="text-[var(--text-secondary)] opacity-70 text-xs italic bg-[var(--surface-raised)] border border-[var(--border-subtle)] p-2 rounded">
-          Try: http://sbi-kyc-update.tk/verify
+          {isHindi ? 'जांचें: http://sbi-kyc-update.tk/verify' : 'Try: http://sbi-kyc-update.tk/verify'}
         </div>
       </div>
 

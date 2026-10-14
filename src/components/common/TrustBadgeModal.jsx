@@ -1,8 +1,11 @@
 import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { ShieldCheck, Copy, CheckCircle2, X, Code2 } from 'lucide-react';
 
 const TrustBadgeModal = memo(({ onClose }) => {
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
   const [copied, setCopied] = useState(false);
 
   const embedSnippet = `<a href="https://satya-gpt-30.vercel.app/" target="_blank" rel="noopener noreferrer">
@@ -26,6 +29,7 @@ const TrustBadgeModal = memo(({ onClose }) => {
         <button
           onClick={onClose}
           className="absolute top-3.5 right-3.5 p-1.5 rounded-lg text-[var(--text-muted)] hover:text-slate-100 hover:bg-[#0B0F19]"
+          aria-label="Close modal"
         >
           <X size={18} />
         </button>
@@ -36,18 +40,22 @@ const TrustBadgeModal = memo(({ onClose }) => {
           </div>
           <div>
             <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-slate-100">
-              "Protected by SATYA-GPT" Enterprise Trust Badge
+              {isHindi ? '"SATYA-GPT द्वारा सुरक्षित" सुरक्षा ट्रस्ट बैज' : '"Protected by SATYA-GPT" Enterprise Trust Badge'}
             </h2>
-            <p className="text-[10px] text-[var(--text-muted)]">Embed verified safety seal on your startup website footer</p>
+            <p className="text-[10px] text-[var(--text-muted)]">
+              {isHindi ? 'अपनी वेबसाइट या स्टार्टअप पर सत्यापित सुरक्षा सील लगाएं' : 'Embed verified safety seal on your startup website footer'}
+            </p>
           </div>
         </div>
 
         {/* Badge Preview */}
         <div className="p-4 bg-[#0B0F19] rounded-xl border border-[#27395C] text-center space-y-2">
-          <div className="text-[10px] text-[var(--text-muted)] font-bold uppercase">Badge Preview:</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-bold uppercase">
+            {isHindi ? 'बैज पूर्वावलोकन:' : 'Badge Preview:'}
+          </div>
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/50 rounded-xl text-emerald-300 font-bold text-xs shadow-md">
             <ShieldCheck size={18} className="text-emerald-400" />
-            <span>PROTECTED BY SATYA-GPT 92-ENGINE AI</span>
+            <span>{isHindi ? 'SATYA-GPT 92-इंजन AI द्वारा सुरक्षित' : 'PROTECTED BY SATYA-GPT 92-ENGINE AI'}</span>
           </div>
         </div>
 
@@ -55,7 +63,7 @@ const TrustBadgeModal = memo(({ onClose }) => {
         <div className="space-y-1">
           <label className="block text-[10px] text-[var(--text-muted)] font-bold uppercase flex items-center gap-1">
             <Code2 size={13} className="text-[var(--accent)]" />
-            <span>HTML Embed Code:</span>
+            <span>{isHindi ? 'HTML एम्बेड कोड:' : 'HTML Embed Code:'}</span>
           </label>
           <pre className="p-3 bg-[#0B0F19] rounded-xl border border-[#27395C] text-[10px] text-cyan-300 overflow-x-auto select-all">
             {embedSnippet}
@@ -64,10 +72,10 @@ const TrustBadgeModal = memo(({ onClose }) => {
 
         <button
           onClick={handleCopy}
-          className="w-full py-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg"
+          className="w-full py-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg cursor-pointer"
         >
           {copied ? <CheckCircle2 size={15} /> : <Copy size={15} />}
-          <span>{copied ? 'Badge Snippet Copied!' : 'Copy Embed Code'}</span>
+          <span>{copied ? (isHindi ? 'कोड कॉपी हो गया!' : 'Embed Code Copied!') : (isHindi ? 'HTML कोड कॉपी करें' : 'Copy HTML Code')}</span>
         </button>
       </motion.div>
     </div>

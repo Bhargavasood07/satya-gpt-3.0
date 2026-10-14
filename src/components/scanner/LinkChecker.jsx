@@ -60,12 +60,12 @@ export default function LinkChecker({ onScanResult }) {
           {isScanning ? (
             <span className="flex items-center gap-1.5">
               <span className="animate-spin inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full" />
-              <span>Scanning</span>
+              <span>{t('scanner.scanning', 'Scanning...')}</span>
             </span>
           ) : (
             <>
               <Search size={14} />
-              <span>Scan Link</span>
+              <span>{t('satyaGpt.checkNow', 'Scan Link')}</span>
             </>
           )}
         </button>
@@ -77,9 +77,9 @@ export default function LinkChecker({ onScanResult }) {
           <div className="flex items-center justify-between text-xs font-bold text-[var(--primary)]">
             <span className="flex items-center gap-1.5">
               <Activity size={14} className="animate-pulse text-[var(--cyan-500)]" />
-              {scanStep === 1 && "1/3 Querying 92 VirusTotal engines..."}
-              {scanStep === 2 && "2/3 KAVACH Edge AI heuristics check..."}
-              {scanStep === 3 && "3/3 Verifying SSL certificate & DNS..."}
+              {scanStep === 1 && (t('scanner.step1', '1/3 Querying 92 VirusTotal engines...'))}
+              {scanStep === 2 && (t('scanner.step2', '2/3 KAVACH Edge AI heuristics check...'))}
+              {scanStep === 3 && (t('scanner.step3', '3/3 Verifying SSL certificate & DNS...'))}
             </span>
             <span className="text-[var(--cyan-500)] font-mono">{scanStep * 33}%</span>
           </div>

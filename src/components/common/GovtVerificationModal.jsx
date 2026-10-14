@@ -1,8 +1,12 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { ShieldCheck, Building2, Award, CheckCircle2, Lock, ExternalLink, X, FileText, Globe } from 'lucide-react';
 
 const GovtVerificationModal = memo(({ onClose }) => {
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
+
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md font-mono text-slate-200">
       <motion.div
@@ -14,6 +18,7 @@ const GovtVerificationModal = memo(({ onClose }) => {
         <button
           onClick={onClose}
           className="absolute top-3.5 right-3.5 p-1.5 rounded-lg text-[var(--text-muted)] hover:text-slate-100 hover:bg-[#060913]"
+          aria-label="Close modal"
         >
           <X size={18} />
         </button>
@@ -26,13 +31,15 @@ const GovtVerificationModal = memo(({ onClose }) => {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-sm sm:text-base font-extrabold uppercase text-amber-300 tracking-wider">
-                Government & National Nodal Accreditation
+                {isHindi ? 'सरकारी एवं राष्ट्रीय नोडल सत्यापन' : 'Government & National Nodal Accreditation'}
               </h2>
               <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[9px] font-bold border border-emerald-500/40">
-                VERIFIED
+                {isHindi ? 'सत्यापित' : 'VERIFIED'}
               </span>
             </div>
-            <p className="text-[10px] text-amber-200/80">MeitY • CERT-In • I4C 1930 Nodal Cyber Crime Prevention Portal</p>
+            <p className="text-[10px] text-amber-200/80">
+              {isHindi ? 'MeitY • CERT-In • I4C 1930 राष्ट्रीय साइबर क्राइम रिपोर्टिंग पोर्टल' : 'MeitY • CERT-In • I4C 1930 Nodal Cyber Crime Prevention Portal'}
+            </p>
           </div>
         </div>
 
@@ -41,40 +48,48 @@ const GovtVerificationModal = memo(({ onClose }) => {
           <div className="p-3 bg-[#060913] border border-[#27395C] rounded-xl space-y-1">
             <div className="flex items-center gap-1.5 text-cyan-300 font-bold text-[11px]">
               <Award size={14} className="text-[var(--accent)]" />
-              <span>MeitY & CERT-In Aligned</span>
+              <span>{isHindi ? 'MeitY एवं CERT-In अनुरूप' : 'MeitY & CERT-In Aligned'}</span>
             </div>
             <p className="text-[10px] text-slate-400">
-              Empanelled threat intelligence engine aligned with CERT-In advisory directives for national malware analysis.
+              {isHindi 
+                ? 'राष्ट्रीय मालवेयर विश्लेषण और साइबर सुरक्षा दिशानिर्देशों के अनुरूप संरचित।'
+                : 'Empanelled threat intelligence engine aligned with CERT-In advisory directives for national malware analysis.'}
             </p>
           </div>
 
           <div className="p-3 bg-[#060913] border border-[#27395C] rounded-xl space-y-1">
             <div className="flex items-center gap-1.5 text-amber-300 font-bold text-[11px]">
               <ShieldCheck size={14} className="text-amber-400" />
-              <span>I4C 1930 Helpline Nodal Hub</span>
+              <span>{isHindi ? 'I4C 1930 हेल्पलाइन नोडल केंद्र' : 'I4C 1930 Helpline Nodal Hub'}</span>
             </div>
             <p className="text-[10px] text-slate-400">
-              Direct dispatch protocols connected to 1930 Citizen Financial Cyber Fraud Reporting System.
+              {isHindi 
+                ? 'नागरिक वित्तीय साइबर फ्रॉड रिपोर्टिंग सिस्टम 1930 से जुड़ा आपातकालीन प्रोटोकॉल।'
+                : 'Direct dispatch protocols connected to 1930 Citizen Financial Cyber Fraud Reporting System.'}
             </p>
           </div>
 
           <div className="p-3 bg-[#060913] border border-[#27395C] rounded-xl space-y-1">
             <div className="flex items-center gap-1.5 text-emerald-300 font-bold text-[11px]">
               <Lock size={14} className="text-emerald-400" />
-              <span>ISO/IEC 27001:2022 Certified</span>
+              <span>ISO/IEC 27001:2022</span>
             </div>
             <p className="text-[10px] text-slate-400">
-              Information Security Management System (ISMS) compliance with zero-trust client data privacy.
+              {isHindi 
+                ? 'शून्य-ट्रस्ट डेटा गोपनीयता के साथ सूचना सुरक्षा प्रबंधन प्रणाली मानक।'
+                : 'Information Security Management System (ISMS) compliance with zero-trust client data privacy.'}
             </p>
           </div>
 
           <div className="p-3 bg-[#060913] border border-[#27395C] rounded-xl space-y-1">
             <div className="flex items-center gap-1.5 text-purple-300 font-bold text-[11px]">
               <Globe size={14} className="text-purple-400" />
-              <span>Cyber Swachhta Kendra</span>
+              <span>{isHindi ? 'साइबर स्वच्छता केंद्र' : 'Cyber Swachhta Kendra'}</span>
             </div>
             <p className="text-[10px] text-slate-400">
-              Botnet cleaning and malware analysis integration for citizen device hygiene.
+              {isHindi 
+                ? 'नागरिकों के फोन व कंप्यूटर को वायरस व बॉटनेट्स से मुक्त रखने हेतु समन्वय।'
+                : 'Botnet cleaning and malware analysis integration for citizen device hygiene.'}
             </p>
           </div>
         </div>
@@ -82,11 +97,14 @@ const GovtVerificationModal = memo(({ onClose }) => {
         {/* Certificate Verification Box */}
         <div className="p-3.5 bg-amber-500/10 border border-amber-500/40 rounded-xl space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase text-amber-300">National Accreditation ID</span>
+            <span className="text-[10px] font-bold uppercase text-amber-300">
+              {isHindi ? 'राष्ट्रीय प्रत्यायन पहचान संख्या:' : 'National Accreditation ID'}
+            </span>
             <span className="text-[10px] font-mono text-cyan-300 font-extrabold">CERT-IN-2026-GOVT-994821</span>
           </div>
           <div className="text-[11px] text-slate-300 leading-relaxed">
-            Chief Architect & Founder: <strong>Bhargava Sood</strong> (SATYA-GPT National Cyber Security Initiative).
+            {isHindi ? 'मुख्य वास्तुकार एवं संस्थापक: ' : 'Chief Architect & Founder: '}
+            <strong>Bhargava Sood</strong> ({isHindi ? 'SATYA-GPT राष्ट्रीय साइबर सुरक्षा पहल' : 'SATYA-GPT National Cyber Security Initiative'}).
           </div>
         </div>
 
@@ -96,18 +114,18 @@ const GovtVerificationModal = memo(({ onClose }) => {
             href="https://cybercrime.gov.in"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md"
+            className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md cursor-pointer"
           >
             <Globe size={14} />
-            <span>Official Cybercrime.gov.in Portal</span>
+            <span>{isHindi ? 'आधिकारिक Cybercrime.gov.in पोर्टल' : 'Official Cybercrime.gov.in Portal'}</span>
             <ExternalLink size={12} />
           </a>
 
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-[#060913] border border-[#27395C] text-slate-300 hover:text-white font-bold rounded-xl text-xs"
+            className="px-4 py-2 bg-[#060913] border border-[#27395C] text-slate-300 hover:text-white font-bold rounded-xl text-xs cursor-pointer"
           >
-            Close Verification
+            {isHindi ? 'बंद करें' : 'Close Verification'}
           </button>
         </div>
       </motion.div>

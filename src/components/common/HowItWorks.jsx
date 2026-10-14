@@ -1,27 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ScanLine, Zap, ShieldCheck } from 'lucide-react';
-
-const steps = [
-  {
-    number: '01',
-    title: 'Paste a suspicious link, SMS, or QR code',
-    description: 'Quickly drop any suspicious digital content into the analysis engine.',
-    icon: ScanLine,
-  },
-  {
-    number: '02',
-    title: 'KAVACH AI + 92 engines analyze it instantly',
-    description: 'Our proprietary AI combined with global threat intelligence scans the content.',
-    icon: Zap,
-  },
-  {
-    number: '03',
-    title: 'Get a plain-language verdict and next steps',
-    description: 'Receive actionable insights and clear steps to protect yourself.',
-    icon: ShieldCheck,
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 const containerVariants = {
   hidden: {},
@@ -38,12 +18,39 @@ const itemVariants = {
 };
 
 const HowItWorks = ({ onTryItClick }) => {
+  const { t } = useTranslation();
+
+  const steps = [
+    {
+      number: '01',
+      title: t('howItWorks.step1Title', 'Paste a suspicious link, SMS, or QR code'),
+      description: t('howItWorks.step1Desc', 'Quickly drop any suspicious digital content into the analysis engine.'),
+      icon: ScanLine,
+    },
+    {
+      number: '02',
+      title: t('howItWorks.step2Title', 'KAVACH AI + 92 engines analyze it instantly'),
+      description: t('howItWorks.step2Desc', 'Our proprietary AI combined with global threat intelligence scans the content.'),
+      icon: Zap,
+    },
+    {
+      number: '03',
+      title: t('howItWorks.step3Title', 'Get a plain-language verdict and next steps'),
+      description: t('howItWorks.step3Desc', 'Receive actionable insights and clear steps to protect yourself.'),
+      icon: ShieldCheck,
+    }
+  ];
+
   return (
     <section className="py-6">
       <div className="w-full">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>How It Works</h2>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Three simple steps to secure your digital presence.</p>
+          <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+            {t('howItWorks.title', 'How It Works')}
+          </h2>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            {t('howItWorks.subtitle', 'Three simple steps to secure your digital presence.')}
+          </p>
         </div>
 
         <motion.div 
@@ -59,7 +66,7 @@ const HowItWorks = ({ onTryItClick }) => {
             style={{ borderColor: 'var(--border-subtle)', transform: 'translateY(-50%)', zIndex: 0 }}
           />
 
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <motion.div 
               key={step.number} 
               variants={itemVariants}
@@ -105,7 +112,7 @@ const HowItWorks = ({ onTryItClick }) => {
               boxShadow: '0 4px 14px 0 rgba(var(--primary-rgb), 0.39)' 
             }}
           >
-            Try it now
+            {t('howItWorks.tryNow', 'Try it now')}
           </button>
         </div>
       </div>

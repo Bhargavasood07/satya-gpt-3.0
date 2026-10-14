@@ -4,11 +4,11 @@ import { LayoutDashboard, ScanLine, Sparkles, Baby, BookOpen, BarChart3 } from '
 import { useChildMode } from '../../context/ChildModeContext';
 
 const MOBILE_NAV = [
-  { id: 'dashboard',   icon: LayoutDashboard, label: 'Home' },
-  { id: 'scanner',     icon: ScanLine,        label: 'Scan' },
-  { id: 'aihub',       icon: Sparkles,        label: 'AI Hub' },
-  { id: 'analytics',   icon: BarChart3,       label: 'Reports' },
-  { id: 'guidedocs',   icon: BookOpen,        label: 'Guide' },
+  { id: 'dashboard',   icon: LayoutDashboard, label: 'Home',    key: 'mobileNav.home' },
+  { id: 'scanner',     icon: ScanLine,        label: 'Scan',    key: 'mobileNav.scan' },
+  { id: 'aihub',       icon: Sparkles,        label: 'AI Hub',  key: 'mobileNav.aihub' },
+  { id: 'analytics',   icon: BarChart3,       label: 'Reports', key: 'mobileNav.reports' },
+  { id: 'guidedocs',   icon: BookOpen,        label: 'Guide',   key: 'mobileNav.guide' },
 ];
 
 export default function MobileNav({ activeTab, onTabChange }) {
@@ -37,7 +37,7 @@ export default function MobileNav({ activeTab, onTabChange }) {
               background: 'transparent',
             }}
             aria-current={isActive ? 'page' : undefined}
-            aria-label={label}
+            aria-label={t(key, label)}
           >
             <Icon
               size={20}
@@ -47,7 +47,7 @@ export default function MobileNav({ activeTab, onTabChange }) {
               className="text-caption"
               style={{ fontWeight: isActive ? 700 : 400 }}
             >
-              {label}
+              {t(key, label)}
             </span>
           </button>
         );

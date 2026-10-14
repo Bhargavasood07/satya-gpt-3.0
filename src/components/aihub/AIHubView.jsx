@@ -1,18 +1,42 @@
 import React, { useState, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sparkles, Mic, Users, Globe, ArrowLeft } from 'lucide-react';
 import VoiceChatPanel from './VoiceChatPanel';
 import AIPersonaSelector from './AIPersonaSelector';
 import WebSearchPanel from './WebSearchPanel';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const HUB_FEATURES = [
-  { id: 'personas', title: 'AI Personas', description: 'Choose specialized AI assistants', icon: Users, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-  { id: 'voice', title: 'Voice Chat', description: 'Hands-free AI voice conversations', icon: Mic, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-  { id: 'web', title: 'Real-Time Web Search', description: 'Search live information & web links', icon: Globe, color: 'text-rose-400', bg: 'bg-rose-500/10' }
-];
-
 const AIHubView = memo(() => {
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
   const [activePanel, setActivePanel] = useState(null);
+
+  const hubFeatures = [
+    { 
+      id: 'personas', 
+      title: isHindi ? 'विशेषज्ञ AI अवतार' : 'AI Personas', 
+      description: isHindi ? 'साइबर विशेषज्ञ, शिक्षक या अनुवादक चुनें' : 'Choose specialized AI assistants', 
+      icon: Users, 
+      color: 'text-cyan-400', 
+      bg: 'bg-cyan-500/10' 
+    },
+    { 
+      id: 'voice', 
+      title: isHindi ? 'आवाज से बातचीत (Voice Chat)' : 'Voice Chat', 
+      description: isHindi ? 'हिंदी या अंग्रेजी में बोलकर सुरक्षा सलाह लें' : 'Hands-free AI voice conversations', 
+      icon: Mic, 
+      color: 'text-emerald-400', 
+      bg: 'bg-emerald-500/10' 
+    },
+    { 
+      id: 'web', 
+      title: isHindi ? 'लाइव वेब सर्च' : 'Real-Time Web Search', 
+      description: isHindi ? 'इंटरनेट से ताजा जानकारी व सुरक्षा अलर्ट खोजें' : 'Search live information & web links', 
+      icon: Globe, 
+      color: 'text-rose-400', 
+      bg: 'bg-rose-500/10' 
+    }
+  ];
 
   const renderActivePanel = () => {
     switch (activePanel) {
@@ -29,8 +53,12 @@ const AIHubView = memo(() => {
         <div className="flex items-center gap-3">
           <Sparkles className="w-6 h-6 text-[var(--accent)]" />
           <div>
-            <h1 className="font-bold text-sm sm:text-base leading-tight uppercase tracking-wider">SATYA AI Hub — Advanced Intelligence</h1>
-            <p className="text-xs text-[var(--text-muted)] font-mono">Multimodal AI • Voice Assistant • AI Personas • Live Web Search</p>
+            <h1 className="font-bold text-sm sm:text-base leading-tight uppercase tracking-wider">
+              {isHindi ? 'कवच AI सुरक्षा केंद्र — उन्नत AI सहायक' : 'SATYA AI Hub — Advanced Intelligence'}
+            </h1>
+            <p className="text-xs text-[var(--text-muted)] font-mono">
+              {isHindi ? 'आवाज द्वारा बातचीत • विशेषज्ञ AI अवतार • लाइव वेब सर्च' : 'Multimodal AI • Voice Assistant • AI Personas • Live Web Search'}
+            </p>
           </div>
         </div>
       </div>
@@ -45,7 +73,7 @@ const AIHubView = memo(() => {
               exit={{ opacity: 0, scale: 0.95 }}
               className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4"
             >
-              {HUB_FEATURES.map(feature => (
+              {hubFeatures.map(feature => (
                 <div 
                   key={feature.id}
                   className="bg-[#131B2E] border border-[#27395C] rounded-xl p-6 flex flex-col items-center text-center gap-4 hover:border-[var(--accent)] transition-all cursor-pointer shadow-lg group"
@@ -59,7 +87,7 @@ const AIHubView = memo(() => {
                     <p className="text-xs text-[var(--text-muted)] mt-1">{feature.description}</p>
                   </div>
                   <button className="mt-2 px-6 py-2 bg-[#0B0F19] border border-[#27395C] group-hover:border-[var(--accent)] rounded-full text-xs font-bold transition-all text-slate-200">
-                    Open
+                    {isHindi ? 'खोलें' : 'Open'}
                   </button>
                 </div>
               ))}
@@ -75,9 +103,9 @@ const AIHubView = memo(() => {
               <div className="p-2 border-b border-[#27395C] bg-[#0B0F19]">
                 <button 
                   onClick={() => setActivePanel(null)}
-                  className="flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] hover:text-slate-200 px-3 py-1.5 rounded transition-colors"
+                  className="flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] hover:text-slate-200 px-3 py-1.5 rounded transition-colors cursor-pointer"
                 >
-                  <ArrowLeft className="w-4 h-4" /> Back to AI Hub Grid
+                  <ArrowLeft className="w-4 h-4" /> {isHindi ? 'AI केंद्र पर वापस जाएं' : 'Back to AI Hub Grid'}
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto">

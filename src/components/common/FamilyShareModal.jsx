@@ -1,11 +1,16 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Baby, MessageSquare, Copy, X, CheckCircle2, Heart } from 'lucide-react';
 
 const FamilyShareModal = memo(({ onClose }) => {
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
   const [copied, setCopied] = React.useState(false);
 
-  const shareText = `👨‍👩‍👧 *SATYA-GPT FAMILY CYBER SHIELD* 👨‍👩‍👧\n\nI have pre-configured SATYA-GPT Child & Senior Safety Guard for our family!\n\nOpen this link to automatically protect your phone from online scams, phishing, and fake news:\nhttps://satya-gpt-30.vercel.app/?guard=active\n\nStay Safe! ❤️`;
+  const shareText = isHindi 
+    ? `👨‍👩‍👧 *सत्या-GPT परिवार साइबर सुरक्षा कवच* 👨‍👩‍👧\n\nमैंने अपने परिवार के लिए SATYA-GPT बाल एवं वरिष्ठ नागरिक सुरक्षा गार्ड चालू किया है!\n\nअपने फोन को फर्जी बैंक लिंक, लॉटरी SMS और ऑनलाइन फ्रॉड से सुरक्षित रखने के लिए यह लिंक खोलें:\nhttps://satya-gpt-30.vercel.app/?guard=active\n\nसुरक्षित रहें! ❤️`
+    : `👨‍👩‍👧 *SATYA-GPT FAMILY CYBER SHIELD* 👨‍👩‍👧\n\nI have pre-configured SATYA-GPT Child & Senior Safety Guard for our family!\n\nOpen this link to automatically protect your phone from online scams, phishing, and fake news:\nhttps://satya-gpt-30.vercel.app/?guard=active\n\nStay Safe! ❤️`;
 
   const handleWhatsAppShare = () => {
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
@@ -28,6 +33,7 @@ const FamilyShareModal = memo(({ onClose }) => {
         <button
           onClick={onClose}
           className="absolute top-3.5 right-3.5 p-1.5 rounded-lg text-[var(--text-muted)] hover:text-slate-100 hover:bg-[#0B0F19]"
+          aria-label="Close modal"
         >
           <X size={18} />
         </button>
@@ -38,9 +44,11 @@ const FamilyShareModal = memo(({ onClose }) => {
           </div>
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-amber-300">
-              1-Click Family Cyber Guard Share
+              {isHindi ? '1-क्लिक परिवार साइबर सुरक्षा शेयर' : '1-Click Family Cyber Guard Share'}
             </h2>
-            <p className="text-[10px] text-[var(--text-muted)]">Protect parents, kids & relatives with a 1-tap WhatsApp link</p>
+            <p className="text-[10px] text-[var(--text-muted)]">
+              {isHindi ? 'माता-पिता, बच्चों और रिश्तेदारों को WhatsApp पर सुरक्षा लिंक भेजें' : 'Protect parents, kids & relatives with a 1-tap WhatsApp link'}
+            </p>
           </div>
         </div>
 
@@ -51,18 +59,18 @@ const FamilyShareModal = memo(({ onClose }) => {
         <div className="flex flex-col gap-2 pt-1">
           <button
             onClick={handleWhatsAppShare}
-            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg"
+            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg cursor-pointer"
           >
             <MessageSquare size={16} />
-            <span>Share Guard Link on WhatsApp</span>
+            <span>{isHindi ? 'व्हाट्सएप पर सुरक्षा लिंक भेजें' : 'Share Guard Link on WhatsApp'}</span>
           </button>
 
           <button
             onClick={handleCopy}
-            className="w-full py-2.5 bg-[#0B0F19] border border-[#27395C] hover:border-amber-400 text-slate-200 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all"
+            className="w-full py-2.5 bg-[#0B0F19] border border-[#27395C] hover:border-slate-400 text-slate-300 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             {copied ? <CheckCircle2 size={15} className="text-emerald-400" /> : <Copy size={15} />}
-            <span>{copied ? 'Link Copied!' : 'Copy Share Text'}</span>
+            <span>{copied ? (isHindi ? 'कॉपी हो गया!' : 'Copied!') : (isHindi ? 'मैसेज टेक्स्ट कॉपी करें' : 'Copy Message Text')}</span>
           </button>
         </div>
       </motion.div>

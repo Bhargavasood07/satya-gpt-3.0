@@ -5,7 +5,8 @@ import { analyzeScamGlobally } from '../../services/virusTotalService';
 import { useChildMode } from '../../context/ChildModeContext';
 
 export default function TextChecker({ onScanResult }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
   const { isChildMode } = useChildMode();
   const [textInput, setTextInput] = useState('');
   const [isScanning, setIsScanning] = useState(false);
@@ -14,15 +15,21 @@ export default function TextChecker({ onScanResult }) {
   const samples = [
     {
       label: t('satyaGpt.sampleKycSms', '🔴 Fake SBI KYC SMS Alert'),
-      value: 'Dear Customer, your SBI YONO Account will be blocked today. Please update your PAN immediately: http://sbi-kyc-verify99.tk',
+      value: isHindi 
+        ? 'प्रिय ग्राहक, आपका SBI YONO खाता आज ब्लॉक हो जाएगा। कृपया तुरंत पैन कार्ड अपडेट करें: http://sbi-kyc-verify99.tk'
+        : 'Dear Customer, your SBI YONO Account will be blocked today. Please update your PAN immediately: http://sbi-kyc-verify99.tk',
     },
     {
       label: t('satyaGpt.sampleGamingScam', '🟣 Free Game Currency Scam'),
-      value: 'Congratulations Kid! Click here to claim 5,000 FREE ROBUX / Free Fire Diamonds instantly! Enter your password: http://free-robux.xyz',
+      value: isHindi
+        ? 'बधाई हो! 5,000 फ्री रोबक्स / फ्री फायर डायमंड तुरंत पाने के लिए यहां क्लिक करें! अपना पासवर्ड दर्ज करें: http://free-robux.xyz'
+        : 'Congratulations Kid! Click here to claim 5,000 FREE ROBUX / Free Fire Diamonds instantly! Enter your password: http://free-robux.xyz',
     },
     {
-      label: '🟡 Electricity Power Cut Threat SMS',
-      value: 'Dear consumer, your electricity power will be disconnected at 9:30 PM tonight due to unpaid bill. Call officer immediately at 9876543210',
+      label: t('satyaGpt.sampleElectricitySms', '🟡 Electricity Power Cut Threat SMS'),
+      value: isHindi
+        ? 'प्रिय उपभोक्ता, बिल जमा न होने के कारण आज रात 9:30 बजे आपकी बिजली काट दी जाएगी। तुरंत बिजली अधिकारी से 9876543210 पर संपर्क करें।'
+        : 'Dear consumer, your electricity power will be disconnected at 9:30 PM tonight due to unpaid bill. Call officer immediately at 9876543210',
     }
   ];
 
@@ -60,7 +67,7 @@ export default function TextChecker({ onScanResult }) {
         <div className="flex justify-between items-center mt-2">
           <span className="text-[11px] text-[var(--text-muted)] flex items-center gap-1">
             <MessageSquare size={13} />
-            NLP Scam Keyword Detection Active
+            {isHindi ? 'AI फ्रॉड शब्द पहचान सक्रिय' : 'NLP Scam Keyword Detection Active'}
           </span>
           <button
             onClick={() => handleVerify()}
@@ -70,12 +77,12 @@ export default function TextChecker({ onScanResult }) {
             {isScanning ? (
               <span className="flex items-center gap-1.5">
                 <span className="animate-spin inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full" />
-                <span>Analyzing SMS</span>
+                <span>{isHindi ? 'SMS जांच जारी...' : 'Analyzing SMS'}</span>
               </span>
             ) : (
               <>
                 <Search size={14} />
-                <span>Verify Message</span>
+                <span>{t('satyaGpt.checkNow', 'Verify Message')}</span>
               </>
             )}
           </button>
@@ -88,9 +95,9 @@ export default function TextChecker({ onScanResult }) {
           <div className="flex items-center justify-between text-xs font-bold text-[var(--primary)]">
             <span className="flex items-center gap-1.5">
               <Activity size={14} className="animate-pulse text-[var(--cyan-500)]" />
-              {scanStep === 1 && "1/3 Analyzing threat vectors & intent..."}
-              {scanStep === 2 && "2/3 Cross-referencing 1930 fraud database..."}
-              {scanStep === 3 && "3/3 Inspecting redirect links & APK signatures..."}
+              {scanStep === 1 && (isHindi ? '1/3: फ्रॉड शब्दों और संदेश के इरादे का विश्लेषण...' : '1/3 Analyzing threat vectors & intent...')}
+              {scanStep === 2 && (isHindi ? '2/3: 1930 राष्ट्रीय फ्रॉड डेटाबेस से मिलान...' : '2/3 Cross-referencing 1930 fraud database...')}
+              {scanStep === 3 && (isHindi ? '3/3: लिंक व APK सुरक्षा हस्ताक्षर जांच...' : '3/3 Inspecting redirect links & APK signatures...')}
             </span>
             <span className="text-[var(--cyan-500)] font-mono">{scanStep * 33}%</span>
           </div>

@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { BarChart3, TrendingUp, ShieldAlert, ShieldCheck, PieChart, Activity, Server, ArrowUpRight, Sun, Moon, Sparkles, LineChart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { useTranslation } from 'react-i18next';
+
 export default function AnalyticsView({ metrics, events }) {
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
+
   const [graphMode, setGraphMode] = useState('bars'); // 'bars', 'predictive'
   const [isLightContrast, setIsLightContrast] = useState(true); // Default Light Contrast Theme for Graph Clarity!
 
@@ -11,10 +16,42 @@ export default function AnalyticsView({ metrics, events }) {
   const safeCount = totalScans - threatCount;
 
   const categories = [
-    { id: 'phishing', name: 'Phishing Links', count: 18, color: '#EF4444', gradient: 'from-rose-500 to-red-600', isHigh: true, prediction: '+14% Spike Projected' },
-    { id: 'sms', name: 'SMS Scam Forwards', count: 11, color: '#F59E0B', gradient: 'from-amber-400 to-orange-500', isHigh: false, prediction: '+4% Moderate' },
-    { id: 'qr', name: 'Fake QR Codes', count: 6, color: '#3B82F6', gradient: 'from-cyan-400 to-blue-500', isHigh: false, prediction: '-2% Declining' },
-    { id: 'child', name: 'Adult/Child Block', count: 3, color: '#A855F7', gradient: 'from-purple-500 to-indigo-600', isLow: true, prediction: 'Stable Low' },
+    { 
+      id: 'phishing', 
+      name: isHindi ? 'फिशिंग लिंक फ्रॉड' : 'Phishing Links', 
+      count: 18, 
+      color: '#EF4444', 
+      gradient: 'from-rose-500 to-red-600', 
+      isHigh: true, 
+      prediction: isHindi ? '+14% बढ़ोतरी की संभावना' : '+14% Spike Projected' 
+    },
+    { 
+      id: 'sms', 
+      name: isHindi ? 'संदिग्ध SMS / संदेश' : 'SMS Scam Forwards', 
+      count: 11, 
+      color: '#F59E0B', 
+      gradient: 'from-amber-400 to-orange-500', 
+      isHigh: false, 
+      prediction: isHindi ? '+4% सामान्य' : '+4% Moderate' 
+    },
+    { 
+      id: 'qr', 
+      name: isHindi ? 'फर्जी QR कोड' : 'Fake QR Codes', 
+      count: 6, 
+      color: '#3B82F6', 
+      gradient: 'from-cyan-400 to-blue-500', 
+      isHigh: false, 
+      prediction: isHindi ? '-2% कमी दर्ज' : '-2% Declining' 
+    },
+    { 
+      id: 'child', 
+      name: isHindi ? 'वयस्क / गेमिंग ब्लॉक' : 'Adult/Child Block', 
+      count: 3, 
+      color: '#A855F7', 
+      gradient: 'from-purple-500 to-indigo-600', 
+      isLow: true, 
+      prediction: isHindi ? 'स्थिर व सुरक्षित' : 'Stable Low' 
+    },
   ];
 
   return (
@@ -27,16 +64,18 @@ export default function AnalyticsView({ metrics, events }) {
           </div>
           <div>
             <h2 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">
-              SOC Security Analytics & Predictive Intelligence Graph
+              {isHindi ? 'SOC सुरक्षा विश्लेषण एवं AI पूर्वानुमान ग्राफ' : 'SOC Security Analytics & Predictive Intelligence Graph'}
             </h2>
-            <p className="text-[11px] text-[var(--text-muted)]">Real-time threat distribution, High/Low peak markers & AI 24h predictive trends</p>
+            <p className="text-[11px] text-[var(--text-muted)]">
+              {isHindi ? 'लाइव साइबर खतरा वितरण, उच्चतम/निम्नतम स्तर और 24-घंटे का AI पूर्वानुमान' : 'Real-time threat distribution, High/Low peak markers & AI 24h predictive trends'}
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono px-2.5 py-1 bg-[#0B0F19] border border-[#1E2D4A] text-emerald-400 font-bold rounded flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            AI PREDICTOR ACTIVE
+            {isHindi ? 'AI पूर्वानुमान सक्रिय' : 'AI PREDICTOR ACTIVE'}
           </span>
         </div>
       </div>
@@ -44,38 +83,38 @@ export default function AnalyticsView({ metrics, events }) {
       {/* Metric Summary Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
         <div className="bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl space-y-1">
-          <div className="text-[10px] text-[var(--text-muted)] font-bold">TOTAL INSPECTED</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-bold">{isHindi ? 'कुल जांच (स्कैन)' : 'TOTAL INSPECTED'}</div>
           <div className="text-xl sm:text-2xl font-bold text-[var(--text-primary)]">{totalScans.toLocaleString()}</div>
           <div className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
             <ArrowUpRight size={12} />
-            <span>+14% vs last 24h</span>
+            <span>{isHindi ? '+14% पिछले 24 घंटे में' : '+14% vs last 24h'}</span>
           </div>
         </div>
 
         <div className="bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl space-y-1">
-          <div className="text-[10px] text-[var(--text-muted)] font-bold">THREATS NEUTRALIZED</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-bold">{isHindi ? 'रोके गए खतरे' : 'THREATS NEUTRALIZED'}</div>
           <div className="text-xl sm:text-2xl font-bold text-rose-400">{threatCount}</div>
           <div className="text-[10px] text-rose-400 font-bold flex items-center gap-0.5">
             <ShieldAlert size={12} />
-            <span>HIGH PEAK: Phishing</span>
+            <span>{isHindi ? 'सर्वाधिक: फर्जी लिंक' : 'HIGH PEAK: Phishing'}</span>
           </div>
         </div>
 
         <div className="bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl space-y-1">
-          <div className="text-[10px] text-[var(--text-muted)] font-bold">VERIFIED CLEAN</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-bold">{isHindi ? 'सुरक्षित सत्यापित' : 'VERIFIED CLEAN'}</div>
           <div className="text-xl sm:text-2xl font-bold text-emerald-400">{safeCount.toLocaleString()}</div>
           <div className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
             <ShieldCheck size={12} />
-            <span>Clean Safety Rating</span>
+            <span>{isHindi ? 'सुरक्षा रेटिंग उत्तम' : 'Clean Safety Rating'}</span>
           </div>
         </div>
 
         <div className="bg-[#131B2E] border border-[#27395C] p-3.5 rounded-xl space-y-1">
-          <div className="text-[10px] text-[var(--text-muted)] font-bold">PREDICTED NEXT 6H</div>
-          <div className="text-xl sm:text-2xl font-bold text-amber-400">HIGH LEVEL</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-bold">{isHindi ? 'अगले 6 घंटे का अनुमान' : 'PREDICTED NEXT 6H'}</div>
+          <div className="text-xl sm:text-2xl font-bold text-amber-400">{isHindi ? 'सचेत रहें' : 'HIGH LEVEL'}</div>
           <div className="text-[10px] text-amber-300 font-bold flex items-center gap-0.5">
             <TrendingUp size={12} />
-            <span>Evening Phishing Wave</span>
+            <span>{isHindi ? 'शाम को फर्जी SMS की संभावना' : 'Evening Phishing Wave'}</span>
           </div>
         </div>
       </div>

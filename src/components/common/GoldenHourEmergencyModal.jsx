@@ -1,18 +1,22 @@
 import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { ShieldAlert, AlertTriangle, PhoneCall, Lock, CheckCircle2, X, Send, KeyRound, Building2, Cpu, RefreshCw, ArrowRight, ShieldCheck } from 'lucide-react';
 import { maskSensitiveField } from '../../utils/securityGuard';
 
 const SUPPORTED_BANK_APIS = [
-  { id: 'sbi', name: 'State Bank of India (SBI Nodal API)', code: 'SBI-CYBER-API-v3' },
-  { id: 'hdfc', name: 'HDFC Bank Security Portal', code: 'HDFC-FREEZE-NODE' },
-  { id: 'icici', name: 'ICICI Bank Instant Lock API', code: 'ICICI-SEC-GATEWAY' },
-  { id: 'axis', name: 'Axis Bank Emergency Cyber API', code: 'AXIS-NODAL-V2' },
-  { id: 'pnb', name: 'Punjab National Bank Nodal Hub', code: 'PNB-FREEZE-API' },
-  { id: 'npci', name: 'NPCI / UPI Central Cyber Gateway', code: 'NPCI-1930-CENTRAL' }
+  { id: 'sbi', name: 'State Bank of India (SBI Nodal API)', nameHi: 'भारतीय स्टेट बैंक (SBI नोडल पोर्टल)', code: 'SBI-CYBER-API-v3' },
+  { id: 'hdfc', name: 'HDFC Bank Security Portal', nameHi: 'HDFC बैंक सुरक्षा पोर्टल', code: 'HDFC-FREEZE-NODE' },
+  { id: 'icici', name: 'ICICI Bank Instant Lock API', nameHi: 'ICICI बैंक त्वरित लॉक पोर्टल', code: 'ICICI-SEC-GATEWAY' },
+  { id: 'axis', name: 'Axis Bank Emergency Cyber API', nameHi: 'एक्सिस बैंक आपातकालीन पोर्टल', code: 'AXIS-NODAL-V2' },
+  { id: 'pnb', name: 'Punjab National Bank Nodal Hub', nameHi: 'पंजाब नेशनल बैंक (PNB) नोडल केंद्र', code: 'PNB-FREEZE-API' },
+  { id: 'npci', name: 'NPCI / UPI Central Cyber Gateway', nameHi: 'NPCI / UPI राष्ट्रीय सुरक्षा गेटवे', code: 'NPCI-1930-CENTRAL' }
 ];
 
 const GoldenHourEmergencyModal = memo(({ onClose }) => {
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
+
   const [step, setStep] = useState(1); // 1: Input details, 2: 2FA OTP, 3: Processing API, 4: Frozen Confirmed
   const [selectedBank, setSelectedBank] = useState(SUPPORTED_BANK_APIS[0]);
   const [accountNumber, setAccountNumber] = useState('');
@@ -27,7 +31,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
   const handleRequestOtp = (e) => {
     e.preventDefault();
     if (!mobileNumber || mobileNumber.length < 10) {
-      alert('Please enter a valid 10-digit mobile number linked to your bank account.');
+      alert(isHindi ? 'कृपया बैंक खाते से जुड़ा 10 अंकों का सही मोबाइल नंबर दर्ज करें।' : 'Please enter a valid 10-digit mobile number linked to your bank account.');
       return;
     }
 
@@ -40,7 +44,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
   const handleVerifyOtpAndFreeze = (e) => {
     e.preventDefault();
     if (otpInput.trim() !== generatedOtp && otpInput.trim() !== '123456') {
-      setOtpError(`Invalid OTP! Please enter the 6-digit OTP: ${generatedOtp}`);
+      setOtpError(isHindi ? `गलत OTP! कृपया 6-अंकों का OTP कोड दर्ज करें: ${generatedOtp}` : `Invalid OTP! Please enter the 6-digit OTP: ${generatedOtp}`);
       return;
     }
 
@@ -51,7 +55,14 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
     const maskedTxn = maskSensitiveField(fraudTxnId || '329188492011', 'account');
 
     // Simulate Step 3 Live Bank API Dispatch Sequence
-    const logSequence = [
+    const logSequence = isHindi ? [
+      `${selectedBank.nameHi || selectedBank.name} से संपर्क स्थापित हो रहा है...`,
+      `सुरक्षा 2FA OTP हस्ताक्षर का सत्यापन सफल...`,
+      `उपयोगकर्ता खाता पेलोड एन्क्रिप्ट किया गया (${maskedAcc})...`,
+      `लेन-देन UTR #${maskedTxn} का मिलान...`,
+      `NPCI आपातकालीन लॉक सिग्नल भेजा गया: FREEZE-1930-${Math.floor(100000 + Math.random() * 900000)}...`,
+      `बैंक नोडल अधिकारी द्वारा पैसे निकासी पर रोक की पुष्टि प्राप्त!`
+    ] : [
       `Connecting to ${selectedBank.name}...`,
       `Verifying Zero-Trust 2FA Security OTP Signature...`,
       `Encrypting User Account Payload (${maskedAcc})...`,
@@ -81,6 +92,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
         <button
           onClick={onClose}
           className="absolute top-3.5 right-3.5 p-1.5 rounded-lg text-[var(--text-muted)] hover:text-slate-100 hover:bg-[#0B0F19]"
+          aria-label="Close modal"
         >
           <X size={18} />
         </button>
@@ -92,10 +104,12 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
           </div>
           <div>
             <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
-              <span>15-Min Direct Bank API Emergency Lock</span>
+              <span>{isHindi ? '15-मिनट आपातकालीन बैंक खाता फ्रीज (लॉक)' : '15-Min Direct Bank API Emergency Lock'}</span>
               <ShieldCheck size={16} className="text-emerald-400" />
             </h2>
-            <p className="text-[10px] text-rose-200/80">Direct Nodal API Integration with Zero-Trust Field Masking & 2FA Security OTP</p>
+            <p className="text-[10px] text-rose-200/80">
+              {isHindi ? 'सीधे बैंक नोडल पोर्टल से जुड़ाव - डेटा पूरी तरह गोपनीय व सुरक्षित है' : 'Direct Nodal API Integration with Zero-Trust Field Masking & 2FA Security OTP'}
+            </p>
           </div>
         </div>
 
@@ -104,14 +118,16 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
           <form onSubmit={handleRequestOtp} className="space-y-3.5 text-xs">
             <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-xl text-[11px] text-rose-200 leading-relaxed font-mono">
               <AlertTriangle size={14} className="inline mr-1 text-rose-400" />
-              Zero-Trust Encrypted Bank API Execution. Mobile numbers & account data are masked and never logged to browser history.
+              {isHindi 
+                ? 'आपातकालीन सुरक्षा: आपका मोबाइल नंबर और बैंक खाता विवरण गोपनीय रखा जाता है और सुरक्षित रूप से एन्क्रिप्ट होता है।'
+                : 'Zero-Trust Encrypted Bank API Execution. Mobile numbers & account data are masked and never logged to browser history.'}
             </div>
 
             {/* Bank API Selector */}
             <div>
               <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase flex items-center gap-1">
                 <Building2 size={13} className="text-[var(--accent)]" />
-                <span>Select Target Bank API Endpoint:</span>
+                <span>{isHindi ? 'अपना बैंक चुनें:' : 'Select Target Bank API Endpoint:'}</span>
               </label>
               <select
                 value={selectedBank.id}
@@ -123,7 +139,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
               >
                 {SUPPORTED_BANK_APIS.map((bank) => (
                   <option key={bank.id} value={bank.id}>
-                    {bank.name} — [{bank.code}]
+                    {isHindi ? bank.nameHi : bank.name} — [{bank.code}]
                   </option>
                 ))}
               </select>
@@ -131,7 +147,9 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">Registered Mobile Number (10-Digit)</label>
+                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">
+                  {isHindi ? 'बैंक से जुड़ा मोबाइल नंबर (10 अंक)' : 'Registered Mobile Number (10-Digit)'}
+                </label>
                 <input
                   type="tel"
                   required
@@ -143,7 +161,9 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
               </div>
 
               <div>
-                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">Account / UPI ID</label>
+                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">
+                  {isHindi ? 'खाता नंबर या UPI ID' : 'Account / UPI ID'}
+                </label>
                 <input
                   type="text"
                   required
@@ -156,7 +176,9 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
             </div>
 
             <div>
-              <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">Fraud UPI / UTR Transaction ID</label>
+              <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">
+                {isHindi ? 'धोखाधड़ी वाला UPI / UTR ट्रांजैक्शन नंबर (वैकल्पिक)' : 'Fraud UPI / UTR Transaction ID'}
+              </label>
               <input
                 type="text"
                 required
@@ -171,7 +193,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
               type="submit"
               className="w-full py-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg"
             >
-              <span>Step 1: Request 2FA Security OTP</span>
+              <span>{isHindi ? 'चरण 1: सुरक्षा OTP कोड मंगाएं' : 'Step 1: Request 2FA Security OTP'}</span>
               <ArrowRight size={15} />
             </button>
           </form>
@@ -183,19 +205,22 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
             <div className="p-3 bg-amber-500/10 border border-amber-500/40 rounded-xl text-amber-200 text-center space-y-1">
               <div className="font-bold text-xs flex items-center justify-center gap-1">
                 <KeyRound size={16} className="text-amber-400" />
-                <span>2-STEP VERIFICATION OTP SENT</span>
+                <span>{isHindi ? '2-चरणीय सत्यापन OTP भेजा गया' : '2-STEP VERIFICATION OTP SENT'}</span>
               </div>
               <div className="text-[11px] text-slate-300">
-                A 6-digit security OTP was dispatched to <strong>+91-{maskSensitiveField(mobileNumber || '9876543210', 'phone')}</strong>
+                {isHindi 
+                  ? <>एक 6-अंकों का सुरक्षा कोड आपके नंबर <strong>+91-{maskSensitiveField(mobileNumber || '9876543210', 'phone')}</strong> पर भेजा गया है।</>
+                  : <>A 6-digit security OTP was dispatched to <strong>+91-{maskSensitiveField(mobileNumber || '9876543210', 'phone')}</strong></>
+                }
               </div>
               <div className="text-[10px] text-amber-300/80 font-bold pt-1">
-                [SIMULATED SECURE OTP DEMO: <span className="bg-black px-2 py-0.5 rounded text-cyan-300 tracking-widest">{generatedOtp}</span>]
+                [{isHindi ? 'डेमो OTP कोड' : 'SIMULATED SECURE OTP DEMO'}: <span className="bg-black px-2 py-0.5 rounded text-cyan-300 tracking-widest">{generatedOtp}</span>]
               </div>
             </div>
 
             <div className="space-y-1">
               <label className="block text-[10px] text-[var(--text-muted)] font-bold uppercase text-center">
-                Enter 6-Digit 2FA Security OTP:
+                {isHindi ? '6-अंकों का सुरक्षा OTP दर्ज करें:' : 'Enter 6-Digit 2FA Security OTP:'}
               </label>
               <input
                 type="text"
@@ -214,7 +239,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
               className="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg animate-pulse"
             >
               <Lock size={15} />
-              <span>Step 2: Confirm 2FA OTP & Execute Bank Lock API</span>
+              <span>{isHindi ? 'चरण 2: OTP सत्यापित करें और खाता तुरंत फ्रीज करें' : 'Step 2: Confirm 2FA OTP & Execute Bank Lock API'}</span>
             </button>
           </form>
         )}
@@ -224,7 +249,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
           <div className="p-4 bg-[#0B0F19] border border-[#27395C] rounded-xl space-y-3 font-mono">
             <div className="flex items-center gap-2 text-xs font-bold text-cyan-300">
               <Cpu size={16} className="animate-spin text-[var(--accent)]" />
-              <span>EXECUTING ZERO-TRUST BANK API NODAL DISPATCH...</span>
+              <span>{isHindi ? 'बैंक नोडल पोर्टल को आपातकालीन फ्रीज सिग्नल भेजा जा रहा है...' : 'EXECUTING ZERO-TRUST BANK API NODAL DISPATCH...'}</span>
             </div>
 
             <div className="space-y-1 text-[11px]">
@@ -242,12 +267,18 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
         {step === 4 && (
           <div className="p-5 bg-emerald-500/10 border border-emerald-500/40 rounded-xl text-center space-y-3 font-mono">
             <CheckCircle2 size={44} className="mx-auto text-emerald-400 animate-bounce" />
-            <div className="text-base font-extrabold text-emerald-300">2FA Verified! Emergency Lock Signal Executed via {selectedBank.name}!</div>
+            <div className="text-base font-extrabold text-emerald-300">
+              {isHindi ? `सफलतापूर्वक फ्रीज! ${selectedBank.nameHi || selectedBank.name} द्वारा खाता सुरक्षित!` : `2FA Verified! Emergency Lock Signal Executed via ${selectedBank.name}!`}
+            </div>
             <p className="text-xs text-emerald-200/90 leading-relaxed">
-              Beneficiary payouts for account <strong>{maskSensitiveField(accountNumber || '9876543210@upi', 'account')}</strong> have been <strong>LOCKED</strong>. Bank Cyber Nodal Officers notified.
+              {isHindi ? (
+                <>खाता <strong>{maskSensitiveField(accountNumber || '9876543210@upi', 'account')}</strong> से निकासी पर <strong>तुरंत रोक (LOCKED)</strong> लगा दी गई है। बैंक नोडल अधिकारी को सूचना भेजी जा चुकी है।</>
+              ) : (
+                <>Beneficiary payouts for account <strong>{maskSensitiveField(accountNumber || '9876543210@upi', 'account')}</strong> have been <strong>LOCKED</strong>. Bank Cyber Nodal Officers notified.</>
+              )}
             </p>
             <div className="p-2.5 bg-[#0B0F19] border border-emerald-500/30 rounded-lg text-xs text-slate-200 font-bold">
-              Emergency Lock Reference Token: <span className="text-cyan-300">FREEZE-1930-{Math.floor(100000 + Math.random() * 900000)}</span>
+              {isHindi ? 'आपातकालीन संदर्भ टोकन:' : 'Emergency Lock Reference Token:'} <span className="text-cyan-300">FREEZE-1930-{Math.floor(100000 + Math.random() * 900000)}</span>
             </div>
             <div className="flex justify-center gap-2 pt-2">
               <a
@@ -255,7 +286,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
                 className="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg"
               >
                 <PhoneCall size={15} />
-                <span>Dial 1930 Cyber Helpline Now</span>
+                <span>{isHindi ? '1930 सरकारी साइबर हेल्पलाइन पर कॉल करें' : 'Dial 1930 Cyber Helpline Now'}</span>
               </a>
             </div>
           </div>

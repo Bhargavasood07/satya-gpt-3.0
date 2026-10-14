@@ -6,6 +6,7 @@ import { useChildMode } from '../../context/ChildModeContext';
 const NAV_ITEMS = [
   {
     group: 'Main',
+    groupKey: 'nav.groupMain',
     items: [
       { id: 'dashboard',   icon: LayoutDashboard, label: 'SOC Dashboard',        key: 'nav.dashboard' },
       { id: 'scanner',     icon: ScanLine,        label: 'Threat Scanner',        key: 'nav.scanner' },
@@ -14,6 +15,7 @@ const NAV_ITEMS = [
   },
   {
     group: 'Tools',
+    groupKey: 'nav.groupTools',
     items: [
       { id: 'academy',     icon: GraduationCap,   label: 'Cyber Academy',         key: 'nav.academy' },
       { id: 'childSafety', icon: Baby,            label: 'Child Safety Guard',    key: 'nav.childSafety', isToggle: true },
@@ -22,6 +24,7 @@ const NAV_ITEMS = [
   },
   {
     group: 'Resources',
+    groupKey: 'nav.groupResources',
     items: [
       { id: 'guidedocs',   icon: BookOpen,        label: 'Guide & Docs',          key: 'nav.guidedocs' },
       { id: 'partner',     icon: Building2,       label: 'MeitY & Founder Portal', key: 'nav.partner', isAction: true },
@@ -42,14 +45,14 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
       }}
     >
       <div className="flex flex-col gap-6 flex-1 overflow-y-auto px-2">
-        {NAV_ITEMS.map(({ group, items }) => (
+        {NAV_ITEMS.map(({ group, groupKey, items }) => (
           <div key={group}>
             {/* Group label — desktop only */}
             <div
               className="hidden lg:block px-3 pb-1.5 text-caption uppercase tracking-widest font-semibold"
               style={{ color: 'var(--text-muted)' }}
             >
-              {group}
+              {t(groupKey, group)}
             </div>
 
             <div className="flex flex-col gap-0.5">
@@ -128,10 +131,10 @@ export default function Sidebar({ activeTab, onTabChange, onOpenAdmin, onOpenPar
         >
           <div className="flex items-center gap-1.5 text-caption font-semibold" style={{ color: 'var(--warning)' }}>
             <Award size={12} />
-            <span>MeitY / CERT-In Aligned</span>
+            <span>{t('nav.meityAligned', 'MeitY / CERT-In Aligned')}</span>
           </div>
           <p className="text-caption mt-0.5" style={{ color: 'var(--text-muted)' }}>
-            National Threat Intelligence
+            {t('nav.nationalIntel', 'National Threat Intelligence')}
           </p>
         </div>
       </div>

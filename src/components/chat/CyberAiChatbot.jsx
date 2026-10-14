@@ -6,15 +6,22 @@ import { askKavachAi, RECOMMENDED_AI_MODELS } from '../../services/nemotronChatS
 import { useChildMode } from '../../context/ChildModeContext';
 
 export default function CyberAiChatbot({ isOpen, onToggle }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
   const { isChildMode } = useChildMode();
+
   const [selectedModelId, setSelectedModelId] = useState('kavach-pro');
   const [showModelDropdown, setShowModelDropdown] = useState(false);
+
+  const initialBotText = isHindi 
+    ? 'नमस्ते! मैं **कवच AI** हूँ, SATYA-GPT में आपका व्यक्तिगत साइबर सुरक्षा सहायक।\n\nकिसी भी संदिग्ध SMS, फर्जी बैंक लिंक या अज्ञात QR कोड के बारे में मुझसे सरल हिंदी में पूछें!'
+    : 'Namaste! I am **KAVACH AI**, your personal cybersecurity assistant inside SATYA-GPT.\n\nAsk me about any suspicious SMS, fake bank link, or unknown QR code in plain language!';
+
   const [messages, setMessages] = useState([
     {
       id: 1,
       sender: 'bot',
-      text: 'Namaste! I am **KAVACH AI**, your personal cybersecurity assistant inside SATYA-GPT.\n\nAsk me about any suspicious SMS, fake bank link, or unknown QR code in plain language!',
+      text: initialBotText,
       modelName: 'KAVACH AI Pro',
       timestamp: new Date(),
     },
@@ -25,7 +32,12 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
 
   const activeModel = RECOMMENDED_AI_MODELS.find(m => m.id === selectedModelId) || RECOMMENDED_AI_MODELS[0];
 
-  const quickPrompts = [
+  const quickPrompts = isHindi ? [
+    'मुझे फर्जी SBI KYC SMS आया है, क्या करूं?',
+    '1930 हेल्पलाइन पर शिकायत कैसे करें?',
+    'बाल सुरक्षा मोड कैसे चालू करें?',
+    'क्या यह लिंक खोलना सुरक्षित है?',
+  ] : [
     'I received a fake SBI KYC SMS, what to do?',
     'How to report scam on 1930 Helpline?',
     'How does Child Guard keep my family safe?',
@@ -83,10 +95,10 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
       <div className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50">
         <button
           onClick={onToggle}
-          className="relative group px-3.5 py-2.5 bg-[#131B2E] border border-[#27395C] hover:border-[var(--accent)] text-[var(--text-primary)] rounded-xl shadow-2xl transition-all hover:scale-105 flex items-center gap-2 font-mono font-bold text-xs"
+          className="relative group px-3.5 py-2.5 bg-[#131B2E] border border-[#27395C] hover:border-[var(--accent)] text-[var(--text-primary)] rounded-xl shadow-2xl transition-all hover:scale-105 flex items-center gap-2 font-mono font-bold text-xs cursor-pointer"
         >
           <Bot size={18} className="text-[var(--accent)] animate-pulse" />
-          <span>KAVACH AI</span>
+          <span>{isHindi ? 'कवच AI सहायक' : 'KAVACH AI'}</span>
           <span className="w-2 h-2 bg-emerald-400 rounded-full animate-ping" />
         </button>
       </div>
@@ -111,7 +123,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                 <div className="relative">
                   <button
                     onClick={() => setShowModelDropdown((prev) => !prev)}
-                    className="flex items-center gap-1.5 px-2 py-1 bg-[#131B2E] hover:bg-[#1C2A47] border border-[#27395C] rounded-lg text-left transition-colors"
+                    className="flex items-center gap-1.5 px-2 py-1 bg-[#131B2E] hover:bg-[#1C2A47] border border-[#27395C] rounded-lg text-left transition-colors cursor-pointer"
                   >
                     <div className="flex flex-col">
                       <div className="flex items-center gap-1">
@@ -128,7 +140,9 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                   {/* Dropdown Menu */}
                   {showModelDropdown && (
                     <div className="absolute top-full left-0 mt-1 w-64 bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 p-1.5 space-y-1 font-mono">
-                      <div className="text-[10px] text-[var(--text-muted)] px-2 py-1 border-b border-[#1E2D4A]">KAVACH AI ENGINES</div>
+                      <div className="text-[10px] text-[var(--text-muted)] px-2 py-1 border-b border-[#1E2D4A]">
+                        {isHindi ? 'कवच AI सुरक्षा इंजन' : 'KAVACH AI ENGINES'}
+                      </div>
                       {RECOMMENDED_AI_MODELS.map((m) => (
                         <button
                           key={m.id}
@@ -136,7 +150,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                             setSelectedModelId(m.id);
                             setShowModelDropdown(false);
                           }}
-                          className={`w-full text-left p-2 rounded-lg transition-colors flex items-center justify-between ${
+                          className={`w-full text-left p-2 rounded-lg transition-colors flex items-center justify-between cursor-pointer ${
                             selectedModelId === m.id ? 'bg-[var(--accent-muted)] border border-[var(--accent)]/40 text-[var(--accent)]' : 'hover:bg-[#0B0F19] text-[var(--text-primary)]'
                           }`}
                         >
@@ -162,20 +176,23 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                       {
                         id: Date.now(),
                         sender: 'bot',
-                        text: `Namaste! I am KAVACH AI powered by **${activeModel.name}**. How can I assist you?`,
+                        text: isHindi 
+                          ? `नमस्ते! मैं कवच AI हूँ (**${activeModel.name}** द्वारा संचालित)। मैं आपकी क्या सहायता कर सकता हूँ?`
+                          : `Namaste! I am KAVACH AI powered by **${activeModel.name}**. How can I assist you?`,
                         modelName: activeModel.name,
                         timestamp: new Date(),
                       },
                     ])
                   }
-                  className="p-1.5 rounded hover:bg-[#131B2E] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
-                  title="Clear Chat"
+                  className="p-1.5 rounded hover:bg-[#131B2E] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+                  title={isHindi ? 'चैट रीसेट करें' : 'Clear Chat'}
                 >
                   <RefreshCw size={14} />
                 </button>
                 <button
                   onClick={onToggle}
-                  className="p-1.5 rounded hover:bg-[#131B2E] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  className="p-1.5 rounded hover:bg-[#131B2E] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+                  aria-label="Close Chat"
                 >
                   <X size={18} />
                 </button>
@@ -189,7 +206,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                 <button
                   key={idx}
                   onClick={() => handleSend(qp)}
-                  className="px-2.5 py-1 rounded bg-[#131B2E] border border-[#27395C] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)] whitespace-nowrap transition-all shrink-0 font-mono text-[10px]"
+                  className="px-2.5 py-1 rounded bg-[#131B2E] border border-[#27395C] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)] whitespace-nowrap transition-all shrink-0 font-mono text-[10px] cursor-pointer"
                 >
                   {qp}
                 </button>
@@ -218,7 +235,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                   </div>
 
                   <span className="text-[9px] text-[var(--text-muted)] mt-1 font-mono px-1">
-                    {m.sender === 'user' ? 'You' : `KAVACH (${m.modelName || 'KAVACH AI Pro'})`} •{' '}
+                    {m.sender === 'user' ? (isHindi ? 'आप' : 'You') : `KAVACH (${m.modelName || 'KAVACH AI Pro'})`} •{' '}
                     {m.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
@@ -227,7 +244,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
               {isTyping && (
                 <div className="flex items-center gap-2 p-2.5 bg-[#131B2E] border border-[#27395C] rounded-lg w-fit text-xs text-[var(--text-muted)] font-mono animate-pulse">
                   <Shield size={14} className="text-[var(--accent)]" />
-                  <span>KAVACH ({activeModel.name}) is analyzing threat...</span>
+                  <span>{isHindi ? 'कवच AI खतरे का विश्लेषण कर रहा है...' : `KAVACH (${activeModel.name}) is analyzing threat...`}</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
@@ -240,14 +257,15 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder={`Ask KAVACH (${activeModel.name})...`}
+                  placeholder={isHindi ? 'कवच AI से कोई भी सवाल पूछें...' : `Ask KAVACH (${activeModel.name})...`}
                   className="w-full pl-3 pr-10 py-2 bg-[#0B0F19] border border-[#27395C] rounded-lg text-xs text-[var(--text-primary)] font-mono focus:outline-none focus:border-[var(--accent)]"
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 />
                 <button
                   onClick={() => handleSend()}
                   disabled={!inputValue.trim() || isTyping}
-                  className="absolute right-1.5 p-1.5 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 rounded transition-all disabled:opacity-40"
+                  className="absolute right-1.5 p-1.5 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 rounded transition-all disabled:opacity-40 cursor-pointer"
+                  aria-label="Send Message"
                 >
                   <Send size={14} />
                 </button>

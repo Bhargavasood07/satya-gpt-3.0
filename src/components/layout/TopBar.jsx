@@ -8,7 +8,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 
 const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, openLoginModal } = useAuth();
 
@@ -74,7 +74,7 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
           <div className="flex items-center gap-2 text-xs">
             <Search size={13} className="text-[var(--primary)] group-hover:scale-110 transition-transform" />
             <span className="text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-colors">
-              Search threats, tools or actions...
+              {t('topbar.searchPlaceholder', 'Search threats, domains, protocols... (Ctrl K)')}
             </span>
           </div>
           <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-muted)] shadow-xs">
@@ -101,7 +101,7 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
-          <span className="font-semibold">SOC Online</span>
+          <span className="font-semibold">{t('topbar.socOnline', 'SOC Online')}</span>
           <span className="text-emerald-500/70 font-mono text-[10px]">14ms</span>
         </div>
 
@@ -143,7 +143,7 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
             <User size={11} style={{ color: 'var(--success)' }} />
           </div>
           <span className="text-xs font-semibold max-w-[70px] sm:max-w-[85px] truncate" style={{ color: 'var(--text-secondary)' }}>
-            {isAuthenticated ? user?.name : 'Guest'}
+            {isAuthenticated ? user?.name : t('topbar.guest', 'Guest')}
           </span>
           <ChevronDown size={12} style={{ color: 'var(--text-muted)' }} />
         </button>

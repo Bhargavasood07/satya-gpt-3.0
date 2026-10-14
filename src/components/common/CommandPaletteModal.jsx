@@ -19,6 +19,7 @@ export default function CommandPaletteModal({
   toggleChildMode,
   isChildMode,
 }) {
+  const isHindi = currentLanguage?.startsWith('hi');
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);
@@ -34,9 +35,9 @@ export default function CommandPaletteModal({
   const commands = useMemo(() => [
     {
       id: 'scan',
-      category: 'Core Actions',
-      title: 'Scan Suspicious Link / SMS / QR',
-      subtitle: 'Analyze against 92 security engines',
+      category: isHindi ? 'प्रमुख सेवाएं' : 'Core Actions',
+      title: isHindi ? 'संदिग्ध लिंक, SMS या QR कोड जांचें' : 'Scan Suspicious Link / SMS / QR',
+      subtitle: isHindi ? '92 सुरक्षा इंजनों द्वारा गहन विश्लेषण' : 'Analyze against 92 security engines',
       icon: ScanLine,
       color: 'var(--primary)',
       badge: 'Enter',
@@ -44,9 +45,9 @@ export default function CommandPaletteModal({
     },
     {
       id: 'aihub',
-      category: 'Core Actions',
-      title: 'Open KAVACH AI Security Hub',
-      subtitle: 'Voice chat, multimodal analysis & cyber personas',
+      category: isHindi ? 'प्रमुख सेवाएं' : 'Core Actions',
+      title: isHindi ? 'कवच AI सुरक्षा केंद्र खोलें' : 'Open KAVACH AI Security Hub',
+      subtitle: isHindi ? 'आवाज से बातचीत, बहुभाषी AI सहायता व सुरक्षा गाइड' : 'Voice chat, multimodal analysis & cyber personas',
       icon: Bot,
       color: 'var(--violet-500)',
       badge: 'Tab',
@@ -54,47 +55,47 @@ export default function CommandPaletteModal({
     },
     {
       id: 'freeze',
-      category: 'Emergency Protocol',
-      title: 'Trigger 15-Min Emergency Bank Freeze',
-      subtitle: 'Golden Hour immediate account lock instructions',
+      category: isHindi ? 'आपातकालीन सहायता' : 'Emergency Protocol',
+      title: isHindi ? '15-मिनट आपातकालीन बैंक खाता फ्रीज करें' : 'Trigger 15-Min Emergency Bank Freeze',
+      subtitle: isHindi ? 'धोखाधड़ी होने पर निकासी रोकने का तुरंत उपाय' : 'Golden Hour immediate account lock instructions',
       icon: ShieldAlert,
       color: 'var(--crimson-500)',
-      badge: 'Critical',
+      badge: isHindi ? 'आपातकालीन' : 'Critical',
       action: () => { onTriggerFreeze(); onClose(); },
     },
     {
       id: 'helpline',
-      category: 'Emergency Protocol',
-      title: 'Call 1930 National Cyber Fraud Helpline',
-      subtitle: 'Official Govt of India Citizen Hotline',
+      category: isHindi ? 'आपातकालीन सहायता' : 'Emergency Protocol',
+      title: isHindi ? '1930 राष्ट्रीय साइबर हेल्पलाइन पर कॉल करें' : 'Call 1930 National Cyber Fraud Helpline',
+      subtitle: isHindi ? 'भारत सरकार का आधिकारिक नागरिक सहायता नंबर' : 'Official Govt of India Citizen Hotline',
       icon: PhoneCall,
       color: 'var(--amber-500)',
-      badge: 'Govt',
+      badge: isHindi ? 'सरकारी' : 'Govt',
       action: () => { window.location.href = 'tel:1930'; onClose(); },
     },
     {
       id: 'threatmap',
-      category: 'Live Intelligence',
-      title: 'Open Live Cyber Threat Map',
-      subtitle: 'Real-time telemetry attacks across India',
+      category: isHindi ? 'लाइव सुरक्षा' : 'Live Intelligence',
+      title: isHindi ? 'लाइव साइबर खतरा मैप देखें' : 'Open Live Cyber Threat Map',
+      subtitle: isHindi ? 'देशभर में सक्रिय साइबर हमलों की लाइव स्थिति' : 'Real-time telemetry attacks across India',
       icon: MapPin,
       color: 'var(--cyan-500)',
       action: () => { onOpenThreatMap(); onClose(); },
     },
     {
       id: 'academy',
-      category: 'Live Intelligence',
-      title: 'Cyber Defense Academy',
-      subtitle: '10 real-world fraud interactive scenarios',
+      category: isHindi ? 'लाइव सुरक्षा' : 'Live Intelligence',
+      title: isHindi ? 'साइबर सुरक्षा सीखें (अकादमी)' : 'Cyber Defense Academy',
+      subtitle: isHindi ? '10 आम फ्रॉड मामलों का अभ्यास करें' : '10 real-world fraud interactive scenarios',
       icon: GraduationCap,
       color: 'var(--amber-500)',
       action: () => { onNavigate('academy'); onClose(); },
     },
     {
       id: 'test-phish',
-      category: 'One-Click Test Samples',
-      title: 'Test Phishing Link: SBI KYC Scam',
-      subtitle: 'Simulate high-risk banking credential harvesting detection',
+      category: isHindi ? 'त्वरित परीक्षण' : 'One-Click Test Samples',
+      title: isHindi ? 'फिशिंग लिंक परीक्षण: नकली SBI KYC' : 'Test Phishing Link: SBI KYC Scam',
+      subtitle: isHindi ? 'खतरनाक लिंक पहचान का डेमो देखें' : 'Simulate high-risk banking credential harvesting detection',
       icon: Zap,
       color: 'var(--crimson-500)',
       badge: 'Test',
@@ -106,9 +107,9 @@ export default function CommandPaletteModal({
     },
     {
       id: 'test-safe',
-      category: 'One-Click Test Samples',
-      title: 'Test Safe Link: Official Bank Domain',
-      subtitle: 'Simulate verified clean SSL and domain certificate',
+      category: isHindi ? 'त्वरित परीक्षण' : 'One-Click Test Samples',
+      title: isHindi ? 'सुरक्षित लिंक परीक्षण: आधिकारिक बैंक पोर्टल' : 'Test Safe Link: Official Bank Domain',
+      subtitle: isHindi ? 'सत्यापित सुरक्षित वेबसाइट का डेमो देखें' : 'Simulate verified clean SSL and domain certificate',
       icon: ShieldCheck,
       color: 'var(--emerald-500)',
       badge: 'Test',
@@ -120,9 +121,11 @@ export default function CommandPaletteModal({
     },
     {
       id: 'childmode',
-      category: 'Preferences',
-      title: isChildMode ? 'Disable Child Safety Guard' : 'Enable Child Safety Guard',
-      subtitle: 'Block adult, gaming traps and predatory scams',
+      category: isHindi ? 'सेटिंग्स' : 'Preferences',
+      title: isHindi 
+        ? (isChildMode ? 'बाल सुरक्षा मोड बंद करें' : 'बाल सुरक्षा मोड चालू करें')
+        : (isChildMode ? 'Disable Child Safety Guard' : 'Enable Child Safety Guard'),
+      subtitle: isHindi ? 'वयस्क सामग्री व गेमिंग झांसों को ब्लॉक करें' : 'Block adult, gaming traps and predatory scams',
       icon: Baby,
       color: 'var(--emerald-500)',
       badge: isChildMode ? 'ON' : 'OFF',
@@ -130,23 +133,25 @@ export default function CommandPaletteModal({
     },
     {
       id: 'theme',
-      category: 'Preferences',
-      title: currentTheme === 'light' ? 'Switch to Midnight Ops Dark Mode' : 'Switch to Arctic Ops Light Mode',
-      subtitle: 'Toggle theme display mode',
+      category: isHindi ? 'सेटिंग्स' : 'Preferences',
+      title: isHindi 
+        ? (currentTheme === 'light' ? 'डार्क थीम पर बदलें' : 'लाइट थीम पर बदलें')
+        : (currentTheme === 'light' ? 'Switch to Midnight Ops Dark Mode' : 'Switch to Arctic Ops Light Mode'),
+      subtitle: isHindi ? 'रंग और थीम बदलें' : 'Toggle theme display mode',
       icon: currentTheme === 'light' ? Moon : Sun,
       color: 'var(--primary)',
       action: () => { if (toggleTheme) toggleTheme(); onClose(); },
     },
     {
       id: 'lang',
-      category: 'Preferences',
-      title: currentLanguage?.startsWith('hi') ? 'Switch to English (EN)' : 'Switch to Hindi (हिंदी)',
-      subtitle: 'Toggle platform interface language',
+      category: isHindi ? 'सेटिंग्स' : 'Preferences',
+      title: currentLanguage?.startsWith('hi') ? 'Switch to English (EN)' : 'हिंदी भाषा चुनें (HI)',
+      subtitle: isHindi ? 'भाषा बदलें' : 'Toggle platform interface language',
       icon: Globe,
       color: 'var(--cyan-500)',
       action: () => { if (toggleLanguage) toggleLanguage(); onClose(); },
     },
-  ], [onNavigate, onClose, onTriggerFreeze, onOpenThreatMap, onScanSample, toggleChildMode, isChildMode, currentTheme, toggleTheme, currentLanguage, toggleLanguage]);
+  ], [onNavigate, onClose, onTriggerFreeze, onOpenThreatMap, onScanSample, toggleChildMode, isChildMode, currentTheme, toggleTheme, currentLanguage, toggleLanguage, isHindi]);
 
   const filteredCommands = useMemo(() => {
     if (!query.trim()) return commands;
@@ -223,13 +228,13 @@ export default function CommandPaletteModal({
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Type a command, threat type, or search..."
+                placeholder={isHindi ? 'कमांड, खतरा या टूल खोजें... (उदा. स्कैन, फ्रीज, 1930)' : 'Type a command, threat type, or search...'}
                 className="w-full bg-transparent text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none font-medium"
               />
               {query && (
                 <button
                   onClick={() => setQuery('')}
-                  className="text-xs p-1 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                  className="text-xs p-1 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
                 >
                   <X size={14} />
                 </button>
@@ -244,8 +249,12 @@ export default function CommandPaletteModal({
               {filteredCommands.length === 0 ? (
                 <div className="py-10 text-center">
                   <Terminal size={24} className="mx-auto mb-2 text-[var(--text-muted)] opacity-50" />
-                  <p className="text-sm font-semibold text-[var(--text-secondary)]">No commands found</p>
-                  <p className="text-xs text-[var(--text-muted)] mt-1">Try searching for "scan", "freeze", "phish", or "help"</p>
+                  <p className="text-sm font-semibold text-[var(--text-secondary)]">
+                    {isHindi ? 'कोई परिणाम नहीं मिला' : 'No commands found'}
+                  </p>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">
+                    {isHindi ? '"स्कैन", "फ्रीज", "फिशिंग" या "हेल्प" लिखकर खोजें' : 'Try searching for "scan", "freeze", "phish", or "help"'}
+                  </p>
                 </div>
               ) : (
                 filteredCommands.map((cmd, idx) => {
@@ -256,7 +265,7 @@ export default function CommandPaletteModal({
                       key={cmd.id}
                       onClick={cmd.action}
                       onMouseEnter={() => setSelectedIndex(idx)}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all ${
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer ${
                         isSelected
                           ? 'bg-[var(--surface-overlay)] text-[var(--text-primary)] shadow-sm'
                           : 'text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)]/50'
@@ -293,7 +302,7 @@ export default function CommandPaletteModal({
                       <div className="shrink-0 flex items-center gap-1.5 text-[var(--text-muted)]">
                         {isSelected && (
                           <span className="text-[11px] flex items-center gap-1 text-[var(--primary)] font-mono font-medium">
-                            <span>Run</span>
+                            <span>{isHindi ? 'चलाएं' : 'Run'}</span>
                             <CornerDownLeft size={12} />
                           </span>
                         )}
@@ -310,16 +319,16 @@ export default function CommandPaletteModal({
                 <span className="flex items-center gap-1">
                   <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-inset)] border border-[var(--border-subtle)]">↑</kbd>
                   <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-inset)] border border-[var(--border-subtle)]">↓</kbd>
-                  <span className="ml-0.5">Navigate</span>
+                  <span className="ml-0.5">{isHindi ? 'नेविगेट' : 'Navigate'}</span>
                 </span>
                 <span className="flex items-center gap-1">
                   <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-inset)] border border-[var(--border-subtle)]">↵</kbd>
-                  <span className="ml-0.5">Execute</span>
+                  <span className="ml-0.5">{isHindi ? 'खोलें' : 'Execute'}</span>
                 </span>
               </div>
               <div className="flex items-center gap-1.5 text-[var(--primary)] font-semibold">
                 <Zap size={12} />
-                <span>SATYA Spotlight</span>
+                <span>{isHindi ? 'SATYA त्वरित खोज' : 'SATYA Spotlight'}</span>
               </div>
             </div>
           </motion.div>

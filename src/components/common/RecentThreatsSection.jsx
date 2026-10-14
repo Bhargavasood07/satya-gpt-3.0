@@ -1,13 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
-const threatsData = [
-  { id: 1, type: 'Phishing Link', payload: 'sbi-kyc-verify.tk/update', verdict: 'THREAT', severity: 'critical', engine: '89/92 engines', time: '2 min ago', location: 'Mumbai' },
-  { id: 2, type: 'UPI Scam SMS', payload: 'Your a/c frozen. Click: paytm-kyc.xyz...', verdict: 'THREAT', severity: 'high', engine: '76/92 engines', time: '7 min ago', location: 'Delhi' },
-  { id: 3, type: 'Fake APK', payload: 'e-challan-pay.apk via WhatsApp', verdict: 'THREAT', severity: 'critical', engine: '91/92 engines', time: '12 min ago', location: 'Bangalore' },
-  { id: 4, type: 'QR Code', payload: 'QR at unknown ATM kiosk', verdict: 'SUSPICIOUS', severity: 'medium', engine: '24/92 engines', time: '18 min ago', location: 'Chennai' },
-  { id: 5, type: 'Safe Link', payload: 'https://www.sbi.co.in/portal/web/home', verdict: 'SAFE', severity: 'none', engine: '0/92 engines', time: '23 min ago', location: 'Pune' }
-];
+import { useTranslation } from 'react-i18next';
 
 const getVerdictColors = (verdict) => {
   switch (verdict) {
@@ -37,12 +30,63 @@ const itemVariants = {
 };
 
 const RecentThreatsSection = () => {
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
+
+  const threatsData = [
+    { 
+      id: 1, 
+      type: t('recentThreats.phish', 'Phishing Link'), 
+      payload: 'sbi-kyc-verify.tk/update', 
+      verdict: 'THREAT', 
+      engine: isHindi ? '89/92 सुरक्षा इंजन' : '89/92 engines', 
+      time: t('time.minutesAgo', { count: 2, defaultValue: '2m ago' }), 
+      location: isHindi ? 'मुंबई' : 'Mumbai' 
+    },
+    { 
+      id: 2, 
+      type: t('recentThreats.upi', 'UPI Scam SMS'), 
+      payload: 'Your a/c frozen. Click: paytm-kyc.xyz...', 
+      verdict: 'THREAT', 
+      engine: isHindi ? '76/92 सुरक्षा इंजन' : '76/92 engines', 
+      time: t('time.minutesAgo', { count: 7, defaultValue: '7m ago' }), 
+      location: isHindi ? 'दिल्ली' : 'Delhi' 
+    },
+    { 
+      id: 3, 
+      type: t('recentThreats.apk', 'Fake APK'), 
+      payload: 'e-challan-pay.apk via WhatsApp', 
+      verdict: 'THREAT', 
+      engine: isHindi ? '91/92 सुरक्षा इंजन' : '91/92 engines', 
+      time: t('time.minutesAgo', { count: 12, defaultValue: '12m ago' }), 
+      location: isHindi ? 'बैंगलोर' : 'Bangalore' 
+    },
+    { 
+      id: 4, 
+      type: t('recentThreats.qr', 'QR Code'), 
+      payload: 'QR at unknown ATM kiosk', 
+      verdict: 'SUSPICIOUS', 
+      engine: isHindi ? '24/92 सुरक्षा इंजन' : '24/92 engines', 
+      time: t('time.minutesAgo', { count: 18, defaultValue: '18m ago' }), 
+      location: isHindi ? 'चेन्नई' : 'Chennai' 
+    },
+    { 
+      id: 5, 
+      type: t('recentThreats.safe', 'Safe Link'), 
+      payload: 'https://www.sbi.co.in/portal/web/home', 
+      verdict: 'SAFE', 
+      engine: isHindi ? '0/92 कोई खतरा नहीं' : '0/92 engines', 
+      time: t('time.minutesAgo', { count: 23, defaultValue: '23m ago' }), 
+      location: isHindi ? 'पुणे' : 'Pune' 
+    }
+  ];
+
   return (
     <section className="py-4">
       <div className="w-full">
         <div className="flex items-center gap-3 mb-4">
           <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-            Recent Threats Caught
+            {t('recentThreats.title', 'Recent Threats Caught')}
           </h2>
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider" 
                style={{ backgroundColor: 'rgba(220, 20, 60, 0.1)', color: 'var(--crimson-500)' }}>
@@ -50,7 +94,7 @@ const RecentThreatsSection = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: 'var(--crimson-500)' }}></span>
               <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: 'var(--crimson-500)' }}></span>
             </span>
-            Live
+            {t('recentThreats.live', 'LIVE')}
           </div>
         </div>
 
@@ -63,6 +107,7 @@ const RecentThreatsSection = () => {
         >
           {threatsData.map((threat) => {
             const colors = getVerdictColors(threat.verdict);
+            const verdictLabel = t(`verdict.${threat.verdict.toLowerCase()}`, threat.verdict);
             
             return (
               <motion.div 
@@ -78,10 +123,10 @@ const RecentThreatsSection = () => {
                 }}
               >
                 {/* Left: Verdict Pill */}
-                <div className="flex-shrink-0 mb-2 sm:mb-0 sm:w-32">
+                <div className="flex-shrink-0 mb-2 sm:mb-0 sm:w-36">
                   <span className="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide" 
                         style={{ backgroundColor: colors.bg, color: colors.text }}>
-                    {threat.verdict}
+                    {verdictLabel}
                   </span>
                 </div>
 

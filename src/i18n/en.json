@@ -8,12 +8,106 @@
     "childShieldDisabled": "CHILD GUARD: OFF"
   },
   "nav": {
+    "groupMain": "MAIN",
+    "groupTools": "TOOLS",
+    "groupResources": "RESOURCES",
     "dashboard": "Dashboard",
     "scanner": "AI Scanner",
-    "feeds": "Intel Feeds",
-    "analytics": "Analytics",
+    "aihub": "AI Intelligence Hub",
+    "academy": "Cyber Academy",
     "childSafety": "Child Guard",
-    "settings": "Settings"
+    "analytics": "Security Reports",
+    "guidedocs": "Guides & Docs",
+    "partner": "Partner / Govt",
+    "feeds": "Intel Feeds",
+    "settings": "Settings",
+    "meityAligned": "MeitY / CERT-In Aligned",
+    "nationalIntel": "National Threat Intelligence"
+  },
+  "mobileNav": {
+    "home": "Home",
+    "scan": "Scan",
+    "aihub": "AI Hub",
+    "reports": "Reports",
+    "guide": "Guide"
+  },
+  "topbar": {
+    "searchPlaceholder": "Search threats, domains, protocols... (Ctrl K)",
+    "socOnline": "SOC GRID ONLINE",
+    "guest": "Guest"
+  },
+  "hero": {
+    "badgeIndia": "INDIA'S #1 AI CYBER SHIELD",
+    "badgeMeity": "MeitY & CERT-In Aligned",
+    "titleLine1": "Instant Defense Against",
+    "titleLine2": "Digital Financial Fraud",
+    "subtitle": "Analyze suspicious links, fake banking SMS, or rogue QR codes across 92 enterprise security engines. Emergency 15-minute freeze protocol if you've been targeted.",
+    "founder": "Founder & Chief Architect: Bhargav Sood",
+    "enginesActive": "All 92 Engines Operational",
+    "threatsStats": "0 Active Threats / 5m",
+    "scanBtn": "Scan Suspicious Link / SMS",
+    "freezeBtn": "Emergency Account Freeze",
+    "call1930": "Call 1930 Helpline",
+    "threatMapBtn": "Live Threat Map"
+  },
+  "modules": {
+    "coreTitle": "Core Security Modules",
+    "scannerTitle": "AI Threat Scanner",
+    "scannerDesc": "Deep-scan URLs, banking SMS, QR codes & suspicious APKs against 92 enterprise engines.",
+    "aihubTitle": "KAVACH AI Intelligence Hub",
+    "aihubDesc": "Multimodal AI assistant with voice, image analysis, document RAG, and live threat verification.",
+    "academyTitle": "Cyber Academy & Simulators",
+    "academyDesc": "Master 10 interactive fraud attack vectors and earn a founder-verified certification."
+  },
+  "bento": {
+    "liveSocTitle": "Live SOC Telemetry & National Threat Posture",
+    "realtimeStream": "REAL-TIME STREAM",
+    "radarTitle": "AI Threat Radar",
+    "radarSubtitle": "Nationwide active threat interception grid",
+    "fullMap": "Full Threat Map",
+    "intercepted": "Intercepted",
+    "trackingZones": "Tracking 5 active hot-zones across India",
+    "vtSynced": "VIRUSTOTAL v3 SYNCED",
+    "systemResilience": "System Resilience",
+    "defconStatus": "DEFCON 4 — ELEVATED",
+    "optimal": "Optimal",
+    "postureScore": "Posture Score",
+    "chkEngines": "92 Enterprise Engines",
+    "chkEnginesReady": "100% Ready",
+    "chkDns": "Zero-Trust DNS Shield",
+    "chkDnsProtected": "Protected",
+    "chkFreeze": "15-Min Freeze Protocol",
+    "chkArmed": "Armed",
+    "quickProtocols": "Quick Protocols",
+    "citizenSafety": "Rapid citizen defense actions",
+    "instantScan": "Run Instant Deep Scan",
+    "emergencyFreeze": "Emergency 15-Min Freeze",
+    "govtHelpline": "Call 1930 Govt Helpline",
+    "certInCompliant": "100% CERT-In Compliant",
+    "vectorPhishing": "Phishing Banking Portals",
+    "vectorApk": "Malicious Android APKs",
+    "vectorSms": "Fraudulent Electricity SMS",
+    "vectorQr": "Rogue QR Overlay Traps"
+  },
+  "howItWorks": {
+    "title": "How It Works — Simple 3-Step Protection",
+    "subtitle": "Three easy steps to safeguard your bank accounts and digital identity",
+    "step1Title": "Paste a suspicious link, SMS, or QR code",
+    "step1Desc": "Drop any suspicious message, lottery SMS, or unfamiliar URL to inspect it.",
+    "step2Title": "KAVACH AI + 92 engines analyze it instantly",
+    "step2Desc": "Enterprise scanners and our neural defense engine inspect the payload in seconds.",
+    "step3Title": "Get a plain-language verdict and next steps",
+    "step3Desc": "Receive an instant clear verdict with actionable advice on what to do next.",
+    "tryNow": "Try It Free Now"
+  },
+  "recentThreats": {
+    "title": "Recent Threats Caught",
+    "live": "LIVE",
+    "phish": "Phishing Link",
+    "upi": "UPI Scam SMS",
+    "apk": "Fake APK",
+    "qr": "Rogue QR Code",
+    "safe": "Safe Link"
   },
   "childMode": {
     "title": "Child & Family Cyber Guard",
@@ -38,6 +132,7 @@
     "checkNow": "Verify Content",
     "sampleKycSms": "Fake SBI KYC SMS",
     "sampleGamingScam": "Free Robux / Fire Giveaway",
+    "sampleElectricitySms": "Fake Electricity Bill SMS",
     "sampleSafeUrl": "Official Google.com",
     "samplePhishingUrl": "Suspicious Login Page",
     "redFlagsDetected": "Red Flags Detected:",
@@ -59,6 +154,7 @@
     "current": "EN"
   },
   "metrics": {
+    "liveTitle": "Live Security Metrics",
     "totalScans": "Total Scans Today",
     "threatsBlocked": "Threats Blocked",
     "childBlocks": "Child Guard Blocks",
@@ -79,6 +175,9 @@
     "extracting": "Extracting payload...",
     "decoding": "Decoding QR matrix...",
     "scanning": "Scanning for threats...",
+    "step1": "1/3 Querying 92 VirusTotal engines...",
+    "step2": "2/3 KAVACH Edge AI heuristics check...",
+    "step3": "3/3 Verifying SSL certificate & DNS...",
     "cameraActive": "Camera Active",
     "cameraInactive": "Camera Inactive",
     "noCamera": "No camera detected",
@@ -103,6 +202,7 @@
     "malicious": "MALICIOUS",
     "suspicious": "SUSPICIOUS",
     "safe": "SAFE",
+    "threat": "THREAT",
     "childSafe": "KID SAFE",
     "unknown": "UNKNOWN"
   },
@@ -143,5 +243,18 @@
     "justNow": "Just now",
     "secondsAgo": "{{count}}s ago",
     "minutesAgo": "{{count}}m ago"
+  },
+  "testimonials": {
+    "title": "Verified Defense Reviews & Citizen Trust Seals",
+    "verified": "100% VERIFIED SUCCESS",
+    "item1Tag": "RESCUED FROM UPI SCAM",
+    "item1Comment": "Pasted a suspicious electricity bill SMS link on SATYA-GPT. The 92-engine scanner immediately flagged it as a credential phishing trap. Saved my ₹45,000 savings account!",
+    "item1Role": "IT Engineer, New Delhi",
+    "item2Tag": "E-CHALLAN MALWARE BLOCKED",
+    "item2Comment": "Received a fake RTO e-Challan APK via WhatsApp. SATYA AI detected the malicious signature instantly before installation. Crucial protection for everyday citizens.",
+    "item2Role": "Bank Officer, Bengaluru",
+    "item3Tag": "1930 BANK FREEZE SUCCESS",
+    "item3Comment": "When my brother accidentally entered his UPI PIN on a fake job site, we triggered SATYA 15-Min Bank Freeze and dialed 1930. The fraud payout was blocked within 8 minutes!",
+    "item3Role": "Senior Citizen, Mumbai"
   }
 }

@@ -78,6 +78,7 @@ function FloatingOrb({ size, color, style }) {
 }
 
 function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
+  const { t } = useTranslation();
   const heroRef = useRef(null);
 
   // Mouse-parallax on hero background layers
@@ -151,21 +152,20 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
           {/* Left */}
           <div className="space-y-5 max-w-xl" style={{ transform: 'translateZ(20px)', transformStyle: 'preserve-3d' }}>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="badge badge--primary"><Sparkles size={9} />India's #1 AI Cyber Defense</span>
-              <span className="badge badge--warning"><Award size={9} />MeitY / CERT-In Aligned</span>
+              <span className="badge badge--primary"><Sparkles size={9} />{t('hero.badgeIndia', "India's #1 AI Cyber Defense")}</span>
+              <span className="badge badge--warning"><Award size={9} />{t('hero.badgeMeity', "MeitY / CERT-In Aligned")}</span>
             </div>
 
             <div>
               <h1 className="text-h1 font-sans leading-tight" style={{ color: 'var(--text-primary)' }}>
-                Real-Time Threat<br />
+                {t('hero.titleLine1', 'Real-Time Threat')}<br />
                 <span className="hero-gradient-text">
-                  Intelligence & Protection
+                  {t('hero.titleLine2', 'Intelligence & Protection')}
                 </span>
               </h1>
               <p className="text-small mt-3 font-medium" style={{ color: 'var(--text-secondary)', lineHeight: '1.75', maxWidth: '480px' }}>
-                92-engine VirusTotal v3 · KAVACH AI voice assistant ·
-                15-min emergency bank lock protocol. <br />
-                <span style={{ color: 'var(--text-muted)' }}>Founder: Bhargava Sood.</span>
+                {t('hero.subtitle', '92-engine VirusTotal v3 · KAVACH AI voice assistant · 15-min emergency bank lock protocol.')} <br />
+                <span style={{ color: 'var(--text-muted)' }}>{t('hero.founder', 'Founder: Bhargava Sood.')}</span>
               </p>
             </div>
 
@@ -175,9 +175,9 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
                   style={{ background: 'var(--success)', animation: 'ping-slow 1.8s cubic-bezier(0,0,0.2,1) infinite' }} />
                 <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: 'var(--success)' }} />
               </span>
-              <span className="text-caption font-bold" style={{ color: 'var(--success)' }}>All 92 engines active</span>
+              <span className="text-caption font-bold" style={{ color: 'var(--success)' }}>{t('hero.enginesActive', 'All 92 engines active')}</span>
               <span className="text-caption" style={{ color: 'var(--text-muted)' }}>·</span>
-              <span className="text-caption font-medium" style={{ color: 'var(--text-muted)' }}>0 threats / 5 min</span>
+              <span className="text-caption font-medium" style={{ color: 'var(--text-muted)' }}>{t('hero.threatsStats', '0 threats / 5 min')}</span>
             </div>
           </div>
 
@@ -185,11 +185,11 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
           <div className="flex flex-col gap-3 shrink-0 w-full sm:w-auto lg:w-[210px]"
             style={{ transform: 'translateZ(30px)', transformStyle: 'preserve-3d' }}>
             <button onClick={onScanClick} className="btn btn--primary" style={{ fontSize: '14px', padding: '13px 20px', justifyContent: 'center' }}>
-              <ScanLine size={16} />Scan a Threat<ArrowRight size={14} />
+              <ScanLine size={16} />{t('hero.scanBtn', 'Scan a Threat')}<ArrowRight size={14} />
             </button>
             <div className="grid grid-cols-2 gap-2">
               <button onClick={onFreezeClick} className="btn btn--danger" style={{ fontSize: '12px', padding: '10px 10px', justifyContent: 'center' }}>
-                <ShieldAlert size={14} />Freeze
+                <ShieldAlert size={14} />{t('hero.freezeBtn', 'Freeze')}
               </button>
               <a
                 href="tel:1930"
@@ -204,7 +204,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
                   fontWeight: 700,
                 }}
               >
-                <PhoneCall size={14} />1930
+                <PhoneCall size={14} />{t('hero.call1930', '1930')}
               </a>
             </div>
             <button
@@ -218,7 +218,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
               }}
             >
               <MapPin size={13} className="text-[var(--primary)]" />
-              <span>Live Threat Map</span>
+              <span>{t('hero.threatMapBtn', 'Live Threat Map')}</span>
             </button>
           </div>
         </div>
@@ -488,13 +488,13 @@ export default function App() {
                 {/* 2. Stats — secondary context, 2×2 on mobile, 4-col on desktop */}
                 <section>
                   <h2 className="text-caption font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-muted)' }}>
-                    Live Protection Stats
+                    {t('metrics.liveTitle', 'Live Protection Stats')}
                   </h2>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    <StatCard icon={Shield}     label="Total Scans"        value={metrics?.totalScans?.toLocaleString() ?? '1,442'}  color="#1a6cf9" accentBg="rgba(26,108,249,0.12)" />
-                    <StatCard icon={ShieldAlert} label="Threats Blocked"   value={metrics?.threatsBlocked?.toLocaleString() ?? '99'}  color="#ff2d4f" accentBg="rgba(255,45,79,0.12)" />
-                    <StatCard icon={Users}       label="Child Guard Blocks" value={metrics?.childBlocks?.toLocaleString() ?? '47'}     color="#7c5cfc" accentBg="rgba(124,92,252,0.12)" />
-                    <StatCard icon={Activity}    label="System Integrity"   value={`${Math.floor(metrics?.systemIntegrity ?? 99)}%`}  color="#00c896" accentBg="rgba(0,200,150,0.12)" />
+                    <StatCard icon={Shield}     label={t('metrics.totalScans', 'Total Scans')}        value={metrics?.totalScans?.toLocaleString() ?? '1,442'}  color="#1a6cf9" accentBg="rgba(26,108,249,0.12)" />
+                    <StatCard icon={ShieldAlert} label={t('metrics.threatsBlocked', 'Threats Blocked')}   value={metrics?.threatsBlocked?.toLocaleString() ?? '99'}  color="#ff2d4f" accentBg="rgba(255,45,79,0.12)" />
+                    <StatCard icon={Users}       label={t('metrics.childBlocks', 'Child Guard Blocks')} value={metrics?.childBlocks?.toLocaleString() ?? '47'}     color="#7c5cfc" accentBg="rgba(124,92,252,0.12)" />
+                    <StatCard icon={Activity}    label={t('metrics.systemIntegrity', 'System Integrity')}   value={`${Math.floor(metrics?.systemIntegrity ?? 99)}%`}  color="#00c896" accentBg="rgba(0,200,150,0.12)" />
                   </div>
                 </section>
 
@@ -509,30 +509,30 @@ export default function App() {
                 <section>
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="text-caption font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
-                      Core Modules
+                      {t('modules.coreTitle', 'Core Modules')}
                     </h2>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <ModuleCard
                       icon={ScanLine}
-                      title="AI Threat Scanner"
-                      description="Scan links, SMS, QR codes against 92 VirusTotal detection engines in real time."
+                      title={t('modules.scannerTitle', 'AI Threat Scanner')}
+                      description={t('modules.scannerDesc', 'Scan links, SMS, QR codes against 92 VirusTotal detection engines in real time.')}
                       accent="#3b82f6"
                       accentBg="rgba(59,130,246,0.10)"
                       onClick={() => setActiveTab('scanner')}
                     />
                     <ModuleCard
                       icon={Bot}
-                      title="KAVACH AI Hub"
-                      description="Multilingual voice assistant with Hindi/English cybersecurity-focused AI personas."
+                      title={t('modules.aihubTitle', 'KAVACH AI Hub')}
+                      description={t('modules.aihubDesc', 'Multilingual voice assistant with Hindi/English cybersecurity-focused AI personas.')}
                       accent="#a855f7"
                       accentBg="rgba(168,85,247,0.10)"
                       onClick={() => setActiveTab('aihub')}
                     />
                     <ModuleCard
                       icon={GraduationCap}
-                      title="Cyber Academy"
-                      description="10 real-world threat scenarios with a founder-signed completion certificate."
+                      title={t('modules.academyTitle', 'Cyber Academy')}
+                      description={t('modules.academyDesc', '10 real-world threat scenarios with a founder-signed completion certificate.')}
                       accent="#f59e0b"
                       accentBg="rgba(245,158,11,0.10)"
                       onClick={() => setActiveTab('academy')}
@@ -556,10 +556,10 @@ export default function App() {
               <div className="space-y-4">
                 <div>
                   <h1 className="text-h2 font-bold" style={{ color: 'var(--text-primary)' }}>
-                    AI Threat Scanner
+                    {t('scanner.title', 'AI Threat Scanner')}
                   </h1>
                   <p className="text-small mt-1" style={{ color: 'var(--text-secondary)' }}>
-                    Paste a link, SMS text, or scan a QR code — verified against 92 security engines.
+                    {t('modules.scannerDesc', 'Scan links, SMS, QR codes against 92 VirusTotal detection engines in real time.')}
                   </p>
                 </div>
                 <div className="card p-6">

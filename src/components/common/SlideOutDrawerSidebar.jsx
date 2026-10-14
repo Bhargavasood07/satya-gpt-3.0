@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { LayoutDashboard, ScanLine, BookOpen, Sparkles, GraduationCap, Building2, Baby, BarChart3, ShieldAlert, Share2, ShieldCheck, MapPin, KeyRound, Download, X, Bot, Award, PhoneCall } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
@@ -19,6 +20,8 @@ const SlideOutDrawerSidebar = memo(({
   onInstallApp,
   isAppInstalled
 }) => {
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
   const { isChildMode, toggleChildMode } = useChildMode();
 
   if (!isOpen) return null;
@@ -62,6 +65,7 @@ const SlideOutDrawerSidebar = memo(({
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#0d1629] transition-all cursor-pointer"
+            aria-label="Close menu"
           >
             <X size={18} />
           </button>
@@ -70,7 +74,7 @@ const SlideOutDrawerSidebar = memo(({
         {/* 1. Main Navigation Category */}
         <div className="space-y-1.5">
           <div className="text-[10px] font-extrabold text-[var(--accent)] uppercase tracking-wider px-1">
-            Main System Pages
+            {isHindi ? 'मुख्य सेवाएं' : 'Main System Pages'}
           </div>
 
           <button
@@ -82,7 +86,7 @@ const SlideOutDrawerSidebar = memo(({
             }`}
           >
             <LayoutDashboard size={17} />
-            <span>SOC Dashboard (Home)</span>
+            <span>{t('nav.dashboard', 'SOC Dashboard (Home)')}</span>
           </button>
 
           <button
@@ -94,7 +98,7 @@ const SlideOutDrawerSidebar = memo(({
             }`}
           >
             <ScanLine size={17} />
-            <span>AI Threat Scanner</span>
+            <span>{t('nav.scanner', 'AI Threat Scanner')}</span>
           </button>
 
           <button
@@ -106,7 +110,7 @@ const SlideOutDrawerSidebar = memo(({
             }`}
           >
             <BookOpen size={17} className="text-amber-400" />
-            <span>Guide & Documentation</span>
+            <span>{t('nav.guidedocs', 'Guide & Documentation')}</span>
           </button>
 
           <button
@@ -118,7 +122,7 @@ const SlideOutDrawerSidebar = memo(({
             }`}
           >
             <Sparkles size={17} className="text-purple-400" />
-            <span>AI Intelligence Hub</span>
+            <span>{t('nav.aihub', 'AI Intelligence Hub')}</span>
           </button>
 
           <button
@@ -130,7 +134,7 @@ const SlideOutDrawerSidebar = memo(({
             }`}
           >
             <GraduationCap size={17} className="text-amber-400" />
-            <span>Kavach Cyber Academy</span>
+            <span>{t('nav.academy', 'Kavach Cyber Academy')}</span>
           </button>
 
           <button
@@ -142,14 +146,14 @@ const SlideOutDrawerSidebar = memo(({
             }`}
           >
             <BarChart3 size={17} />
-            <span>Security Analytics</span>
+            <span>{t('nav.analytics', 'Security Analytics')}</span>
           </button>
         </div>
 
         {/* 2. Emergency & Defense Actions */}
         <div className="space-y-1.5 pt-2 border-t border-[#1b2a47]">
           <div className="text-[10px] font-extrabold text-rose-400 uppercase tracking-wider px-1">
-            Emergency & Safety Tools
+            {isHindi ? 'आपातकालीन व सुरक्षा उपकरण' : 'Emergency & Safety Tools'}
           </div>
 
           <button
@@ -157,7 +161,7 @@ const SlideOutDrawerSidebar = memo(({
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold bg-rose-600 hover:bg-rose-500 text-white transition-all shadow-lg animate-pulse cursor-pointer"
           >
             <ShieldAlert size={17} />
-            <span>15-Min Emergency Bank Freeze</span>
+            <span>{isHindi ? '15-मिनट आपातकालीन बैंक खाता फ्रीज' : '15-Min Emergency Bank Freeze'}</span>
           </button>
 
           <button
@@ -165,7 +169,7 @@ const SlideOutDrawerSidebar = memo(({
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-amber-300 hover:bg-slate-800 border border-amber-500/30 cursor-pointer"
           >
             <Share2 size={16} className="text-amber-400" />
-            <span>1-Click Family Guard Share</span>
+            <span>{isHindi ? '1-क्लिक परिवार सुरक्षा शेयर' : '1-Click Family Guard Share'}</span>
           </button>
 
           <button
@@ -173,7 +177,7 @@ const SlideOutDrawerSidebar = memo(({
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-emerald-400 hover:bg-slate-800 border border-emerald-500/30 cursor-pointer"
           >
             <ShieldCheck size={16} className="text-emerald-400" />
-            <span>Trust Badge Seal Generator</span>
+            <span>{isHindi ? 'सत्यापित सुरक्षा सील देखें' : 'Trust Badge Seal Generator'}</span>
           </button>
 
           <button
@@ -185,14 +189,14 @@ const SlideOutDrawerSidebar = memo(({
             }`}
           >
             <Baby size={16} className={isChildMode ? 'text-amber-400' : ''} />
-            <span>Child Guard ({isChildMode ? 'ACTIVE' : 'OFF'})</span>
+            <span>{isHindi ? `बाल सुरक्षा (${isChildMode ? 'सक्रिय' : 'बंद'})` : `Child Guard (${isChildMode ? 'ACTIVE' : 'OFF'})`}</span>
           </button>
         </div>
 
         {/* 3. Government & Verification */}
         <div className="space-y-1.5 pt-2 border-t border-[#1b2a47]">
           <div className="text-[10px] font-extrabold text-amber-400 uppercase tracking-wider px-1">
-            Govt & Nodal Intelligence
+            {isHindi ? 'सरकारी व नोडल इंटेलिजेंस' : 'Govt & Nodal Intelligence'}
           </div>
 
           <button
@@ -200,7 +204,7 @@ const SlideOutDrawerSidebar = memo(({
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-amber-300 hover:bg-slate-800 border border-amber-500/30 cursor-pointer"
           >
             <Building2 size={16} className="text-amber-400" />
-            <span>MeitY / CERT-In Verification</span>
+            <span>{isHindi ? 'MeitY / CERT-In सरकारी दिशानिर्देश' : 'MeitY / CERT-In Verification'}</span>
           </button>
 
           <button
@@ -208,7 +212,7 @@ const SlideOutDrawerSidebar = memo(({
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-cyan-300 hover:bg-slate-800 border border-cyan-500/30 cursor-pointer"
           >
             <MapPin size={16} className="text-cyan-400" />
-            <span>Live State Threat Heatmap</span>
+            <span>{isHindi ? 'लाइव राज्य साइबर खतरा मैप' : 'Live State Threat Heatmap'}</span>
           </button>
 
           <button
@@ -216,7 +220,7 @@ const SlideOutDrawerSidebar = memo(({
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-amber-300 hover:bg-slate-800 border border-[#24375b] cursor-pointer"
           >
             <KeyRound size={16} className="text-amber-400" />
-            <span>Founder Admin Vault</span>
+            <span>{isHindi ? 'संस्थापक एडमिन वॉल्ट' : 'Founder Admin Vault'}</span>
           </button>
         </div>
 
@@ -227,7 +231,7 @@ const SlideOutDrawerSidebar = memo(({
             className="w-full py-2.5 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
           >
             <Bot size={16} />
-            <span>Open KAVACH AI Chatbot</span>
+            <span>{isHindi ? 'कवच AI सुरक्षा सहायक खोलें' : 'Open KAVACH AI Chatbot'}</span>
           </button>
         </div>
       </motion.aside>

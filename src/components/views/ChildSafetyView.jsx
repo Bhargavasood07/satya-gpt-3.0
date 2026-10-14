@@ -1,8 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Baby, ShieldCheck, ShieldAlert, AlertTriangle, Lock, Eye, Sparkles } from 'lucide-react';
 import { useChildMode } from '../../context/ChildModeContext';
 
 export default function ChildSafetyView() {
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
   const { isChildMode, toggleChildMode } = useChildMode();
 
   return (
@@ -15,22 +18,24 @@ export default function ChildSafetyView() {
           </div>
           <div>
             <h2 className="text-xs sm:text-sm font-bold text-slate-100 uppercase tracking-wider">
-              Child Guard & Family Cyber Protection Shield
+              {t('childMode.title', 'Child Guard & Family Cyber Protection Shield')}
             </h2>
-            <p className="text-[11px] text-[var(--text-muted)]">Automatic safety filter blocking adult sites, gaming coin scams (Robux traps) & predatory links</p>
+            <p className="text-[11px] text-[var(--text-muted)]">
+              {t('childMode.subtitle', 'Automatic safety filter blocking adult sites, gaming coin scams (Robux traps) & predatory links')}
+            </p>
           </div>
         </div>
 
         <button
           onClick={toggleChildMode}
-          className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shadow-md flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shadow-md flex items-center gap-2 cursor-pointer ${
             isChildMode
               ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.4)]'
               : 'bg-[#0B0F19] text-slate-200 border-[#27395C] hover:border-amber-400'
           }`}
         >
           <Baby size={16} />
-          <span>{isChildMode ? 'CHILD GUARD: ACTIVE' : 'TURN ON CHILD GUARD'}</span>
+          <span>{isChildMode ? (isHindi ? 'बाल सुरक्षा: सक्रिय' : 'CHILD GUARD: ACTIVE') : (isHindi ? 'बाल सुरक्षा चालू करें' : 'TURN ON CHILD GUARD')}</span>
         </button>
       </div>
 
@@ -49,12 +54,18 @@ export default function ChildSafetyView() {
             )}
             <div>
               <div className="text-sm font-bold uppercase">
-                {isChildMode ? 'Family Cyber Protection is Fully Active' : 'Child Guard is Disabled'}
+                {isChildMode 
+                  ? (isHindi ? 'परिवार व बाल सुरक्षा कवच पूर्ण रूप से सक्रिय है' : 'Family Cyber Protection is Fully Active') 
+                  : (isHindi ? 'बाल सुरक्षा मोड अभी बंद है' : 'Child Guard is Disabled')}
               </div>
               <p className="text-xs text-[var(--text-muted)] mt-0.5">
                 {isChildMode
-                  ? 'All web links, SMS forwards & QR codes are continuously filtered against harmful content.'
-                  : 'Turn on Child Guard to protect children and family members from online threats.'}
+                  ? (isHindi 
+                      ? 'सभी वेबसाइट लिंक, WhatsApp मैसेज व QR कोड को बच्चों के लिए सुरक्षित रखने हेतु जांचा जा रहा है।' 
+                      : 'All web links, SMS forwards & QR codes are continuously filtered against harmful content.')
+                  : (isHindi 
+                      ? 'बच्चों और बुजुर्गों को फर्जी गेमिंग झांसों और ऑनलाइन खतरों से बचाने के लिए बाल सुरक्षा चालू करें।' 
+                      : 'Turn on Child Guard to protect children and family members from online threats.')}
               </p>
             </div>
           </div>
@@ -62,7 +73,7 @@ export default function ChildSafetyView() {
           <span className={`px-2.5 py-1 rounded text-[10px] font-bold ${
             isChildMode ? 'bg-amber-400 text-slate-950' : 'bg-slate-800 text-slate-400 border border-slate-700'
           }`}>
-            {isChildMode ? 'PROTECTED' : 'OFF'}
+            {isChildMode ? (isHindi ? 'सुरक्षित' : 'PROTECTED') : (isHindi ? 'बंद' : 'OFF')}
           </span>
         </div>
 
@@ -71,33 +82,41 @@ export default function ChildSafetyView() {
           <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#27395C] space-y-1">
             <div className="font-bold text-amber-400 flex items-center gap-1.5">
               <Lock size={14} />
-              <span>Adult Site Block</span>
+              <span>{isHindi ? 'अनुचित सामग्री ब्लॉक' : 'Adult Site Block'}</span>
             </div>
-            <p className="text-[10px] text-[var(--text-muted)]">Filters inappropriate redirect links & adult domains.</p>
+            <p className="text-[10px] text-[var(--text-muted)]">
+              {isHindi ? 'गलत वेबसाइट्स और अनुचित रीडायरेक्ट को तुरंत रोकता है।' : 'Filters inappropriate redirect links & adult domains.'}
+            </p>
           </div>
 
           <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#27395C] space-y-1">
             <div className="font-bold text-rose-400 flex items-center gap-1.5">
               <ShieldAlert size={14} />
-              <span>Game Scam Trap Block</span>
+              <span>{isHindi ? 'गेमिंग स्कैम से बचाव' : 'Game Scam Trap Block'}</span>
             </div>
-            <p className="text-[10px] text-[var(--text-muted)]">Blocks fake Robux, Free Diamonds & gaming login traps.</p>
+            <p className="text-[10px] text-[var(--text-muted)]">
+              {isHindi ? 'फ्री रोबक्स, डायमंड्स व फर्जी गेमिंग ऑफर को ब्लॉक करता है।' : 'Blocks fake Robux, Free Diamonds & gaming login traps.'}
+            </p>
           </div>
 
           <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#27395C] space-y-1">
             <div className="font-bold text-[var(--accent)] flex items-center gap-1.5">
               <Eye size={14} />
-              <span>Safe Search Enforcer</span>
+              <span>{isHindi ? 'सुरक्षित सर्च फिल्टर' : 'Safe Search Enforcer'}</span>
             </div>
-            <p className="text-[10px] text-[var(--text-muted)]">Enforces safe search parameters across web lookups.</p>
+            <p className="text-[10px] text-[var(--text-muted)]">
+              {isHindi ? 'इंटरनेट सर्च में केवल सुरक्षित सामग्री ही दिखाता है।' : 'Enforces safe search parameters across web lookups.'}
+            </p>
           </div>
 
           <div className="p-3 bg-[#0B0F19] rounded-lg border border-[#27395C] space-y-1">
             <div className="font-bold text-emerald-400 flex items-center gap-1.5">
               <Sparkles size={14} />
-              <span>Simple AI Explainer</span>
+              <span>{isHindi ? 'सरल AI सुरक्षा सलाह' : 'Simple AI Explainer'}</span>
             </div>
-            <p className="text-[10px] text-[var(--text-muted)]">KAVACH AI explains safety rules in simple student-friendly terms.</p>
+            <p className="text-[10px] text-[var(--text-muted)]">
+              {isHindi ? 'कवच AI आसान भाषा में समझाता है कि क्या सुरक्षित है और क्या नहीं।' : 'KAVACH AI explains safety rules in simple student-friendly terms.'}
+            </p>
           </div>
         </div>
       </div>
