@@ -110,7 +110,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-32 right-3 sm:right-6 w-[92vw] sm:w-[420px] h-[540px] sm:h-[580px] bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden"
+            className="fixed bottom-32 right-3 sm:right-6 w-[92vw] sm:w-[420px] h-[540px] sm:h-[580px] bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden cyber-bracket"
           >
             {/* Header with Model Selector */}
             <div className="p-3 bg-[#0B0F19] border-b border-[#1E2D4A] flex items-center justify-between font-mono">
@@ -221,14 +221,14 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
                   className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}
                 >
                   <div
-                    className={`max-w-[88%] p-3 rounded-lg text-xs leading-relaxed ${
+                    className={`max-w-[88%] p-3 rounded-lg text-xs leading-relaxed break-words ${
                       m.sender === 'user'
                         ? 'bg-[var(--accent)] text-slate-950 font-medium rounded-tr-none font-sans'
                         : 'bg-[#131B2E] border border-[#27395C] text-[var(--text-primary)] rounded-tl-none font-sans'
                     }`}
                   >
                     {m.text.split('\n').map((line, idx) => (
-                      <p key={idx} className="mb-1 last:mb-0">
+                      <p key={idx} className="mb-1 last:mb-0 break-words">
                         {line}
                       </p>
                     ))}

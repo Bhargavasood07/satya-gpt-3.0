@@ -78,7 +78,8 @@ function FloatingOrb({ size, color, style }) {
 }
 
 function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isHindi = i18n.language?.startsWith('hi');
   const heroRef = useRef(null);
 
   // Mouse-parallax on hero background layers
@@ -109,18 +110,18 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
       ref={heroRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="hero-banner rounded-2xl relative overflow-hidden animate-fade-in dot-grid transition-colors duration-300"
+      className="hero-banner cyber-bracket rounded-2xl relative overflow-hidden animate-fade-in cyber-network-grid transition-colors duration-300"
       style={{
         transformStyle: 'preserve-3d',
         willChange: 'transform',
       }}
     >
-      <div className="animate-cyber-scan pointer-events-none" />
+      <div className="cyber-scan-glow" />
 
       {/* ── 3D Floating Geometry ── */}
       <FloatingOrb size="280px" color="#3b82f6" style={{ top: '-60px', right: '-40px', animation: 'float-a 7s ease-in-out infinite', opacity: 0.7 }} />
       <FloatingOrb size="160px" color="#a855f7" style={{ bottom: '-30px', left: '10%', animation: 'float-b 9s ease-in-out infinite', opacity: 0.5 }} />
-      <FloatingOrb size="100px" color="#06b6d4" style={{ top: '30%', right: '28%', animation: 'float-c 11s ease-in-out infinite', opacity: 0.4 }} />
+      <FloatingOrb size="100px" color="#00c8ef" style={{ top: '30%', right: '28%', animation: 'float-c 11s ease-in-out infinite', opacity: 0.4 }} />
 
       {/* Rotating wireframe hexagon */}
       <div
@@ -129,9 +130,9 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
           width: '200px', height: '200px',
           right: '60px', top: '-30px',
           background: 'transparent',
-          border: '1px solid rgba(59,130,246,0.12)',
+          border: '1px solid rgba(0,200,239,0.18)',
           borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
-          boxShadow: 'inset 0 0 40px rgba(59,130,246,0.06)',
+          boxShadow: 'inset 0 0 40px rgba(0,200,239,0.08)',
         }}
       />
       <div
@@ -139,86 +140,104 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
         style={{
           width: '120px', height: '120px',
           right: '100px', top: '20px',
-          border: '1px dashed rgba(168,85,247,0.15)',
+          border: '1px dashed rgba(168,85,247,0.22)',
           borderRadius: '50%',
           animation: 'spin-slow 30s linear infinite reverse',
         }}
       />
 
       {/* ── Content ── */}
-      <div className="relative p-6 sm:p-8 lg:p-10" style={{ transformStyle: 'preserve-3d' }}>
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+      <div className="relative p-5 sm:p-7 lg:p-9" style={{ transformStyle: 'preserve-3d' }}>
+        {/* Tactical Telemetry Header */}
+        <div className="flex flex-wrap items-center gap-2 mb-3.5 font-mono text-[10px]">
+          <span className="cyber-telemetry-badge">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan-500)] animate-ping" />
+            [DEFCON 4 // ACTIVE DEFENSE]
+          </span>
+          <span className="cyber-telemetry-badge">
+            [NODE: DEL-NCR-01]
+          </span>
+          <span className="cyber-telemetry-badge text-[var(--emerald-500)] border-[var(--emerald-500)]/40 bg-[var(--emerald-500)]/10">
+            [92 ENGINES ONLINE]
+          </span>
+        </div>
 
-          {/* Left */}
-          <div className="space-y-5 max-w-xl" style={{ transform: 'translateZ(20px)', transformStyle: 'preserve-3d' }}>
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-8">
+
+          {/* Left: Text & Badges */}
+          <div className="space-y-4 max-w-xl min-w-0" style={{ transform: 'translateZ(20px)', transformStyle: 'preserve-3d' }}>
             <div className="flex flex-wrap items-center gap-2">
               <span className="badge badge--primary"><Sparkles size={9} />{t('hero.badgeIndia', "India's #1 AI Cyber Defense")}</span>
               <span className="badge badge--warning"><Award size={9} />{t('hero.badgeMeity', "MeitY / CERT-In Aligned")}</span>
             </div>
 
             <div>
-              <h1 className="text-h1 font-sans leading-tight" style={{ color: 'var(--text-primary)' }}>
+              <h1 className="text-h1 font-sans leading-tight break-words max-w-full" style={{ color: 'var(--text-primary)' }}>
                 {t('hero.titleLine1', 'Real-Time Threat')}<br />
                 <span className="hero-gradient-text">
                   {t('hero.titleLine2', 'Intelligence & Protection')}
                 </span>
               </h1>
-              <p className="text-small mt-3 font-medium" style={{ color: 'var(--text-secondary)', lineHeight: '1.75', maxWidth: '480px' }}>
+              <p className="text-small mt-3 font-medium break-words max-w-full" style={{ color: 'var(--text-secondary)', lineHeight: '1.75' }}>
                 {t('hero.subtitle', '92-engine VirusTotal v3 · KAVACH AI voice assistant · 15-min emergency bank lock protocol.')} <br />
                 <span style={{ color: 'var(--text-muted)' }}>{t('hero.founder', 'Founder: Bhargava Sood.')}</span>
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-caption">
               <span className="relative flex h-2 w-2 shrink-0">
                 <span className="absolute inline-flex h-full w-full rounded-full"
                   style={{ background: 'var(--success)', animation: 'ping-slow 1.8s cubic-bezier(0,0,0.2,1) infinite' }} />
                 <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: 'var(--success)' }} />
               </span>
-              <span className="text-caption font-bold" style={{ color: 'var(--success)' }}>{t('hero.enginesActive', 'All 92 engines active')}</span>
-              <span className="text-caption" style={{ color: 'var(--text-muted)' }}>·</span>
-              <span className="text-caption font-medium" style={{ color: 'var(--text-muted)' }}>{t('hero.threatsStats', '0 threats / 5 min')}</span>
+              <span className="font-bold text-[var(--success)]">{t('hero.enginesActive', 'All 92 engines active')}</span>
+              <span className="text-[var(--text-muted)]">·</span>
+              <span className="font-mono text-[var(--text-muted)]">{t('hero.threatsStats', '0 threats / 5 min')}</span>
+              <span className="text-[var(--text-muted)]">·</span>
+              <span className="font-mono text-[var(--cyan-500)]">AES-256-GCM</span>
             </div>
           </div>
 
-          {/* Right: CTAs — lifted in Z */}
-          <div className="flex flex-col gap-3 shrink-0 w-full sm:w-auto lg:w-[210px]"
+          {/* Right: CTAs — Strict containment & responsive sizing */}
+          <div className="flex flex-col gap-2.5 shrink-0 w-full sm:w-[260px] lg:w-[270px] max-w-full"
             style={{ transform: 'translateZ(30px)', transformStyle: 'preserve-3d' }}>
-            <button onClick={onScanClick} className="btn btn--primary" style={{ fontSize: '14px', padding: '13px 20px', justifyContent: 'center' }}>
-              <ScanLine size={16} />{t('hero.scanBtn', 'Scan a Threat')}<ArrowRight size={14} />
+            <button
+              onClick={onScanClick}
+              className="btn btn--primary w-full text-center py-3.5 px-4 font-bold text-sm shadow-xl"
+            >
+              <ScanLine size={16} className="shrink-0" />
+              <span className="break-words min-w-0">{t('hero.scanBtn', 'Scan a Threat')}</span>
+              <ArrowRight size={14} className="shrink-0" />
             </button>
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={onFreezeClick} className="btn btn--danger" style={{ fontSize: '12px', padding: '10px 10px', justifyContent: 'center' }}>
-                <ShieldAlert size={14} />{t('hero.freezeBtn', 'Freeze')}
+
+            <div className="grid grid-cols-2 gap-2 w-full">
+              <button
+                onClick={onFreezeClick}
+                className="btn btn--danger py-2.5 px-2 text-xs font-bold"
+              >
+                <ShieldAlert size={14} className="shrink-0" />
+                <span className="break-words min-w-0">{t('hero.freezeBtn', 'Freeze')}</span>
               </button>
               <a
                 href="tel:1930"
-                className="btn btn--ghost"
+                className="btn btn--ghost py-2.5 px-2 text-xs font-bold"
                 style={{
-                  fontSize: '12px',
-                  padding: '10px 10px',
-                  justifyContent: 'center',
                   color: 'var(--warning)',
                   borderColor: 'var(--warning)',
                   background: 'var(--warning-muted)',
-                  fontWeight: 700,
                 }}
               >
-                <PhoneCall size={14} />{t('hero.call1930', '1930')}
+                <PhoneCall size={14} className="shrink-0" />
+                <span className="break-words min-w-0">{t('hero.call1930', '1930')}</span>
               </a>
             </div>
+
             <button
               onClick={onMapClick}
-              className="btn btn--ghost"
-              style={{
-                fontSize: '12px',
-                padding: '10px 12px',
-                justifyContent: 'center',
-                fontWeight: 600,
-              }}
+              className="btn btn--ghost w-full py-2.5 px-3 text-xs font-semibold"
             >
-              <MapPin size={13} className="text-[var(--primary)]" />
-              <span>{t('hero.threatMapBtn', 'Live Threat Map')}</span>
+              <MapPin size={13} className="text-[var(--cyan-500)] shrink-0" />
+              <span className="break-words min-w-0">{t('hero.threatMapBtn', 'Live Threat Map')}</span>
             </button>
           </div>
         </div>
@@ -234,27 +253,32 @@ function StatCard({ icon: Icon, label, value, color, accentBg }) {
       ref={ref}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      className="stat-card p-4 sm:p-5"
+      className="stat-card cyber-bracket p-4 sm:p-5 flex flex-col justify-between overflow-hidden"
       style={{ '--card-accent': color, '--card-accent-muted': accentBg, transformStyle: 'preserve-3d' }}
     >
       {/* Shine overlay */}
       <div className="tilt-shine" data-tilt-shine="true" />
 
-      <div className="flex items-center justify-between mb-4" style={{ transform: 'translateZ(8px)' }}>
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+      <div className="flex items-center justify-between mb-3" style={{ transform: 'translateZ(8px)' }}>
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
           style={{ background: accentBg, border: `1px solid ${color}50`, boxShadow: `0 4px 12px ${color}25` }}>
           <Icon size={17} style={{ color }} />
         </div>
-        <div className="w-2 h-2 rounded-full" style={{ background: color, boxShadow: `0 0 8px ${color}, 0 0 16px ${color}60` }} />
+        <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase"
+          style={{ borderColor: `${color}40`, color: color, background: accentBg }}>
+          ONLINE
+        </span>
       </div>
 
-      <div className="text-h2 font-bold font-mono" style={{ color: 'var(--text-primary)', lineHeight: 1.1, transform: 'translateZ(12px)' }}>
-        {value}
+      <div className="min-w-0">
+        <div className="text-h2 font-bold font-mono truncate" style={{ color: 'var(--text-primary)', lineHeight: 1.1, transform: 'translateZ(12px)' }}>
+          {value}
+        </div>
+        <div className="text-caption uppercase tracking-wider mt-1.5 break-words" style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
+          {label}
+        </div>
       </div>
-      <div className="text-caption uppercase tracking-wider mt-1.5" style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
-        {label}
-      </div>
-      <div className="mt-4 h-px rounded-full"
+      <div className="mt-3.5 h-px rounded-full"
         style={{ background: `linear-gradient(90deg, ${color}80, ${color}25, transparent)` }} />
     </div>
   );
@@ -268,7 +292,7 @@ function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick 
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
-      className="module-card-3d p-5 text-left w-full"
+      className="module-card-3d cyber-bracket p-5 text-left w-full overflow-hidden flex flex-col justify-between"
       style={{ transformStyle: 'preserve-3d' }}
       onFocus={e => e.currentTarget.style.outline = '2px solid var(--border-focus)'}
       onBlur={e => e.currentTarget.style.outline = 'none'}
@@ -276,31 +300,32 @@ function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick 
       {/* Shine */}
       <div className="tilt-shine" data-tilt-shine="true" />
 
-      <div className="flex items-start justify-between mb-4" style={{ transform: 'translateZ(10px)' }}>
-        <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
-          style={{
-            background: `linear-gradient(135deg, ${accentBg} 0%, ${accent}18 100%)`,
-            border: `1px solid ${accent}40`,
-            boxShadow: `0 8px 20px ${accent}20, inset 0 1px 0 ${accent}30`,
-          }}>
-          <Icon size={22} style={{ color: accent, filter: `drop-shadow(0 0 6px ${accent}80)` }} />
+      <div>
+        <div className="flex items-start justify-between mb-3.5" style={{ transform: 'translateZ(10px)' }}>
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+            style={{
+              background: `linear-gradient(135deg, ${accentBg} 0%, ${accent}18 100%)`,
+              border: `1px solid ${accent}40`,
+              boxShadow: `0 8px 20px ${accent}20, inset 0 1px 0 ${accent}30`,
+            }}>
+            <Icon size={22} style={{ color: accent, filter: `drop-shadow(0 0 6px ${accent}80)` }} />
+          </div>
+          <ArrowRight size={14} className="mt-1.5 transition-all duration-200 shrink-0"
+            style={{ color: accent, opacity: 0.5 }}
+          />
         </div>
-        <ArrowRight size={14} className="mt-1.5 transition-all duration-200"
-          style={{ color: accent, opacity: 0.3 }}
-          onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-        />
+
+        <h3 className="text-[14px] font-semibold mb-2 break-words" style={{ color: 'var(--text-primary)', transform: 'translateZ(6px)' }}>
+          {title}
+        </h3>
+        <p className="text-small break-words" style={{ color: 'var(--text-secondary)', lineHeight: '1.65' }}>
+          {description}
+        </p>
       </div>
 
-      <h3 className="text-[14px] font-semibold mb-2" style={{ color: 'var(--text-primary)', transform: 'translateZ(6px)' }}>
-        {title}
-      </h3>
-      <p className="text-small" style={{ color: 'var(--text-secondary)', lineHeight: '1.65' }}>
-        {description}
-      </p>
-
       {/* Bottom accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: `linear-gradient(90deg, transparent, ${accent}50, transparent)` }} />
+      <div className="mt-4 h-px w-full"
+        style={{ background: `linear-gradient(90deg, transparent, ${accent}60, transparent)` }} />
     </button>
   );
 }
@@ -431,6 +456,33 @@ export default function App() {
 
       {/* Live scam ticker */}
       <LiveScamTicker />
+
+      {/* Real-Time Cyber Security Defense Network Bar */}
+      <div className="w-full py-1 px-3 sm:px-6 bg-[var(--surface-void)] border-b border-[var(--border-subtle)] flex items-center justify-between text-[10px] font-mono select-none overflow-x-auto gap-4">
+        <div className="flex items-center gap-3 shrink-0 min-w-0">
+          <span className="flex items-center gap-1.5 text-[var(--cyan-400)] font-bold shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan-400)] animate-ping" />
+            [DEFENSE_GRID: DEFCON-4 ACTIVE]
+          </span>
+          <span className="text-[var(--text-muted)] hidden sm:inline">|</span>
+          <span className="text-[var(--text-secondary)] hidden sm:inline truncate">
+            // SOC_NODE: DEL-CENTRAL-01
+          </span>
+          <span className="text-[var(--text-muted)] hidden md:inline">|</span>
+          <span className="text-[var(--emerald-400)] font-semibold hidden md:inline">
+            PROTOCOL: AES-256-GCM
+          </span>
+        </div>
+        <div className="flex items-center gap-3 shrink-0 ml-auto font-bold">
+          <span className="text-[var(--text-secondary)]">
+            92 ENGINES SYNCED
+          </span>
+          <span className="text-[var(--text-muted)]">|</span>
+          <span className="text-[var(--cyan-400)]">
+            14ms
+          </span>
+        </div>
+      </div>
 
       {/* Clipboard auto-scan */}
       <ClipboardAutoScanner onScanLink={(url) => handleScanResult(url, 'clipboard')} />

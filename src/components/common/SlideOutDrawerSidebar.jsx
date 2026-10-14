@@ -160,24 +160,24 @@ const SlideOutDrawerSidebar = memo(({
             onClick={() => { onClose(); onOpenBankFreeze(); }}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold bg-rose-600 hover:bg-rose-500 text-white transition-all shadow-lg animate-pulse cursor-pointer"
           >
-            <ShieldAlert size={17} />
-            <span>{isHindi ? '15-मिनट आपातकालीन बैंक खाता फ्रीज' : '15-Min Emergency Bank Freeze'}</span>
+            <ShieldAlert size={17} className="shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? '15-मिनट आपातकालीन बैंक खाता फ्रीज' : '15-Min Emergency Bank Freeze'}</span>
           </button>
 
           <button
             onClick={() => { onClose(); onOpenFamilyShare(); }}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-amber-300 hover:bg-slate-800 border border-amber-500/30 cursor-pointer"
           >
-            <Share2 size={16} className="text-amber-400" />
-            <span>{isHindi ? '1-क्लिक परिवार सुरक्षा शेयर' : '1-Click Family Guard Share'}</span>
+            <Share2 size={16} className="text-amber-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? '1-क्लिक परिवार सुरक्षा शेयर' : '1-Click Family Guard Share'}</span>
           </button>
 
           <button
             onClick={() => { onClose(); onOpenTrustBadge(); }}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-emerald-400 hover:bg-slate-800 border border-emerald-500/30 cursor-pointer"
           >
-            <ShieldCheck size={16} className="text-emerald-400" />
-            <span>{isHindi ? 'सत्यापित सुरक्षा सील देखें' : 'Trust Badge Seal Generator'}</span>
+            <ShieldCheck size={16} className="text-emerald-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'सत्यापित सुरक्षा सील देखें' : 'Trust Badge Seal Generator'}</span>
           </button>
 
           <button
@@ -188,8 +188,8 @@ const SlideOutDrawerSidebar = memo(({
                 : 'bg-[#0d1629] text-slate-300 border-[#24375b]'
             }`}
           >
-            <Baby size={16} className={isChildMode ? 'text-amber-400' : ''} />
-            <span>{isHindi ? `बाल सुरक्षा (${isChildMode ? 'सक्रिय' : 'बंद'})` : `Child Guard (${isChildMode ? 'ACTIVE' : 'OFF'})`}</span>
+            <Baby size={16} className={isChildMode ? 'text-amber-400 shrink-0' : 'shrink-0'} />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? `बाल सुरक्षा (${isChildMode ? 'सक्रिय' : 'बंद'})` : `Child Guard (${isChildMode ? 'ACTIVE' : 'OFF'})`}</span>
           </button>
         </div>
 
@@ -203,24 +203,24 @@ const SlideOutDrawerSidebar = memo(({
             onClick={() => { onClose(); onOpenGovtVerification(); }}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-amber-300 hover:bg-slate-800 border border-amber-500/30 cursor-pointer"
           >
-            <Building2 size={16} className="text-amber-400" />
-            <span>{isHindi ? 'MeitY / CERT-In सरकारी दिशानिर्देश' : 'MeitY / CERT-In Verification'}</span>
+            <Building2 size={16} className="text-amber-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'MeitY / CERT-In सरकारी दिशानिर्देश' : 'MeitY / CERT-In Verification'}</span>
           </button>
 
           <button
             onClick={() => { onClose(); onOpenThreatMap(); }}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-cyan-300 hover:bg-slate-800 border border-cyan-500/30 cursor-pointer"
           >
-            <MapPin size={16} className="text-cyan-400" />
-            <span>{isHindi ? 'लाइव राज्य साइबर खतरा मैप' : 'Live State Threat Heatmap'}</span>
+            <MapPin size={16} className="text-cyan-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'लाइव राज्य साइबर खतरा मैप' : 'Live State Threat Heatmap'}</span>
           </button>
 
           <button
             onClick={() => { onClose(); onOpenAdmin(); }}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-amber-300 hover:bg-slate-800 border border-[#24375b] cursor-pointer"
           >
-            <KeyRound size={16} className="text-amber-400" />
-            <span>{isHindi ? 'संस्थापक एडमिन वॉल्ट' : 'Founder Admin Vault'}</span>
+            <KeyRound size={16} className="text-amber-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'संस्थापक एडमिन वॉल्ट' : 'Founder Admin Vault'}</span>
           </button>
         </div>
 
@@ -228,10 +228,10 @@ const SlideOutDrawerSidebar = memo(({
         <div className="mt-auto pt-3 border-t border-[#1b2a47] space-y-2">
           <button
             onClick={() => { onClose(); onOpenChat(); }}
-            className="w-full py-2.5 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+            className="w-full py-2.5 px-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
           >
-            <Bot size={16} />
-            <span>{isHindi ? 'कवच AI सुरक्षा सहायक खोलें' : 'Open KAVACH AI Chatbot'}</span>
+            <Bot size={16} className="shrink-0" />
+            <span className="break-words min-w-0 text-center">{isHindi ? 'कवच AI सुरक्षा सहायक खोलें' : 'Open KAVACH AI Chatbot'}</span>
           </button>
         </div>
       </motion.aside>

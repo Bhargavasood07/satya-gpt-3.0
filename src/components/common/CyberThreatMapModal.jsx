@@ -139,8 +139,9 @@ const CyberThreatMapModal = memo(({ onClose }) => {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-3xl bg-[#0D1527] border-2 border-[var(--accent)] rounded-2xl p-5 sm:p-6 shadow-[0_0_50px_rgba(0,229,255,0.3)] relative max-h-[90vh] overflow-y-auto space-y-4 text-xs"
+        className="w-full max-w-3xl bg-[#0D1527] border-2 border-[var(--accent)] rounded-2xl p-5 sm:p-6 shadow-[0_0_50px_rgba(0,229,255,0.3)] relative max-h-[90vh] overflow-y-auto space-y-4 text-xs cyber-bracket cyber-network-grid"
       >
+        <div className="cyber-scan-glow" />
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -262,10 +263,10 @@ const CyberThreatMapModal = memo(({ onClose }) => {
               </p>
               <a
                 href="tel:1930"
-                className="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-all cursor-pointer"
+                className="w-full py-2.5 px-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-all cursor-pointer break-words text-center"
               >
-                <PhoneCall size={14} />
-                <span>{isHindi ? '1930 साइबर हेल्पलाइन पर शिकायत करें' : 'Report Incident to 1930 Helpline'}</span>
+                <PhoneCall size={14} className="shrink-0" />
+                <span className="break-words">{isHindi ? '1930 साइबर हेल्पलाइन पर शिकायत करें' : 'Report Incident to 1930 Helpline'}</span>
               </a>
             </div>
           </div>

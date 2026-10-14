@@ -1,17 +1,42 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Radio, ShieldAlert, AlertTriangle, ShieldCheck, MapPin, Activity } from 'lucide-react';
 
 const getVerdictColors = (verdict) => {
   switch (verdict) {
     case 'THREAT':
-      return { border: 'var(--crimson-500)', bg: 'rgba(220, 20, 60, 0.1)', text: 'var(--crimson-500)' };
+      return { 
+        border: 'var(--crimson-500)', 
+        bg: 'var(--crimson-muted)', 
+        text: 'var(--crimson-500)',
+        glow: 'rgba(255, 45, 79, 0.25)',
+        icon: ShieldAlert
+      };
     case 'SUSPICIOUS':
-      return { border: 'var(--amber-500)', bg: 'rgba(255, 191, 0, 0.1)', text: 'var(--amber-500)' };
+      return { 
+        border: 'var(--amber-500)', 
+        bg: 'var(--amber-muted)', 
+        text: 'var(--amber-500)',
+        glow: 'rgba(245, 166, 35, 0.25)',
+        icon: AlertTriangle
+      };
     case 'SAFE':
-      return { border: 'var(--emerald-500)', bg: 'rgba(16, 185, 129, 0.1)', text: 'var(--emerald-500)' };
+      return { 
+        border: 'var(--emerald-500)', 
+        bg: 'var(--safe-muted)', 
+        text: 'var(--emerald-500)',
+        glow: 'rgba(0, 200, 150, 0.25)',
+        icon: ShieldCheck
+      };
     default:
-      return { border: 'var(--border-subtle)', bg: 'transparent', text: 'var(--text-primary)' };
+      return { 
+        border: 'var(--border-subtle)', 
+        bg: 'transparent', 
+        text: 'var(--text-primary)',
+        glow: 'transparent',
+        icon: ShieldCheck
+      };
   }
 };
 
@@ -19,14 +44,14 @@ const containerVariants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.1
+      staggerChildren: 0.08
     }
   }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, x: 50 },
-  show: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } }
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } }
 };
 
 const RecentThreatsSection = () => {
@@ -41,7 +66,8 @@ const RecentThreatsSection = () => {
       verdict: 'THREAT', 
       engine: isHindi ? '89/92 सुरक्षा इंजन' : '89/92 engines', 
       time: t('time.minutesAgo', { count: 2, defaultValue: '2m ago' }), 
-      location: isHindi ? 'मुंबई' : 'Mumbai' 
+      location: isHindi ? 'मुंबई' : 'Mumbai',
+      protocol: 'HTTPS_TRAP'
     },
     { 
       id: 2, 
@@ -50,7 +76,8 @@ const RecentThreatsSection = () => {
       verdict: 'THREAT', 
       engine: isHindi ? '76/92 सुरक्षा इंजन' : '76/92 engines', 
       time: t('time.minutesAgo', { count: 7, defaultValue: '7m ago' }), 
-      location: isHindi ? 'दिल्ली' : 'Delhi' 
+      location: isHindi ? 'दिल्ली' : 'Delhi',
+      protocol: 'SMS_HOOK'
     },
     { 
       id: 3, 
@@ -59,7 +86,8 @@ const RecentThreatsSection = () => {
       verdict: 'THREAT', 
       engine: isHindi ? '91/92 सुरक्षा इंजन' : '91/92 engines', 
       time: t('time.minutesAgo', { count: 12, defaultValue: '12m ago' }), 
-      location: isHindi ? 'बैंगलोर' : 'Bangalore' 
+      location: isHindi ? 'बैंगलोर' : 'Bangalore',
+      protocol: 'APK_SIDELOAD'
     },
     { 
       id: 4, 
@@ -68,38 +96,44 @@ const RecentThreatsSection = () => {
       verdict: 'SUSPICIOUS', 
       engine: isHindi ? '24/92 सुरक्षा इंजन' : '24/92 engines', 
       time: t('time.minutesAgo', { count: 18, defaultValue: '18m ago' }), 
-      location: isHindi ? 'चेन्नई' : 'Chennai' 
+      location: isHindi ? 'चेन्नई' : 'Chennai',
+      protocol: 'STATIC_QR'
     },
     { 
       id: 5, 
       type: t('recentThreats.safe', 'Safe Link'), 
       payload: 'https://www.sbi.co.in/portal/web/home', 
       verdict: 'SAFE', 
-      engine: isHindi ? '0/92 कोई खतरा नहीं' : '0/92 engines', 
+      engine: isHindi ? '0/92 कोई खतरा नहीं' : '0/92 clean', 
       time: t('time.minutesAgo', { count: 23, defaultValue: '23m ago' }), 
-      location: isHindi ? 'पुणे' : 'Pune' 
+      location: isHindi ? 'पुणे' : 'Pune',
+      protocol: 'VERIFIED_SSL'
     }
   ];
 
   return (
-    <section className="py-4">
+    <section className="py-2 font-sans">
       <div className="w-full">
-        <div className="flex items-center gap-3 mb-4">
-          <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-            {t('recentThreats.title', 'Recent Threats Caught')}
-          </h2>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider" 
-               style={{ backgroundColor: 'rgba(220, 20, 60, 0.1)', color: 'var(--crimson-500)' }}>
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: 'var(--crimson-500)' }}></span>
-              <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: 'var(--crimson-500)' }}></span>
+        {/* Section Header: Tactical Cyber Header */}
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Radio size={16} className="text-[var(--cyan-500)] animate-pulse shrink-0" />
+            <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-[var(--text-primary)] break-words">
+              {t('recentThreats.title', 'Recent Threats Caught')}
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="cyber-telemetry-badge">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--crimson-500)] animate-ping" />
+              {t('recentThreats.live', 'LIVE THREAT FEED')}
             </span>
-            {t('recentThreats.live', 'LIVE')}
           </div>
         </div>
 
+        {/* List of threats with 100% container containment */}
         <motion.div 
-          className="flex flex-col gap-3"
+          className="flex flex-col gap-2.5 w-full"
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
@@ -108,49 +142,69 @@ const RecentThreatsSection = () => {
           {threatsData.map((threat) => {
             const colors = getVerdictColors(threat.verdict);
             const verdictLabel = t(`verdict.${threat.verdict.toLowerCase()}`, threat.verdict);
+            const IconComponent = colors.icon;
             
             return (
               <motion.div 
                 key={threat.id}
                 variants={itemVariants}
-                className="flex flex-col sm:flex-row sm:items-center justify-between py-3 px-4 rounded-lg shadow-sm"
+                className="cyber-bracket flex flex-col md:flex-row md:items-center justify-between p-3 sm:p-3.5 rounded-xl transition-all w-full overflow-hidden"
                 style={{ 
                   backgroundColor: 'var(--surface-card)', 
                   borderLeft: `4px solid ${colors.border}`,
-                  borderTop: '1px solid var(--border-subtle)',
-                  borderRight: '1px solid var(--border-subtle)',
-                  borderBottom: '1px solid var(--border-subtle)'
+                  borderTop: '1px solid var(--border-default)',
+                  borderRight: '1px solid var(--border-default)',
+                  borderBottom: '1px solid var(--border-default)',
+                  boxShadow: `0 2px 10px rgba(0,0,0,0.25), 0 0 12px ${colors.glow}`,
                 }}
               >
-                {/* Left: Verdict Pill */}
-                <div className="flex-shrink-0 mb-2 sm:mb-0 sm:w-36">
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide" 
-                        style={{ backgroundColor: colors.bg, color: colors.text }}>
-                    {verdictLabel}
+                {/* Left: Verdict Badge & Icon */}
+                <div className="flex items-center gap-2 mb-2 md:mb-0 shrink-0 md:w-36">
+                  <span 
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold tracking-wide border uppercase"
+                    style={{ 
+                      backgroundColor: colors.bg, 
+                      color: colors.text, 
+                      borderColor: colors.border 
+                    }}
+                  >
+                    <IconComponent size={12} className="shrink-0" />
+                    <span>{verdictLabel}</span>
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] md:hidden">
+                    {threat.time}
                   </span>
                 </div>
 
-                {/* Middle: Type + Payload + Location */}
-                <div className="flex-grow min-w-0 pr-4">
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="font-semibold text-sm truncate" style={{ color: 'var(--text-primary)' }}>
+                {/* Middle: Type + Payload Box (strictly stays in box) */}
+                <div className="flex-1 min-w-0 md:px-4 space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold text-xs sm:text-sm text-[var(--text-primary)] break-words">
                       {threat.type}
                     </span>
-                    <span className="text-xs text-ellipsis overflow-hidden whitespace-nowrap" style={{ color: 'var(--text-secondary)' }}>
-                      {threat.payload}
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface-inset)] text-[var(--cyan-400)] border border-[var(--border-subtle)]">
+                      {threat.protocol}
+                    </span>
+                    <span className="text-xs text-[var(--text-muted)] flex items-center gap-0.5 shrink-0">
+                      <MapPin size={11} className="text-[var(--text-muted)]" />
+                      <span>{threat.location}</span>
                     </span>
                   </div>
-                  <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                    📍 {threat.location}
+
+                  {/* Payload container: break-all and max-w-full guarantees zero overflow */}
+                  <div className="w-full min-w-0">
+                    <code className="block w-full text-[11px] font-mono text-[var(--text-secondary)] break-all bg-[var(--surface-inset)]/80 px-2 py-1 rounded border border-[var(--border-subtle)]">
+                      {threat.payload}
+                    </code>
                   </div>
                 </div>
 
-                {/* Right: Engine Count + Time */}
-                <div className="flex-shrink-0 flex sm:flex-col items-center sm:items-end gap-2 sm:gap-1 mt-2 sm:mt-0">
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                {/* Right: Engine Count & Timestamp */}
+                <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-1 mt-2 md:mt-0 shrink-0 pt-1 md:pt-0 border-t md:border-t-0 border-[var(--border-subtle)]">
+                  <span className="text-xs font-mono font-bold text-[var(--text-primary)] break-words text-right">
                     {threat.engine}
                   </span>
-                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] hidden md:block">
                     {threat.time}
                   </span>
                 </div>

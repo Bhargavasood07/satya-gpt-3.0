@@ -31,7 +31,7 @@ export default function MobileNav({ activeTab, onTabChange }) {
           <button
             key={id}
             onClick={() => onTabChange(id)}
-            className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 rounded-lg transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="flex flex-col items-center justify-center gap-0.5 flex-1 py-1 rounded-lg transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-w-0 overflow-hidden"
             style={{
               color: isActive ? 'var(--primary)' : 'var(--text-muted)',
               background: 'transparent',
@@ -40,12 +40,13 @@ export default function MobileNav({ activeTab, onTabChange }) {
             aria-label={t(key, label)}
           >
             <Icon
-              size={20}
+              size={19}
               strokeWidth={isActive ? 2.5 : 1.8}
+              className="shrink-0"
             />
             <span
-              className="text-caption"
-              style={{ fontWeight: isActive ? 700 : 400 }}
+              className="text-[10px] sm:text-caption truncate max-w-full px-0.5 leading-tight text-center"
+              style={{ fontWeight: isActive ? 700 : 500 }}
             >
               {t(key, label)}
             </span>

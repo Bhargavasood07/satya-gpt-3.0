@@ -62,17 +62,17 @@ export default function TextChecker({ onScanResult }) {
           value={textInput}
           onChange={(e) => setTextInput(e.target.value)}
           placeholder={t('satyaGpt.inputPlaceholderText', 'Paste suspicious SMS message, WhatsApp forward, or email text to verify...')}
-          className="w-full p-3.5 bg-[var(--surface-raised)] border border-[var(--border-default)] rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary-glow)] transition-all resize-none shadow-inner"
+          className="w-full p-3.5 bg-[var(--surface-raised)] border border-[var(--border-default)] rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary-glow)] transition-all resize-none shadow-inner break-words"
         />
-        <div className="flex justify-between items-center mt-2">
-          <span className="text-[11px] text-[var(--text-muted)] flex items-center gap-1">
-            <MessageSquare size={13} />
-            {isHindi ? 'AI फ्रॉड शब्द पहचान सक्रिय' : 'NLP Scam Keyword Detection Active'}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2 w-full">
+          <span className="text-[11px] text-[var(--text-muted)] flex items-center gap-1 min-w-0 break-words">
+            <MessageSquare size={13} className="shrink-0 text-[var(--cyan-500)]" />
+            <span>{isHindi ? 'AI फ्रॉड शब्द पहचान सक्रिय' : 'NLP Scam Keyword Detection Active'}</span>
           </span>
           <button
             onClick={() => handleVerify()}
             disabled={isScanning || !textInput.trim()}
-            className="px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition-all disabled:opacity-40 shadow-lg shadow-[var(--primary-glow)] cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 transition-all disabled:opacity-40 shadow-lg shadow-[var(--primary-glow)] cursor-pointer shrink-0"
           >
             {isScanning ? (
               <span className="flex items-center gap-1.5">
@@ -81,8 +81,8 @@ export default function TextChecker({ onScanResult }) {
               </span>
             ) : (
               <>
-                <Search size={14} />
-                <span>{t('satyaGpt.checkNow', 'Verify Message')}</span>
+                <Search size={14} className="shrink-0" />
+                <span className="break-words">{t('satyaGpt.checkNow', 'Verify Message')}</span>
               </>
             )}
           </button>
@@ -124,12 +124,12 @@ export default function TextChecker({ onScanResult }) {
                 setTextInput(s.value);
                 handleVerify(s.value);
               }}
-              className="text-xs px-3 py-2 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--primary)] hover:bg-[var(--surface-overlay)] transition-all text-left flex flex-col gap-1 cursor-pointer group shadow-sm"
+              className="text-xs px-3 py-2 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--primary)] hover:bg-[var(--surface-overlay)] transition-all text-left flex flex-col gap-1 cursor-pointer group shadow-sm w-full min-w-0 overflow-hidden"
             >
-              <span className="font-bold text-[var(--text-primary)] text-[11px] group-hover:text-[var(--primary)] transition-colors">
+              <span className="font-bold text-[var(--text-primary)] text-[11px] group-hover:text-[var(--cyan-400)] transition-colors break-words">
                 {s.label}
               </span>
-              <span className="text-[10px] text-[var(--text-muted)] line-clamp-2 font-mono">
+              <span className="text-[10px] text-[var(--text-muted)] line-clamp-2 font-mono break-words">
                 {s.value}
               </span>
             </button>

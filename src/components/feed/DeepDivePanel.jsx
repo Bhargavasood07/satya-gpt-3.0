@@ -112,8 +112,9 @@ const DeepDivePanel = ({ event, onClose }) => {
         animate={{ x: 0 }}
         exit={{ x: '100%' }}
         transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-        className="fixed right-0 top-0 h-full w-full sm:w-96 lg:w-[450px] bg-[#131B2E] border-l border-[#27395C] z-50 shadow-2xl flex flex-col font-mono text-slate-200"
+        className="fixed right-0 top-0 h-full w-full sm:w-96 lg:w-[450px] bg-[#131B2E] border-l border-[#27395C] z-50 shadow-2xl flex flex-col font-mono text-slate-200 cyber-bracket cyber-network-grid"
       >
+        <div className="cyber-scan-glow" />
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-[#1E2D4A] bg-[#0B0F19]">
           <div className="flex flex-col">

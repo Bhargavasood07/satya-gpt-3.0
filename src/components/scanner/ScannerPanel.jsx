@@ -21,23 +21,29 @@ const ScannerPanel = ({ onScanResult }) => {
   ], [t]);
 
   return (
-    <div className="w-full flex flex-col bg-[var(--surface-card)] border border-[var(--border-subtle)] rounded-xl overflow-hidden shadow-2xl p-3.5 sm:p-4 font-mono space-y-4">
+    <div className="w-full flex flex-col bg-[var(--surface-card)] border border-[var(--border-default)] rounded-xl overflow-hidden shadow-2xl p-3.5 sm:p-5 font-mono space-y-4 cyber-bracket cyber-network-grid relative">
+      <div className="cyber-scan-glow" />
       
       {/* Child Mode Banner */}
       {isChildMode && (
-        <div className="flex items-center gap-2 p-2 rounded bg-[var(--emerald-500)]/10 border border-[var(--emerald-500)]/30 text-[var(--emerald-500)] text-xs font-bold w-full">
+        <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[var(--emerald-500)]/10 border border-[var(--emerald-500)]/30 text-[var(--emerald-500)] text-xs font-bold w-full break-words">
           <Shield size={16} className="text-[var(--emerald-500)] shrink-0" />
-          <span>{t('childMode.activeBanner', 'Child Safety Guard Active — Adult and scam content blocked')}</span>
+          <span className="min-w-0">{t('childMode.activeBanner', 'Child Safety Guard Active — Adult and scam content blocked')}</span>
         </div>
       )}
 
       {/* Header */}
       <div className="flex flex-col gap-3 border-b border-[var(--border-default)] pb-4">
-        <div className="flex items-center gap-2 text-[var(--text-primary)]">
-          <ScanLine className="text-[var(--cyan-500)] shrink-0" size={20} />
-          <h3 className="text-sm sm:text-base font-bold tracking-wide uppercase text-[var(--text-primary)]">
-            {t('scanner.title', 'SATYA-GPT Scanner')}
-          </h3>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-[var(--text-primary)] min-w-0">
+            <ScanLine className="text-[var(--cyan-500)] shrink-0" size={20} />
+            <h3 className="text-sm sm:text-base font-bold tracking-wide uppercase text-[var(--text-primary)] break-words">
+              {t('scanner.title', 'SATYA-GPT Scanner')}
+            </h3>
+          </div>
+          <span className="cyber-telemetry-badge shrink-0">
+            [92 ENGINES SYNCED]
+          </span>
         </div>
 
         {/* Tab Selection Row - Pill Tabs */}

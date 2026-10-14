@@ -71,13 +71,13 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
           onClick={onOpenCommandPalette}
           className="w-full flex items-center justify-between px-3 py-1.5 rounded-xl border border-[var(--border-default)] bg-[var(--surface-inset)]/60 text-[var(--text-secondary)] hover:border-[var(--primary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-inset)] transition-all group cursor-pointer shadow-inner"
         >
-          <div className="flex items-center gap-2 text-xs">
-            <Search size={13} className="text-[var(--primary)] group-hover:scale-110 transition-transform" />
-            <span className="text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-colors">
+          <div className="flex items-center gap-2 text-xs min-w-0 flex-1">
+            <Search size={13} className="text-[var(--cyan-500)] group-hover:scale-110 transition-transform shrink-0" />
+            <span className="text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-colors truncate">
               {t('topbar.searchPlaceholder', 'Search threats, domains, protocols... (Ctrl K)')}
             </span>
           </div>
-          <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-muted)] shadow-xs">
+          <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-muted)] shadow-xs shrink-0">
             Ctrl K
           </kbd>
         </button>

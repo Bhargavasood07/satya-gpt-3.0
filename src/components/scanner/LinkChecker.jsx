@@ -40,22 +40,43 @@ export default function LinkChecker({ onScanResult }) {
   return (
     <div className="space-y-4 font-mono">
       {/* Search Input Box */}
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-          <Link className="h-5 w-5 text-[var(--primary)]" />
+      <div className="relative flex flex-col sm:block gap-2">
+        <div className="relative w-full">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <Link className="h-5 w-5 text-[var(--cyan-500)]" />
+          </div>
+          <input
+            type="url"
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            placeholder={t('satyaGpt.inputPlaceholderUrl', 'Paste URL or Link to scan (e.g. sbi-kyc-verify.tk)...')}
+            className="w-full pl-11 pr-4 sm:pr-36 py-3.5 bg-[var(--surface-raised)] border border-[var(--border-default)] rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary-glow)] transition-all shadow-inner break-all"
+            onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
+          />
+          <button
+            onClick={() => handleVerify()}
+            disabled={isScanning || !urlInput.trim()}
+            className="hidden sm:flex absolute right-2 top-2 bottom-2 px-4 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-bold rounded-lg text-xs items-center gap-1.5 transition-all disabled:opacity-40 shadow-lg shadow-[var(--primary-glow)] cursor-pointer"
+          >
+            {isScanning ? (
+              <span className="flex items-center gap-1.5">
+                <span className="animate-spin inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full" />
+                <span>{t('scanner.scanning', 'Scanning...')}</span>
+              </span>
+            ) : (
+              <>
+                <Search size={14} className="shrink-0" />
+                <span className="break-words">{t('satyaGpt.checkNow', 'Scan Link')}</span>
+              </>
+            )}
+          </button>
         </div>
-        <input
-          type="url"
-          value={urlInput}
-          onChange={(e) => setUrlInput(e.target.value)}
-          placeholder={t('satyaGpt.inputPlaceholderUrl', 'Paste URL or Link to scan (e.g. sbi-kyc-verify.tk)...')}
-          className="w-full pl-11 pr-32 py-3.5 bg-[var(--surface-raised)] border border-[var(--border-default)] rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary-glow)] transition-all shadow-inner"
-          onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
-        />
+
+        {/* Mobile-only full width scan button so text never clips or overlaps */}
         <button
           onClick={() => handleVerify()}
           disabled={isScanning || !urlInput.trim()}
-          className="absolute right-2 top-2 bottom-2 px-4 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition-all disabled:opacity-40 shadow-lg shadow-[var(--primary-glow)] cursor-pointer"
+          className="sm:hidden w-full py-3 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all disabled:opacity-40 shadow-lg cursor-pointer"
         >
           {isScanning ? (
             <span className="flex items-center gap-1.5">
@@ -64,8 +85,8 @@ export default function LinkChecker({ onScanResult }) {
             </span>
           ) : (
             <>
-              <Search size={14} />
-              <span>{t('satyaGpt.checkNow', 'Scan Link')}</span>
+              <Search size={14} className="shrink-0" />
+              <span className="break-words">{t('satyaGpt.checkNow', 'Scan Link')}</span>
             </>
           )}
         </button>
@@ -106,12 +127,12 @@ export default function LinkChecker({ onScanResult }) {
                 setUrlInput(s.value);
                 handleVerify(s.value);
               }}
-              className="text-xs px-3 py-2 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--primary)] hover:bg-[var(--surface-overlay)] transition-all text-left flex flex-col gap-1 cursor-pointer group shadow-sm"
+              className="text-xs px-3 py-2 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--primary)] hover:bg-[var(--surface-overlay)] transition-all text-left flex flex-col gap-1 cursor-pointer group shadow-sm w-full min-w-0 overflow-hidden"
             >
-              <span className="font-bold text-[var(--text-primary)] text-[11px] group-hover:text-[var(--primary)] transition-colors">
+              <span className="font-bold text-[var(--text-primary)] text-[11px] group-hover:text-[var(--cyan-400)] transition-colors break-words">
                 {s.label}
               </span>
-              <span className="text-[10px] text-[var(--text-muted)] truncate font-mono">
+              <span className="text-[10px] text-[var(--text-muted)] break-all font-mono">
                 {s.value}
               </span>
             </button>

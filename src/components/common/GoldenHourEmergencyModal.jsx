@@ -87,7 +87,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-xl bg-[#131B2E] border-2 border-rose-500/80 rounded-2xl p-5 sm:p-6 shadow-[0_0_50px_rgba(239,68,68,0.4)] relative max-h-[90vh] overflow-y-auto space-y-4"
+        className="w-full max-w-xl bg-[#131B2E] border-2 border-rose-500/80 rounded-2xl p-5 sm:p-6 shadow-[0_0_50px_rgba(239,68,68,0.4)] relative max-h-[90vh] overflow-y-auto space-y-4 cyber-bracket"
       >
         <button
           onClick={onClose}
@@ -102,12 +102,12 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
           <div className="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/60 flex items-center justify-center text-rose-400 shrink-0 animate-pulse">
             <ShieldAlert size={24} />
           </div>
-          <div>
-            <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-rose-300 flex flex-wrap items-center gap-1.5 break-words">
               <span>{isHindi ? '15-मिनट आपातकालीन बैंक खाता फ्रीज (लॉक)' : '15-Min Direct Bank API Emergency Lock'}</span>
-              <ShieldCheck size={16} className="text-emerald-400" />
+              <ShieldCheck size={16} className="text-emerald-400 shrink-0" />
             </h2>
-            <p className="text-[10px] text-rose-200/80">
+            <p className="text-[10px] text-rose-200/80 break-words">
               {isHindi ? 'सीधे बैंक नोडल पोर्टल से जुड़ाव - डेटा पूरी तरह गोपनीय व सुरक्षित है' : 'Direct Nodal API Integration with Zero-Trust Field Masking & 2FA Security OTP'}
             </p>
           </div>
@@ -116,8 +116,8 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
         {/* ═════════ STEP 1: BANK SELECTOR & FRAUD DETAILS ═════════ */}
         {step === 1 && (
           <form onSubmit={handleRequestOtp} className="space-y-3.5 text-xs">
-            <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-xl text-[11px] text-rose-200 leading-relaxed font-mono">
-              <AlertTriangle size={14} className="inline mr-1 text-rose-400" />
+            <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-xl text-[11px] text-rose-200 leading-relaxed font-mono break-words">
+              <AlertTriangle size={14} className="inline mr-1 text-rose-400 shrink-0" />
               {isHindi 
                 ? 'आपातकालीन सुरक्षा: आपका मोबाइल नंबर और बैंक खाता विवरण गोपनीय रखा जाता है और सुरक्षित रूप से एन्क्रिप्ट होता है।'
                 : 'Zero-Trust Encrypted Bank API Execution. Mobile numbers & account data are masked and never logged to browser history.'}
@@ -126,7 +126,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
             {/* Bank API Selector */}
             <div>
               <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase flex items-center gap-1">
-                <Building2 size={13} className="text-[var(--accent)]" />
+                <Building2 size={13} className="text-[var(--accent)] shrink-0" />
                 <span>{isHindi ? 'अपना बैंक चुनें:' : 'Select Target Bank API Endpoint:'}</span>
               </label>
               <select
@@ -147,7 +147,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">
+                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase break-words">
                   {isHindi ? 'बैंक से जुड़ा मोबाइल नंबर (10 अंक)' : 'Registered Mobile Number (10-Digit)'}
                 </label>
                 <input
@@ -161,7 +161,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
               </div>
 
               <div>
-                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">
+                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase break-words">
                   {isHindi ? 'खाता नंबर या UPI ID' : 'Account / UPI ID'}
                 </label>
                 <input
@@ -176,7 +176,7 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
             </div>
 
             <div>
-              <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase">
+              <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase break-words">
                 {isHindi ? 'धोखाधड़ी वाला UPI / UTR ट्रांजैक्शन नंबर (वैकल्पिक)' : 'Fraud UPI / UTR Transaction ID'}
               </label>
               <input
@@ -191,10 +191,10 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg"
+              className="w-full py-3 px-4 bg-[var(--accent)] hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg break-words text-center"
             >
-              <span>{isHindi ? 'चरण 1: सुरक्षा OTP कोड मंगाएं' : 'Step 1: Request 2FA Security OTP'}</span>
-              <ArrowRight size={15} />
+              <span className="break-words">{isHindi ? 'चरण 1: सुरक्षा OTP कोड मंगाएं' : 'Step 1: Request 2FA Security OTP'}</span>
+              <ArrowRight size={15} className="shrink-0" />
             </button>
           </form>
         )}
@@ -236,10 +236,10 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg animate-pulse"
+              className="w-full py-3 px-4 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg animate-pulse break-words text-center"
             >
-              <Lock size={15} />
-              <span>{isHindi ? 'चरण 2: OTP सत्यापित करें और खाता तुरंत फ्रीज करें' : 'Step 2: Confirm 2FA OTP & Execute Bank Lock API'}</span>
+              <Lock size={15} className="shrink-0" />
+              <span className="break-words">{isHindi ? 'चरण 2: OTP सत्यापित करें और खाता तुरंत फ्रीज करें' : 'Step 2: Confirm 2FA OTP & Execute Bank Lock API'}</span>
             </button>
           </form>
         )}
@@ -280,13 +280,13 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
             <div className="p-2.5 bg-[#0B0F19] border border-emerald-500/30 rounded-lg text-xs text-slate-200 font-bold">
               {isHindi ? 'आपातकालीन संदर्भ टोकन:' : 'Emergency Lock Reference Token:'} <span className="text-cyan-300">FREEZE-1930-{Math.floor(100000 + Math.random() * 900000)}</span>
             </div>
-            <div className="flex justify-center gap-2 pt-2">
+            <div className="flex justify-center gap-2 pt-2 w-full">
               <a
                 href="tel:1930"
-                className="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg"
+                className="w-full sm:w-auto px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg break-words text-center"
               >
-                <PhoneCall size={15} />
-                <span>{isHindi ? '1930 सरकारी साइबर हेल्पलाइन पर कॉल करें' : 'Dial 1930 Cyber Helpline Now'}</span>
+                <PhoneCall size={15} className="shrink-0" />
+                <span className="break-words">{isHindi ? '1930 सरकारी साइबर हेल्पलाइन पर कॉल करें' : 'Dial 1930 Cyber Helpline Now'}</span>
               </a>
             </div>
           </div>

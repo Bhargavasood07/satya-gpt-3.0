@@ -122,18 +122,21 @@ export default function AnalyticsView({ metrics, events }) {
       {/* Main Interactive High-Contrast Graph Component */}
       <div className="bg-[#131B2E] border border-[#27395C] p-4 sm:p-5 rounded-xl space-y-4 shadow-2xl">
         {/* Graph Controls Header */}
+        {/* Graph Controls Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1E2D4A] pb-3">
-          <div className="flex items-center gap-2">
-            <LineChart size={18} className="text-[var(--accent)]" />
-            <div>
-              <h3 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase">
-                Threat Vector Highs & Lows Comparison Graph
+          <div className="flex items-center gap-2 min-w-0">
+            <LineChart size={18} className="text-[var(--cyan-500)] shrink-0" />
+            <div className="min-w-0">
+              <h3 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase break-words">
+                {isHindi ? 'साइबर खतरा स्तर तुलना ग्राफ (उच्च / निम्न)' : 'Threat Vector Highs & Lows Comparison Graph'}
               </h3>
-              <p className="text-[10px] text-[var(--text-muted)] font-mono">Visual graph mapping threat category peaks, lows & future predictions</p>
+              <p className="text-[10px] text-[var(--text-muted)] font-mono break-words">
+                {isHindi ? 'विभिन्न श्रेणियों के साइबर खतरों के स्तर, न्यूनतम/अधिकतम रिकॉर्ड और AI पूर्वानुमान' : 'Visual graph mapping threat category peaks, lows & future predictions'}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             {/* Light / Dark Theme Graph Toggle */}
             <button
               onClick={() => setIsLightContrast((p) => !p)}
@@ -144,8 +147,8 @@ export default function AnalyticsView({ metrics, events }) {
               }`}
               title="Toggle Light Theme / Dark Theme for Graph Clarity"
             >
-              {isLightContrast ? <Sun size={13} className="text-slate-950" /> : <Moon size={13} className="text-[var(--accent)]" />}
-              <span>{isLightContrast ? 'Light Theme Graph' : 'Dark Theme Graph'}</span>
+              {isLightContrast ? <Sun size={13} className="text-slate-950" /> : <Moon size={13} className="text-[var(--cyan-400)]" />}
+              <span>{isLightContrast ? (isHindi ? 'लाइट थीम ग्राफ' : 'Light Theme Graph') : (isHindi ? 'डार्क थीम ग्राफ' : 'Dark Theme Graph')}</span>
             </button>
 
             {/* Mode Switcher */}
@@ -154,33 +157,39 @@ export default function AnalyticsView({ metrics, events }) {
                 onClick={() => setGraphMode('bars')}
                 className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all ${
                   graphMode === 'bars'
-                    ? 'bg-[var(--accent)] text-slate-950 shadow-md'
+                    ? 'bg-[var(--primary)] text-white shadow-md'
                     : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                 }`}
               >
-                Bar Graph (High/Low)
+                {isHindi ? 'बार ग्राफ (उच्च/निम्न)' : 'Bar Graph (High/Low)'}
               </button>
               <button
                 onClick={() => setGraphMode('predictive')}
                 className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all ${
                   graphMode === 'predictive'
-                    ? 'bg-[var(--accent)] text-slate-950 shadow-md'
+                    ? 'bg-[var(--primary)] text-white shadow-md'
                     : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                 }`}
               >
-                Predictive Trend
+                {isHindi ? 'AI पूर्वानुमान' : 'Predictive Trend'}
               </button>
             </div>
           </div>
         </div>
 
         {/* AI Predictive Insight Banner */}
-        <div className="bg-[#0B0F19] border border-amber-500/40 p-3 rounded-xl flex items-center justify-between gap-2 text-xs font-mono text-amber-200">
-          <div className="flex items-center gap-2">
+        <div className="bg-[#0B0F19] border border-amber-500/40 p-3 rounded-xl flex items-center justify-between gap-2 text-xs font-mono text-amber-200 break-words">
+          <div className="flex items-center gap-2 min-w-0">
             <Sparkles size={16} className="text-amber-400 shrink-0 animate-pulse" />
-            <div>
-              <span className="font-bold text-amber-300">AI Predictive Forecast: </span>
-              <span className="text-[11px]">Phishing Links are at <strong className="text-rose-400 font-extrabold">HIGH PEAK</strong>. An evening scam spike is projected between 20:00-22:00. Keep Scanner & Child Guard active!</span>
+            <div className="min-w-0 break-words">
+              <span className="font-bold text-amber-300">{isHindi ? 'AI सुरक्षा पूर्वानुमान: ' : 'AI Predictive Forecast: '}</span>
+              <span className="text-[11px] break-words">
+                {isHindi ? (
+                  <>फिशिंग लिंक वर्तमान में <strong className="text-rose-400 font-extrabold">उच्चतम स्तर (HIGH PEAK)</strong> पर हैं। शाम 8:00 से 10:00 के बीच फर्जी SMS में बढ़ोतरी की संभावना है। स्कैनर और बाल सुरक्षा मोड सक्रिय रखें!</>
+                ) : (
+                  <>Phishing Links are at <strong className="text-rose-400 font-extrabold">HIGH PEAK</strong>. An evening scam spike is projected between 20:00-22:00. Keep Scanner & Child Guard active!</>
+                )}
+              </span>
             </div>
           </div>
         </div>
@@ -196,13 +205,13 @@ export default function AnalyticsView({ metrics, events }) {
               {/* Horizontal Background Grid Lines (Clean Text: HIGH PEAK, MODERATE, LOW SAFE) */}
               <div className="absolute inset-0 flex flex-col justify-between p-4 pointer-events-none">
                 <div className={`border-b w-full text-[10px] font-extrabold tracking-wider ${isLightContrast ? 'border-slate-300 text-rose-600' : 'border-[#27395C] text-rose-400'}`}>
-                  HIGH PEAK
+                  {isHindi ? 'उच्चतम स्तर (HIGH PEAK)' : 'HIGH PEAK'}
                 </div>
                 <div className={`border-b w-full text-[10px] font-extrabold tracking-wider ${isLightContrast ? 'border-slate-300 text-amber-600' : 'border-[#27395C] text-amber-400'}`}>
-                  MODERATE
+                  {isHindi ? 'मध्यम स्तर (MODERATE)' : 'MODERATE'}
                 </div>
                 <div className={`border-b w-full text-[10px] font-extrabold tracking-wider ${isLightContrast ? 'border-slate-300 text-emerald-600' : 'border-[#27395C] text-emerald-400'}`}>
-                  LOW SAFE
+                  {isHindi ? 'न्यूनतम सुरक्षित (LOW SAFE)' : 'LOW SAFE'}
                 </div>
               </div>
 
@@ -221,13 +230,13 @@ export default function AnalyticsView({ metrics, events }) {
                         transition={{ repeat: Infinity, repeatType: 'reverse', duration: 1 }}
                         className="mb-2 px-2.5 py-1 rounded bg-rose-600 text-white text-[10px] font-extrabold shadow-[0_0_12px_rgba(239,68,68,0.8)] shrink-0 border border-rose-400"
                       >
-                        HIGH PEAK 🚨
+                        {isHindi ? 'उच्चतम स्तर 🚨' : 'HIGH PEAK 🚨'}
                       </motion.div>
                     )}
 
                     {cat.isLow && (
                       <div className="mb-2 px-2.5 py-1 rounded bg-emerald-600 text-white text-[10px] font-extrabold shadow-[0_0_12px_rgba(16,185,129,0.8)] shrink-0 border border-emerald-400">
-                        LOW SAFE 🛡️
+                        {isHindi ? 'सुरक्षित 🛡️' : 'LOW SAFE 🛡️'}
                       </div>
                     )}
 
@@ -237,7 +246,7 @@ export default function AnalyticsView({ metrics, events }) {
                         ? 'bg-slate-900 text-white border-slate-700'
                         : 'bg-[#131B2E] text-slate-100 border-[#27395C]'
                     }`}>
-                      {cat.count} Threats
+                      {cat.count} {isHindi ? 'खतरे' : 'Threats'}
                     </span>
 
                     {/* Vertical High-Visibility Glowing Bar */}
@@ -274,10 +283,10 @@ export default function AnalyticsView({ metrics, events }) {
                     <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
                       cat.isHigh ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                     }`}>
-                      {cat.isHigh ? 'HIGH PEAK' : cat.isLow ? 'LOW SAFE' : 'MODERATE'}
+                      {cat.isHigh ? (isHindi ? 'उच्चतम' : 'HIGH PEAK') : cat.isLow ? (isHindi ? 'सुरक्षित' : 'LOW SAFE') : (isHindi ? 'मध्यम' : 'MODERATE')}
                     </span>
                   </div>
-                  <div className="text-[10px] text-[var(--text-muted)]">Prediction: <strong className="text-[var(--accent)]">{cat.prediction}</strong></div>
+                  <div className="text-[10px] text-[var(--text-muted)]">{isHindi ? 'पूर्वानुमान: ' : 'Prediction: '}<strong className="text-[var(--cyan-400)]">{cat.prediction}</strong></div>
                 </div>
               ))}
             </div>
@@ -329,12 +338,12 @@ export default function AnalyticsView({ metrics, events }) {
               </div>
 
               {/* Time X-Axis */}
-              <div className={`flex justify-between text-[10px] font-bold pt-2 border-t ${isLightContrast ? 'border-slate-300 text-slate-700' : 'border-[#1E2D4A] text-[var(--text-muted)]'}`}>
-                <span>00:00 (LOW SAFE)</span>
+              <div className={`flex flex-wrap justify-between text-[10px] font-bold pt-2 border-t gap-1 ${isLightContrast ? 'border-slate-300 text-slate-700' : 'border-[#1E2D4A] text-[var(--text-muted)]'}`}>
+                <span>00:00 ({isHindi ? 'न्यूनतम' : 'LOW'})</span>
                 <span>06:00</span>
-                <span>12:00 (MODERATE)</span>
-                <span className="text-rose-600 font-extrabold">18:00 (HIGH PEAK)</span>
-                <span className="text-amber-600 font-extrabold">21:00 (AI PREDICTED PEAK)</span>
+                <span>12:00 ({isHindi ? 'मध्यम' : 'MOD'})</span>
+                <span className="text-rose-600 font-extrabold">18:00 ({isHindi ? 'उच्चतम' : 'HIGH'})</span>
+                <span className="text-amber-600 font-extrabold">21:00 ({isHindi ? 'AI पीक' : 'AI PEAK'})</span>
                 <span>24:00</span>
               </div>
             </div>
@@ -343,27 +352,27 @@ export default function AnalyticsView({ metrics, events }) {
       </div>
 
       {/* Top VirusTotal Vendor Detection Engine Hits */}
-      <div className="bg-[#131B2E] border border-[#27395C] p-4 sm:p-5 rounded-xl space-y-4 shadow-xl">
-        <h3 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase flex items-center gap-2">
-          <Server size={16} className="text-emerald-400" />
-          Top VirusTotal Vendor Detection Engine Hits
+      <div className="bg-[#131B2E] border border-[#27395C] p-4 sm:p-5 rounded-xl space-y-4 shadow-xl cyber-bracket">
+        <h3 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase flex items-center gap-2 break-words">
+          <Server size={16} className="text-emerald-400 shrink-0" />
+          <span>{isHindi ? 'शीर्ष वायरसटोटल सुरक्षा इंजन डिटेक्शन' : 'Top VirusTotal Vendor Detection Engine Hits'}</span>
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[var(--text-secondary)]">
-          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A]">
-            <span className="font-bold text-[var(--text-primary)]">Google Safebrowsing</span>
-            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded">34 Detections</span>
+          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] gap-2">
+            <span className="font-bold text-[var(--text-primary)] break-words min-w-0">Google Safebrowsing</span>
+            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded shrink-0 font-mono text-[11px]">34 {isHindi ? 'खतरे' : 'Detections'}</span>
           </div>
-          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A]">
-            <span className="font-bold text-[var(--text-primary)]">Kaspersky Threat Intelligence</span>
-            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded">31 Detections</span>
+          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] gap-2">
+            <span className="font-bold text-[var(--text-primary)] break-words min-w-0">Kaspersky Threat Intelligence</span>
+            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded shrink-0 font-mono text-[11px]">31 {isHindi ? 'खतरे' : 'Detections'}</span>
           </div>
-          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A]">
-            <span className="font-bold text-[var(--text-primary)]">Sophos Cyber Engine</span>
-            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded">29 Detections</span>
+          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] gap-2">
+            <span className="font-bold text-[var(--text-primary)] break-words min-w-0">Sophos Cyber Engine</span>
+            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded shrink-0 font-mono text-[11px]">29 {isHindi ? 'खतरे' : 'Detections'}</span>
           </div>
-          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A]">
-            <span className="font-bold text-[var(--text-primary)]">BitDefender URL Scanner</span>
-            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded">28 Detections</span>
+          <div className="flex justify-between items-center p-3 bg-[#0B0F19] rounded-lg border border-[#1E2D4A] gap-2">
+            <span className="font-bold text-[var(--text-primary)] break-words min-w-0">BitDefender URL Scanner</span>
+            <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded shrink-0 font-mono text-[11px]">28 {isHindi ? 'खतरे' : 'Detections'}</span>
           </div>
         </div>
       </div>

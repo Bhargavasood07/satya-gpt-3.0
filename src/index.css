@@ -331,6 +331,24 @@
 html { scroll-behavior:smooth; font-size:16px; }
 html,body,#root { max-width:100vw; overflow-x:hidden; height:100%; }
 
+/* Universal Text & Letter Containment Guarantee ("Be in the box across the entire site") */
+p, span, h1, h2, h3, h4, h5, h6, label, a, kbd, li, td, th {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+/* Flex container children must shrink properly without forcing parent container blowout */
+.flex > * {
+  min-width: 0;
+}
+.break-anywhere, .break-all-words {
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+}
+code, pre, .font-mono {
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
 body {
   font-family:'Inter',system-ui,-apple-system,sans-serif;
   font-size:15px;
@@ -614,38 +632,41 @@ img,svg { -webkit-user-drag:none; pointer-events:auto; }
 .badge--purple  { background:var(--purple-muted);  color:var(--purple);  border-color:rgba(168,85,247,0.28); }
 
 /* ============================================================
-   BUTTON
+   BUTTON (Strict Containment Guaranteed)
    ============================================================ */
 .btn {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:9px 18px; border-radius:10px;
-  font-size:13px; font-weight:600; line-height:1;
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  padding:9px 16px; border-radius:10px;
+  font-size:13px; font-weight:600; line-height:1.25;
   cursor:pointer; transition:all 0.15s ease;
-  border:1px solid transparent; white-space:nowrap;
+  border:1px solid transparent; white-space:normal;
   font-family:inherit; position:relative;
+  max-width:100%; text-align:center;
+  overflow-wrap:break-word; word-break:break-word;
+  min-width:0;
 }
 .btn:focus-visible { outline:2px solid var(--border-focus); outline-offset:2px; }
 .btn:disabled { opacity:0.4; cursor:not-allowed; }
 .btn:active:not(:disabled) { transform:scale(0.97) translateY(1px); }
 
 .btn--primary {
-  background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color:#fff; border-color:#3b82f6;
-  box-shadow:0 2px 8px rgba(59,130,246,0.35), 0 0 0 0 rgba(59,130,246,0.3);
+  background:linear-gradient(135deg, #1a6cf9 0%, #00c8ef 100%);
+  color:#fff; border-color:rgba(0,200,239,0.5);
+  box-shadow:0 2px 10px rgba(26,108,249,0.4), 0 0 15px rgba(0,200,239,0.25);
 }
 .btn--primary:hover:not(:disabled) {
-  background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  box-shadow:0 4px 20px rgba(59,130,246,0.5), 0 0 0 3px rgba(59,130,246,0.15);
+  background:linear-gradient(135deg, #2563eb 0%, #00b4d8 100%);
+  box-shadow:0 4px 22px rgba(26,108,249,0.55), 0 0 0 3px rgba(0,200,239,0.2);
   transform:translateY(-2px);
 }
 
 .btn--danger {
-  background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color:#fff; border-color:#ef4444;
-  box-shadow:0 2px 8px rgba(239,68,68,0.3);
+  background:linear-gradient(135deg, #ff2d4f 0%, #c4162a 100%);
+  color:#fff; border-color:rgba(255,45,79,0.6);
+  box-shadow:0 2px 10px rgba(255,45,79,0.35);
 }
 .btn--danger:hover:not(:disabled) {
-  box-shadow:0 4px 20px rgba(239,68,68,0.45);
+  box-shadow:0 4px 22px rgba(255,45,79,0.55);
   transform:translateY(-2px);
 }
 
@@ -656,6 +677,118 @@ img,svg { -webkit-user-drag:none; pointer-events:auto; }
 .btn--ghost:hover:not(:disabled) {
   background:var(--surface-overlay);
   color:var(--text-primary); border-color:var(--border-strong);
+}
+
+/* ============================================================
+   PROPER CYBER SECURITY NETWORK DESIGN SYSTEM
+   ============================================================ */
+/* Cyber tactical HUD card with crosshair brackets */
+.cyber-hud-card {
+  position: relative;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+.cyber-hud-card:hover {
+  border-color: var(--border-brand);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 0 20px rgba(0,200,239,0.12), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+/* Corner brackets: Authentic SOC defense terminal crosshairs */
+.cyber-bracket {
+  position: relative;
+}
+.cyber-bracket::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--cyan-500);
+  border-left: 2px solid var(--cyan-500);
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 10;
+}
+.cyber-bracket::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid var(--cyan-500);
+  border-right: 2px solid var(--cyan-500);
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Tactical Telemetry Badge */
+.cyber-telemetry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(0, 200, 239, 0.08);
+  border: 1px solid rgba(0, 200, 239, 0.3);
+  color: var(--cyan-400);
+  white-space: nowrap;
+}
+
+/* Cyber Scanning Line */
+.cyber-scan-glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan-500), var(--primary), transparent);
+  box-shadow: 0 0 12px var(--cyan-500);
+  animation: scan-line 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* SOC Grid Matrix Overlay */
+.cyber-network-grid {
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(0, 200, 239, 0.12) 1px, transparent 0),
+    linear-gradient(to right, rgba(26, 108, 249, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 108, 249, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px, 48px 48px, 48px 48px;
+}
+[data-theme="light"] .cyber-network-grid {
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(14, 116, 144, 0.1) 1px, transparent 0),
+    linear-gradient(to right, rgba(26, 108, 249, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 108, 249, 0.04) 1px, transparent 1px);
+}
+
+/* Pulsing Cyber Node Ring */
+.cyber-node-pulse {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.cyber-node-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 1px solid currentColor;
+  animation: pulse-ring 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  opacity: 0.6;
 }
 
 /* ============================================================
