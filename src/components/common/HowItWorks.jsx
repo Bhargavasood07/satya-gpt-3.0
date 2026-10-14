@@ -39,11 +39,11 @@ const itemVariants = {
 
 const HowItWorks = ({ onTryItClick }) => {
   return (
-    <section className="py-12" style={{ backgroundColor: 'var(--background)' }}>
-      <div className="container mx-auto px-4 max-w-5xl">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>How It Works</h2>
-          <p style={{ color: 'var(--text-secondary)' }}>Three simple steps to secure your digital presence.</p>
+    <section className="py-6">
+      <div className="w-full">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>How It Works</h2>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Three simple steps to secure your digital presence.</p>
         </div>
 
         <motion.div 

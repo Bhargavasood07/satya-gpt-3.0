@@ -38,9 +38,9 @@ const itemVariants = {
 
 const RecentThreatsSection = () => {
   return (
-    <section className="py-8" style={{ backgroundColor: 'var(--background)' }}>
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="flex items-center gap-3 mb-6">
+    <section className="py-4">
+      <div className="w-full">
+        <div className="flex items-center gap-3 mb-4">
           <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
             Recent Threats Caught
           </h2>

@@ -35,8 +35,11 @@ import SlideOutDrawerSidebar from './components/common/SlideOutDrawerSidebar';
 import HowItWorks from './components/common/HowItWorks';
 import RecentThreatsSection from './components/common/RecentThreatsSection';
 import TestimonialsSection from './components/common/TestimonialsSection';
+import CommandPaletteModal from './components/common/CommandPaletteModal';
+import SocTelemetryBento from './components/common/SocTelemetryBento';
 import LoginModal from './components/auth/LoginModal';
 import { useAuth } from './context/AuthContext';
+import { useTheme } from './context/ThemeContext';
 
 // Views
 import AIHubView from './components/aihub/AIHubView';
@@ -291,13 +294,15 @@ function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick 
 
 
 export default function App() {
-  const { t } = useTranslation();
-  const { isChildMode } = useChildMode();
+  const { t, i18n } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
+  const { isChildMode, toggleChildMode } = useChildMode();
   const { isLoginModalOpen, closeLoginModal } = useAuth();
   const { isInstalled, installApp } = usePwaInstall();
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [activeMetricModal, setActiveMetricModal] = useState(null);
   const [hasNewVersion, setHasNewVersion] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -343,6 +348,11 @@ export default function App() {
         setIsGovtVerificationOpen(false);
         setIsThreatMapOpen(false);
         setIsDrawerOpen(false);
+        setIsCommandPaletteOpen(false);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen(p => !p);
       }
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'b') {
         e.preventDefault();
@@ -400,7 +410,11 @@ export default function App() {
       className="flex flex-col h-screen overflow-hidden"
       style={{ background: 'var(--surface-base)' }}
     >
-      <TopBar onOpenAdmin={handleOpenAdmin} onToggleDrawer={() => setIsDrawerOpen(true)} />
+      <TopBar
+        onOpenAdmin={handleOpenAdmin}
+        onToggleDrawer={() => setIsDrawerOpen(true)}
+        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+      />
 
       {/* Live scam ticker */}
       <LiveScamTicker />
@@ -471,7 +485,14 @@ export default function App() {
                   </div>
                 </section>
 
-                {/* 3. Core modules */}
+                {/* 3. Live SOC Threat Radar & Cyber Resilience Matrix */}
+                <SocTelemetryBento
+                  onScanClick={() => setActiveTab('scanner')}
+                  onFreezeClick={() => setIsEmergencyFreezeOpen(true)}
+                  onOpenMap={() => setIsThreatMapOpen(true)}
+                />
+
+                {/* 4. Core modules */}
                 <section>
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="text-caption font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
@@ -620,6 +641,24 @@ export default function App() {
         <AnimatePresence>
           {isLoginModalOpen && <LoginModal onClose={closeLoginModal} />}
         </AnimatePresence>
+
+        <CommandPaletteModal
+          isOpen={isCommandPaletteOpen}
+          onClose={() => setIsCommandPaletteOpen(false)}
+          onNavigate={setActiveTab}
+          onScanSample={handleScanResult}
+          onTriggerFreeze={() => setIsEmergencyFreezeOpen(true)}
+          onOpenThreatMap={() => setIsThreatMapOpen(true)}
+          toggleTheme={toggleTheme}
+          currentTheme={theme}
+          toggleLanguage={() => {
+            const lang = i18n?.language || 'en';
+            i18n?.changeLanguage(lang.startsWith('hi') ? 'en' : 'hi');
+          }}
+          currentLanguage={i18n?.language}
+          toggleChildMode={toggleChildMode}
+          isChildMode={isChildMode}
+        />
 
         <MobileNav activeTab={activeTab} onTabChange={setActiveTab} onOpenAdmin={handleOpenAdmin} />
         <CyberAiChatbot isOpen={isChatOpen} onToggle={handleToggleChat} />
