@@ -334,6 +334,7 @@ function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick 
 
 export default function App() {
   const { t, i18n } = useTranslation();
+  const isHindi = i18n?.language?.startsWith('hi');
   const { theme, toggleTheme } = useTheme();
   const { isChildMode, toggleChildMode } = useChildMode();
   const { isLoginModalOpen, closeLoginModal } = useAuth();
