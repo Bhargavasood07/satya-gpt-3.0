@@ -39,6 +39,7 @@ import TestimonialsSection from './components/common/TestimonialsSection';
 import CommandPaletteModal from './components/common/CommandPaletteModal';
 import SocTelemetryBento from './components/common/SocTelemetryBento';
 import LoginModal from './components/auth/LoginModal';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { useAuth } from './context/AuthContext';
 import { useTheme } from './context/ThemeContext';
 
@@ -732,7 +733,11 @@ export default function App() {
         </AnimatePresence>
 
         <AnimatePresence>
-          {isThreatMapOpen && <CyberThreatMapModal onClose={() => setIsThreatMapOpen(false)} />}
+          {isThreatMapOpen && (
+            <ErrorBoundary inline title="Threat Map Protected" onReset={() => setIsThreatMapOpen(false)}>
+              <CyberThreatMapModal onClose={() => setIsThreatMapOpen(false)} />
+            </ErrorBoundary>
+          )}
         </AnimatePresence>
 
         <AnimatePresence>

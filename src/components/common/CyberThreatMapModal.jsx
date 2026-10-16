@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MapPin, ShieldAlert, AlertTriangle, Activity, TrendingUp, Search, X,
   CheckCircle2, PhoneCall, Building2, Zap, Radio, Sparkles, Eye,
-  Clock, Shield, ArrowUpRight, Flame, BarChart3, Bot, Compass
+  Clock, Shield, ArrowUpRight, Flame, BarChart3, Bot, Compass, ExternalLink
 } from 'lucide-react';
 
 // ── REAL-TIME SCAM NODES WITH UNIQUE FEATURE IDENTIFIERS & COORDINATES ────────

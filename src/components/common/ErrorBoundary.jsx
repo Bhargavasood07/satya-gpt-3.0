@@ -27,7 +27,7 @@ export default class ErrorBoundary extends React.Component {
 
     if (this.props.onReset) {
       this.props.onReset();
-    } else {
+    } else if (!this.props.inline) {
       window.location.reload();
     }
   };
