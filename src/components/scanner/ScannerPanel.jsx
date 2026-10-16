@@ -5,6 +5,7 @@ import CameraFeed from './CameraFeed';
 import QRScanner from './QRScanner';
 import LinkChecker from './LinkChecker';
 import TextChecker from './TextChecker';
+import ErrorBoundary from '../common/ErrorBoundary';
 import { useChildMode } from '../../context/ChildModeContext';
 
 const ScannerPanel = ({ onScanResult }) => {
@@ -81,10 +82,12 @@ const ScannerPanel = ({ onScanResult }) => {
 
       {/* Tab Content Panel */}
       <div className="min-h-[200px] mt-2">
-        {activeTab === 'link' && <LinkChecker onScanResult={onScanResult} />}
-        {activeTab === 'text' && <TextChecker onScanResult={onScanResult} />}
-        {activeTab === 'qr' && <QRScanner onScanResult={onScanResult} />}
-        {activeTab === 'camera' && <CameraFeed />}
+        <ErrorBoundary inline title="Scanner Module Protected" key={activeTab}>
+          {activeTab === 'link' && <LinkChecker onScanResult={onScanResult} />}
+          {activeTab === 'text' && <TextChecker onScanResult={onScanResult} />}
+          {activeTab === 'qr' && <QRScanner onScanResult={onScanResult} />}
+          {activeTab === 'camera' && <CameraFeed />}
+        </ErrorBoundary>
       </div>
     </div>
   );

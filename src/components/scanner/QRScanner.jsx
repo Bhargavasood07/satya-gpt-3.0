@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { QrCode, Upload, CheckCircle2, ShieldCheck, ShieldAlert, Activity } from 'lucide-react';
+import { QrCode, Upload, CheckCircle2, ShieldCheck, ShieldAlert, Activity, RefreshCw } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { analyzeScamGlobally } from '../../services/virusTotalService';
 
@@ -11,9 +11,12 @@ const QRScanner = ({ onScanResult }) => {
   const [vtAnalysis, setVtAnalysis] = useState(null);
   const [statusText, setStatusText] = useState('');
   const [scanMode, setScanMode] = useState('camera'); // 'camera' or 'upload'
+  const [cameraError, setCameraError] = useState(null);
+
   const html5QrCodeRef = useRef(null);
   const fileInputRef = useRef(null);
   const statusIntervalRef = useRef(null);
+  const isStoppingRef = useRef(false);
 
   const statusMessages = [
     'AI Motion Detector Radar Active...',
@@ -24,6 +27,7 @@ const QRScanner = ({ onScanResult }) => {
   const cycleStatusText = useCallback(() => {
     let i = 0;
     setStatusText(statusMessages[0]);
+    if (statusIntervalRef.current) clearInterval(statusIntervalRef.current);
     statusIntervalRef.current = setInterval(() => {
       i = (i + 1) % statusMessages.length;
       setStatusText(statusMessages[i]);
@@ -33,40 +37,70 @@ const QRScanner = ({ onScanResult }) => {
   const stopStatusCycle = useCallback(() => {
     if (statusIntervalRef.current) {
       clearInterval(statusIntervalRef.current);
+      statusIntervalRef.current = null;
     }
   }, []);
 
-  const handleScanSuccess = async (decodedText) => {
+  // Safe teardown that never throws unhandled errors
+  const safeStopScanner = useCallback(async () => {
     stopStatusCycle();
+    if (isStoppingRef.current) return;
+    isStoppingRef.current = true;
+
+    try {
+      const scanner = html5QrCodeRef.current;
+      if (scanner) {
+        if (scanner.isScanning) {
+          await scanner.stop();
+        }
+        try {
+          scanner.clear();
+        } catch (_) {}
+      }
+    } catch (err) {
+      // Harmless: scanner was already stopped or idle
+      console.warn("QR scanner teardown status:", err?.message || err);
+    } finally {
+      html5QrCodeRef.current = null;
+      setIsScanning(false);
+      isStoppingRef.current = false;
+    }
+  }, [stopStatusCycle]);
+
+  const handleScanSuccess = async (decodedText) => {
+    await safeStopScanner();
     setScanResult(decodedText);
     setStatusText(t('scanner.scanSuccess', 'QR Code Decoded Successfully'));
 
-    const vtReport = await analyzeScamGlobally(decodedText, 'qr');
-    setVtAnalysis(vtReport);
+    try {
+      const vtReport = await analyzeScamGlobally(decodedText, 'qr');
+      setVtAnalysis(vtReport);
 
-    if (onScanResult) {
-      onScanResult(decodedText, 'qr', vtReport);
-    }
-
-    if (html5QrCodeRef.current && isScanning) {
-      html5QrCodeRef.current.stop().then(() => {
-        setIsScanning(false);
-      }).catch(err => {
-        console.error("Error stopping scanner", err);
-      });
+      if (onScanResult) {
+        onScanResult(decodedText, 'qr', vtReport);
+      }
+    } catch (err) {
+      console.error("VT analysis error:", err);
     }
   };
 
   const startCameraScan = async () => {
+    setCameraError(null);
     try {
+      await safeStopScanner();
       setScanResult(null);
       setVtAnalysis(null);
       setIsScanning(true);
       cycleStatusText();
-      
-      const html5QrCode = new Html5Qrcode("qr-reader");
+
+      const qrContainer = document.getElementById("qr-reader-viewport");
+      if (!qrContainer) {
+        throw new Error("Scanner viewport not found in DOM");
+      }
+
+      const html5QrCode = new Html5Qrcode("qr-reader-viewport");
       html5QrCodeRef.current = html5QrCode;
-      
+
       await html5QrCode.start(
         { facingMode: "environment" },
         {
@@ -77,43 +111,45 @@ const QRScanner = ({ onScanResult }) => {
         () => {}
       );
     } catch (err) {
-      console.error("Error starting camera scanner:", err);
-      setIsScanning(false);
-      stopStatusCycle();
+      console.warn("Camera access or scanner init notice:", err);
+      setCameraError(err?.message || 'Unable to access camera');
+      await safeStopScanner();
     }
   };
 
   const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files?.[0];
     if (!file) return;
 
     try {
+      await safeStopScanner();
       setScanResult(null);
       setVtAnalysis(null);
       setIsScanning(true);
       cycleStatusText();
-      
-      const html5QrCode = new Html5Qrcode("qr-reader");
+
+      const qrContainer = document.getElementById("qr-reader-viewport");
+      const html5QrCode = new Html5Qrcode(qrContainer ? "qr-reader-viewport" : "qr-reader-hidden");
       html5QrCodeRef.current = html5QrCode;
-      
+
       const decodedText = await html5QrCode.scanFile(file, true);
       await handleScanSuccess(decodedText);
     } catch (err) {
-      console.error("Error scanning file:", err);
+      console.warn("Error scanning QR from file:", err);
       setIsScanning(false);
       stopStatusCycle();
-      setStatusText(t('scanner.scanFailed', 'Scan Failed'));
-    }
-    
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      setStatusText(t('scanner.scanFailed', 'Scan Failed - No QR code found'));
+    } finally {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
       if (file.type.startsWith('image/')) {
@@ -127,14 +163,12 @@ const QRScanner = ({ onScanResult }) => {
     e.stopPropagation();
   };
 
+  // Safe cleanup on unmount
   useEffect(() => {
     return () => {
-      stopStatusCycle();
-      if (html5QrCodeRef.current && isScanning) {
-        html5QrCodeRef.current.stop().catch(console.error);
-      }
+      safeStopScanner();
     };
-  }, [stopStatusCycle, isScanning]);
+  }, [safeStopScanner]);
 
   const isMalicious = vtAnalysis && (vtAnalysis.maliciousCount > 0 || vtAnalysis.riskScore > 50);
 
@@ -146,23 +180,29 @@ const QRScanner = ({ onScanResult }) => {
           <QrCode className="text-[var(--accent)]" size={18} />
           <span>AI Motion Detector QR Scanner</span>
         </h3>
-        
+
         <div className="flex bg-[#0B0F19] rounded-lg p-1 border border-[#1E2D4A]">
           <button
-            onClick={() => setScanMode('camera')}
-            className={`px-2.5 py-1 text-xs font-bold rounded-md transition-colors ${
-              scanMode === 'camera' 
-                ? 'bg-[var(--accent)] text-slate-950 shadow-md' 
+            onClick={() => {
+              safeStopScanner();
+              setScanMode('camera');
+            }}
+            className={`px-2.5 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
+              scanMode === 'camera'
+                ? 'bg-[var(--accent)] text-slate-950 shadow-md'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             Camera
           </button>
           <button
-            onClick={() => setScanMode('upload')}
-            className={`px-2.5 py-1 text-xs font-bold rounded-md transition-colors ${
-              scanMode === 'upload' 
-                ? 'bg-[var(--accent)] text-slate-950 shadow-md' 
+            onClick={() => {
+              safeStopScanner();
+              setScanMode('upload');
+            }}
+            className={`px-2.5 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
+              scanMode === 'upload'
+                ? 'bg-[var(--accent)] text-slate-950 shadow-md'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
@@ -207,7 +247,7 @@ const QRScanner = ({ onScanResult }) => {
                 setVtAnalysis(null);
                 setStatusText('');
               }}
-              className="mt-2 px-5 py-2 bg-[#0B0F19] text-[var(--text-primary)] text-xs font-bold border border-[#27395C] hover:border-[var(--accent)] rounded-lg transition-colors shadow-md"
+              className="mt-2 px-5 py-2 bg-[#0B0F19] text-[var(--text-primary)] text-xs font-bold border border-[#27395C] hover:border-[var(--accent)] rounded-lg transition-colors shadow-md cursor-pointer"
             >
               Scan Another QR
             </button>
@@ -216,33 +256,41 @@ const QRScanner = ({ onScanResult }) => {
           <>
             {scanMode === 'camera' ? (
               <div className="relative w-full aspect-square max-h-[260px] bg-[#0B0F19] rounded-xl border border-[#27395C] overflow-hidden mx-auto">
-                <div id="qr-reader" className="w-full h-full object-cover"></div>
+                <div id="qr-reader-viewport" className="w-full h-full object-cover"></div>
+
                 {!isScanning && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0B0F19]/90 backdrop-blur-sm z-10 p-4 text-center">
                     <button
                       onClick={startCameraScan}
-                      className="px-5 py-2.5 bg-[var(--accent)] text-slate-950 font-bold rounded-xl hover:bg-cyan-400 transition-all flex items-center gap-2 text-xs shadow-[0_0_15px_var(--accent-glow)]"
+                      className="px-5 py-2.5 bg-[var(--accent)] text-slate-950 font-bold rounded-xl hover:bg-cyan-400 transition-all flex items-center gap-2 text-xs shadow-[0_0_15px_var(--accent-glow)] cursor-pointer"
                     >
                       <QrCode size={18} />
                       <span>Start Motion Radar QR Scan</span>
                     </button>
-                    <p className="text-[10px] text-[var(--text-muted)] mt-2">Tracks spatial motion & analyzes QR payload with 92 VT engines</p>
+                    <p className="text-[10px] text-[var(--text-muted)] mt-2">
+                      Tracks spatial motion & analyzes QR payload with 92 VT engines
+                    </p>
+                    {cameraError && (
+                      <p className="text-[11px] text-rose-400 font-bold mt-2 bg-rose-500/10 px-3 py-1 rounded border border-rose-500/30">
+                        Camera notice: {cameraError} (Try Upload mode)
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
             ) : (
-              <div 
+              <div
                 className="relative w-full aspect-square max-h-[260px] flex flex-col items-center justify-center bg-[#0B0F19] rounded-xl border-2 border-dashed border-[#27395C] hover:border-[var(--accent)] transition-colors p-4 mx-auto cursor-pointer"
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <div id="qr-reader" className="hidden"></div>
-                
+                <div id="qr-reader-hidden" className="hidden"></div>
+
                 <Upload size={36} className="text-[var(--accent)] mb-2" />
                 <p className="text-xs font-bold text-[var(--text-primary)] mb-1">Drop QR Image Here</p>
                 <p className="text-[11px] text-[var(--text-muted)] mb-4">or click to browse files</p>
-                
+
                 <input
                   type="file"
                   accept="image/*"
@@ -250,7 +298,7 @@ const QRScanner = ({ onScanResult }) => {
                   ref={fileInputRef}
                   onChange={handleFileUpload}
                 />
-                
+
                 <div className="px-4 py-1.5 bg-[#131B2E] text-[var(--text-primary)] border border-[#27395C] rounded-lg text-xs font-bold">
                   Choose Image File
                 </div>
