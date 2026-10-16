@@ -276,7 +276,7 @@ function StatCard({ icon: Icon, label, value, color, accentBg }) {
         <div className="text-xl sm:text-h2 font-bold font-mono truncate" style={{ color: 'var(--text-primary)', lineHeight: 1.1, transform: 'translateZ(12px)' }}>
           {value}
         </div>
-        <div className="text-[10px] sm:text-caption uppercase tracking-wider mt-1.5 break-words" style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
+        <div className="text-[10px] sm:text-caption uppercase tracking-wider mt-1.5 break-normal truncate" style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
           {label}
         </div>
       </div>

@@ -60,7 +60,7 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
   ];
 
   return (
-    <section className="space-y-3 font-sans">
+    <section className="space-y-3 font-sans w-full">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Radio size={16} className="text-[var(--primary)] animate-pulse" />
@@ -74,11 +74,11 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
         </div>
       </div>
 
-      {/* Bento 3-column / 2-row layout */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 w-full">
-        {/* Bento 1: Live Cyber Radar (5 cols on md+) */}
+      {/* Bento Layout — Adapts fluidly without letter-wrapping or squeezed columns */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 sm:gap-4 w-full">
+        {/* Bento 1: Live Cyber Radar (Spans full on mobile/tablet, 5-col on wide screens) */}
         <div
-          className="md:col-span-5 p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden group cyber-bracket cyber-network-grid"
+          className="col-span-1 md:col-span-2 xl:col-span-5 p-4 sm:p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden group cyber-bracket cyber-network-grid"
           style={{
             background: 'var(--surface-card)',
             border: '1px solid var(--border-default)',
@@ -92,23 +92,23 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
           />
           <div className="cyber-scan-glow" />
 
-          <div className="flex items-center justify-between mb-2 z-10">
+          <div className="flex items-center justify-between mb-2 z-10 gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <div className="w-7 h-7 rounded-lg bg-[var(--primary-muted)] border border-[var(--primary)]/30 flex items-center justify-center shrink-0">
                 <Radar size={15} className="text-[var(--cyan-500)]" />
               </div>
               <div className="min-w-0">
-                <h3 className="text-xs font-bold text-[var(--text-primary)] break-words">
+                <h3 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] truncate">
                   {t('bento.radarTitle', 'AI Threat Radar')}
                 </h3>
-                <p className="text-[10px] text-[var(--text-muted)] font-mono">
+                <p className="text-[10px] text-[var(--text-muted)] font-mono truncate">
                   {t('bento.radarSubtitle', 'National Spatial Defense Grid')}
                 </p>
               </div>
             </div>
             <button
               onClick={onOpenMap}
-              className="text-[11px] font-semibold flex items-center gap-1 text-[var(--cyan-400)] hover:underline shrink-0"
+              className="text-[11px] font-semibold flex items-center gap-1 text-[var(--cyan-400)] hover:underline shrink-0 px-2 py-1 rounded bg-[var(--surface-raised)] border border-[var(--border-subtle)]"
             >
               <span>{t('bento.fullMap', 'Full Map')}</span>
               <ArrowUpRight size={12} />
@@ -159,7 +159,7 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
             })}
 
             {/* Live Detected Target Card overlay */}
-            <div className="absolute bottom-2 left-2 right-2 px-2.5 py-1.5 rounded-lg bg-[var(--surface-raised)]/90 backdrop-blur-md border border-[var(--border-default)] flex items-center justify-between text-[11px] font-mono">
+            <div className="absolute bottom-2 left-2 right-2 px-2.5 py-1.5 rounded-lg bg-[var(--surface-raised)]/95 backdrop-blur-md border border-[var(--border-default)] flex items-center justify-between text-[11px] font-mono gap-1">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shrink-0" />
                 <span className="font-bold text-[var(--text-primary)] truncate">
@@ -176,30 +176,30 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
           </div>
 
           <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)] pt-1">
-            <span>{t('bento.trackingZones', 'Tracking 5 active hot zones')}</span>
-            <span className="font-mono text-[var(--cyan-500)]">{t('bento.vtSynced', 'VIRUSTOTAL v3 SYNCED')}</span>
+            <span className="truncate">{t('bento.trackingZones', 'Tracking 5 active hot zones')}</span>
+            <span className="font-mono text-[var(--cyan-500)] shrink-0">{t('bento.vtSynced', 'VIRUSTOTAL v3 SYNCED')}</span>
           </div>
         </div>
 
-        {/* Bento 2: Cyber Resilience & DEFCON Readiness (4 cols on md+) */}
+        {/* Bento 2: Cyber Resilience & DEFCON Readiness (1-col on mobile, 4-col on xl+) */}
         <div
-          className="md:col-span-4 p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden cyber-bracket cyber-network-grid"
+          className="col-span-1 xl:col-span-4 p-4 sm:p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden cyber-bracket cyber-network-grid"
           style={{
             background: 'var(--surface-card)',
             border: '1px solid var(--border-default)',
             boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
           }}
         >
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-2 gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <div className="w-7 h-7 rounded-lg bg-[var(--emerald-muted)] border border-[var(--emerald-500)]/30 flex items-center justify-center shrink-0">
                 <ShieldCheck size={15} className="text-[var(--emerald-500)]" />
               </div>
               <div className="min-w-0">
-                <h3 className="text-xs font-bold text-[var(--text-primary)] break-words">
+                <h3 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] truncate">
                   {t('bento.systemResilience', 'System Resilience')}
                 </h3>
-                <p className="text-[10px] text-[var(--text-muted)] font-mono">
+                <p className="text-[10px] text-[var(--text-muted)] font-mono truncate">
                   {t('bento.defconStatus', 'DEFCON 4 · Guarded')}
                 </p>
               </div>
@@ -209,13 +209,15 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
             </span>
           </div>
 
-          {/* Big Score Counter */}
-          <div className="my-3 flex items-baseline gap-2">
-            <span className="text-4xl sm:text-5xl font-mono font-black tracking-tight" style={{ color: 'var(--text-primary)' }}>
-              96.4
-            </span>
-            <span className="text-sm font-mono text-[var(--emerald-500)] font-bold">/ 100</span>
-            <span className="text-xs text-[var(--text-muted)] ml-auto font-medium break-words">
+          {/* Big Score Counter — Protected against character-by-character wrap */}
+          <div className="my-2.5 sm:my-3 flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-baseline gap-1.5 whitespace-nowrap">
+              <span className="text-3xl sm:text-4xl font-mono font-black tracking-tight text-[var(--text-primary)]">
+                96.4
+              </span>
+              <span className="text-xs sm:text-sm font-mono text-[var(--emerald-500)] font-bold">/ 100</span>
+            </div>
+            <span className="text-[10px] sm:text-xs text-[var(--text-muted)] font-mono font-medium px-2 py-0.5 rounded bg-[var(--surface-raised)] border border-[var(--border-subtle)] whitespace-nowrap">
               {t('bento.postureScore', 'Posture Score')}
             </span>
           </div>
@@ -236,7 +238,7 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
             <div className="flex items-center justify-between py-1 border-b border-[var(--border-subtle)] gap-2">
               <span className="flex items-center gap-1.5 min-w-0">
                 <CheckCircle2 size={13} className="text-[var(--emerald-500)] shrink-0" />
-                <span className="break-words">{t('bento.chkEngines', '92 VirusTotal Engines')}</span>
+                <span className="truncate">{t('bento.chkEngines', '92 VirusTotal Engines')}</span>
               </span>
               <span className="font-mono text-[11px] text-[var(--emerald-500)] font-semibold shrink-0">
                 {t('bento.chkEnginesReady', '100% Ready')}
@@ -245,7 +247,7 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
             <div className="flex items-center justify-between py-1 border-b border-[var(--border-subtle)] gap-2">
               <span className="flex items-center gap-1.5 min-w-0">
                 <CheckCircle2 size={13} className="text-[var(--emerald-500)] shrink-0" />
-                <span className="break-words">{t('bento.chkDns', 'Zero-Trust DNS Resolver')}</span>
+                <span className="truncate">{t('bento.chkDns', 'Zero-Trust DNS Resolver')}</span>
               </span>
               <span className="font-mono text-[11px] text-[var(--emerald-500)] font-semibold shrink-0">
                 {t('bento.chkDnsProtected', 'Protected')}
@@ -254,7 +256,7 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
             <div className="flex items-center justify-between py-1 gap-2">
               <span className="flex items-center gap-1.5 min-w-0">
                 <CheckCircle2 size={13} className="text-[var(--emerald-500)] shrink-0" />
-                <span className="break-words">{t('bento.chkFreeze', '15-Min Bank Freeze')}</span>
+                <span className="truncate">{t('bento.chkFreeze', '15-Min Bank Freeze')}</span>
               </span>
               <span className="font-mono text-[11px] text-[var(--cyan-500)] font-semibold shrink-0">
                 {t('bento.chkArmed', 'Armed & Ready')}
@@ -263,9 +265,9 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
           </div>
         </div>
 
-        {/* Bento 3: Quick Defensive Actions & Vectors (3 cols on md+) */}
+        {/* Bento 3: Quick Defensive Actions & Protocols (1-col on mobile, 3-col on xl+) */}
         <div
-          className="md:col-span-3 p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden cyber-bracket cyber-network-grid"
+          className="col-span-1 xl:col-span-3 p-4 sm:p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden cyber-bracket cyber-network-grid"
           style={{
             background: 'var(--surface-card)',
             border: '1px solid var(--border-default)',
@@ -278,10 +280,10 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
                 <Zap size={15} className="text-[var(--amber-500)]" />
               </div>
               <div className="min-w-0">
-                <h3 className="text-xs font-bold text-[var(--text-primary)] break-words">
+                <h3 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] truncate">
                   {t('bento.quickProtocols', 'Quick Protocols')}
                 </h3>
-                <p className="text-[10px] text-[var(--text-muted)] font-mono">
+                <p className="text-[10px] text-[var(--text-muted)] font-mono truncate">
                   {t('bento.citizenSafety', 'Immediate citizen safety')}
                 </p>
               </div>
@@ -290,11 +292,11 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
             <div className="space-y-2">
               <button
                 onClick={onScanClick}
-                className="w-full py-2.5 px-3 rounded-xl bg-[var(--surface-raised)] hover:bg-[var(--surface-overlay)] border border-[var(--border-subtle)] hover:border-[var(--primary)] text-left flex items-center justify-between group transition-all"
+                className="w-full py-2.5 px-3 rounded-xl bg-[var(--surface-raised)] hover:bg-[var(--surface-overlay)] border border-[var(--border-subtle)] hover:border-[var(--primary)] text-left flex items-center justify-between group transition-all cursor-pointer"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <Activity size={14} className="text-[var(--cyan-500)] shrink-0" />
-                  <span className="text-xs font-semibold text-[var(--text-primary)] break-words min-w-0">
+                  <span className="text-xs font-semibold text-[var(--text-primary)] truncate min-w-0">
                     {t('bento.instantScan', 'Instant Deep Scan')}
                   </span>
                 </div>
@@ -303,11 +305,11 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
 
               <button
                 onClick={onFreezeClick}
-                className="w-full py-2.5 px-3 rounded-xl bg-[var(--crimson-muted)] hover:bg-[var(--crimson-muted)]/80 border border-[var(--crimson-500)]/40 text-left flex items-center justify-between group transition-all"
+                className="w-full py-2.5 px-3 rounded-xl bg-[var(--crimson-muted)] hover:bg-[var(--crimson-muted)]/80 border border-[var(--crimson-500)]/40 text-left flex items-center justify-between group transition-all cursor-pointer"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <ShieldAlert size={14} className="text-[var(--crimson-500)] shrink-0" />
-                  <span className="text-xs font-bold text-[var(--crimson-500)] break-words min-w-0">
+                  <span className="text-xs font-bold text-[var(--crimson-500)] truncate min-w-0">
                     {t('bento.emergencyFreeze', 'Emergency Bank Freeze')}
                   </span>
                 </div>
@@ -319,8 +321,8 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
                 className="w-full py-2.5 px-3 rounded-xl bg-[var(--surface-raised)] hover:bg-[var(--surface-overlay)] border border-[var(--border-subtle)] text-left flex items-center justify-between group transition-all"
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-xs font-bold text-[var(--amber-500)] shrink-0">1930</span>
-                  <span className="text-xs font-semibold text-[var(--text-primary)] break-words min-w-0">
+                  <span className="text-xs font-bold text-[var(--amber-500)] shrink-0 font-mono">1930</span>
+                  <span className="text-xs font-semibold text-[var(--text-primary)] truncate min-w-0">
                     {t('bento.govtHelpline', 'Govt Helpline')}
                   </span>
                 </div>
@@ -330,8 +332,8 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
           </div>
 
           <div className="pt-3 mt-2 border-t border-[var(--border-subtle)] text-[10px] text-[var(--text-muted)] flex items-center justify-between">
-            <span>MeitY / CERT-In</span>
-            <span className="text-[var(--emerald-500)] font-semibold font-mono">
+            <span className="truncate">MeitY / CERT-In</span>
+            <span className="text-[var(--emerald-500)] font-semibold font-mono shrink-0">
               {t('bento.certInCompliant', '100% Compliant')}
             </span>
           </div>
@@ -346,15 +348,15 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
             className="p-3 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] cyber-bracket flex flex-col justify-between hover:border-[var(--border-strong)] transition-all min-w-0 overflow-hidden"
           >
             <div className="flex items-center justify-between mb-1 gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono truncate">
                 {isHindi ? `सुरक्षा चैनल 0${i + 1}` : `Vector 0${i + 1}`}
               </span>
               <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: v.color }} />
             </div>
-            <div className="text-xs font-semibold text-[var(--text-primary)] break-words min-w-0">
+            <div className="text-xs font-semibold text-[var(--text-primary)] truncate min-w-0">
               {v.name}
             </div>
-            <div className="text-[11px] font-mono mt-1 font-bold" style={{ color: v.color }}>
+            <div className="text-[11px] font-mono mt-1 font-bold truncate" style={{ color: v.color }}>
               {v.stat}
             </div>
           </div>
