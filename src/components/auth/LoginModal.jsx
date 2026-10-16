@@ -38,12 +38,12 @@ const LoginModal = memo(({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md font-mono text-slate-200">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md font-mono text-slate-200">
       <motion.div 
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-md bg-[#131B2E] border-2 border-[var(--accent)] rounded-2xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)] flex flex-col items-center text-center relative overflow-hidden font-mono"
+        className="w-full max-w-md bg-[#131B2E] border-2 border-[var(--accent)] rounded-2xl p-5 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)] flex flex-col items-center text-center relative max-h-[88dvh] overflow-y-auto font-mono"
       >
         {/* Close Button */}
         <button

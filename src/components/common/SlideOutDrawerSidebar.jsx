@@ -44,7 +44,7 @@ const SlideOutDrawerSidebar = memo(({
         animate={{ x: 0 }}
         exit={{ x: '-100%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="relative w-80 sm:w-96 max-w-[85vw] h-full bg-[#060a14] border-r-2 border-[var(--accent)] shadow-[15px_0_50px_rgba(0,229,255,0.25)] flex flex-col z-10 overflow-y-auto p-4 space-y-5 backdrop-blur-2xl"
+        className="relative w-80 sm:w-96 max-w-[88vw] h-full bg-[#060a14] border-r-2 border-[var(--accent)] shadow-[15px_0_50px_rgba(0,229,255,0.25)] flex flex-col z-10 overflow-y-auto p-4 pb-24 sm:pb-6 space-y-4 backdrop-blur-2xl"
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-[#1b2a47] pb-3">

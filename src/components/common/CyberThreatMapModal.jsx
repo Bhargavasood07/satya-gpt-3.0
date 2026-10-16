@@ -134,12 +134,12 @@ const CyberThreatMapModal = memo(({ onClose }) => {
   );
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md font-mono text-slate-200">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2.5 sm:p-4 bg-slate-950/90 backdrop-blur-md font-mono text-slate-200">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-3xl bg-[#0D1527] border-2 border-[var(--accent)] rounded-2xl p-5 sm:p-6 shadow-[0_0_50px_rgba(0,229,255,0.3)] relative max-h-[90vh] overflow-y-auto space-y-4 text-xs cyber-bracket cyber-network-grid"
+        className="w-full max-w-3xl bg-[#0D1527] border-2 border-[var(--accent)] rounded-2xl p-4 sm:p-6 shadow-[0_0_50px_rgba(0,229,255,0.3)] relative max-h-[88dvh] overflow-y-auto space-y-3.5 sm:space-y-4 text-xs cyber-bracket cyber-network-grid"
       >
         <div className="cyber-scan-glow" />
         {/* Close Button */}
@@ -189,7 +189,7 @@ const CyberThreatMapModal = memo(({ onClose }) => {
         {/* Main Grid: State Cards & Live Details Panel */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Left Column: State Threat Index List */}
-          <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+          <div className="space-y-2 max-h-[220px] sm:max-h-[380px] overflow-y-auto pr-1">
             {filteredStates.map((item) => (
               <div
                 key={item.id}

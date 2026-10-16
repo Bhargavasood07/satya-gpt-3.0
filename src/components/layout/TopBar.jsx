@@ -21,19 +21,20 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
 
   return (
     <header
-      className="h-14 flex items-center justify-between px-3 sm:px-6 select-none z-40 relative backdrop-blur-md"
+      className="flex items-center justify-between px-2.5 sm:px-6 select-none z-40 relative backdrop-blur-md w-full pt-[env(safe-area-inset-top)]"
       style={{
+        height: 'calc(3.5rem + env(safe-area-inset-top, 0px))',
         background: 'var(--surface-raised)',
         borderBottom: '1px solid var(--border-subtle)',
         boxShadow: '0 1px 0 rgba(59,130,246,0.06)',
       }}
     >
       {/* ── Left: Menu + Brand ── */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         {/* Hamburger Menu (Mobile/Drawer) */}
         <button
           onClick={onToggleDrawer}
-          className="btn btn--ghost p-2"
+          className="btn btn--ghost p-1.5 sm:p-2 shrink-0"
           aria-label="Open navigation menu"
           title="Menu"
         >
@@ -43,21 +44,21 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
         {/* Brand */}
         <button
           onClick={onOpenAdmin}
-          className="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg group"
+          className="flex items-center gap-2 sm:gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg group min-w-0"
           aria-label="SATYA-GPT — Admin"
         >
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 shadow-md shadow-blue-500/20"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 shadow-md shadow-blue-500/20"
             style={{ background: 'var(--primary)', color: '#fff' }}
           >
-            <Shield size={16} strokeWidth={2.5} />
+            <Shield size={15} strokeWidth={2.5} />
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-[15px] font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+          <div className="flex items-baseline gap-1.5 sm:gap-2 min-w-0">
+            <span className="text-[14px] sm:text-[15px] font-bold tracking-tight truncate" style={{ color: 'var(--text-primary)' }}>
               SATYA<span style={{ color: 'var(--primary)' }}>-GPT</span>
             </span>
             <span
-              className="hidden sm:inline-flex items-center gap-1 text-[10px] py-0.5 px-2 rounded-full font-mono font-bold bg-blue-500/10 text-blue-400 border border-blue-500/25"
+              className="hidden sm:inline-flex items-center gap-1 text-[10px] py-0.5 px-2 rounded-full font-mono font-bold bg-blue-500/10 text-blue-400 border border-blue-500/25 shrink-0"
             >
               <Zap size={9} />
               SOC v18
@@ -85,11 +86,11 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
       </div>
 
       {/* ── Right: Live Status + Controls ── */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
+      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
         {/* Mobile Spotlight Icon */}
         <button
           onClick={onOpenCommandPalette}
-          className="md:hidden btn btn--ghost p-2"
+          className="md:hidden btn btn--ghost p-1.5 sm:p-2"
           title="Search / Command Palette"
           aria-label="Search / Command Palette"
         >
@@ -109,7 +110,7 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
         {/* Lang Toggle */}
         <button
           onClick={handleLangToggle}
-          className="btn btn--ghost py-1.5 px-2.5 text-xs font-mono"
+          className="btn btn--ghost py-1 px-2 sm:px-2.5 text-xs font-mono"
           title="Toggle language"
           aria-label={isHindi ? 'Switch to English' : 'Switch to Hindi'}
         >
@@ -120,7 +121,7 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="btn btn--ghost p-2"
+          className="btn btn--ghost p-1.5 sm:p-2"
           title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
           aria-label="Toggle theme"
         >
@@ -130,12 +131,12 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
           }
         </button>
 
-        {/* GitHub Repository Link */}
+        {/* GitHub Repository Link (Desktop only in topbar - on mobile it is in drawer & footer) */}
         <a
           href="https://github.com/Bhargavasood07/satya-gpt-3.0"
           target="_blank"
           rel="noopener noreferrer"
-          className="btn btn--ghost p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:text-white transition-colors"
+          className="hidden sm:inline-flex btn btn--ghost p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:text-white transition-colors"
           title="GitHub Repository (Bhargavasood07/satya-gpt-3.0)"
           aria-label="GitHub Repository"
         >
@@ -145,7 +146,7 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
         {/* Account Button */}
         <button
           onClick={openLoginModal}
-          className="btn btn--ghost py-1.5 px-2.5 sm:px-3 gap-1.5"
+          className="btn btn--ghost py-1 px-2 sm:px-3 gap-1 sm:gap-1.5"
           title="Account"
           aria-label="Account switcher"
         >
@@ -155,10 +156,10 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
           >
             <User size={11} style={{ color: 'var(--success)' }} />
           </div>
-          <span className="text-xs font-semibold max-w-[70px] sm:max-w-[85px] truncate" style={{ color: 'var(--text-secondary)' }}>
+          <span className="hidden sm:inline text-xs font-semibold max-w-[85px] truncate" style={{ color: 'var(--text-secondary)' }}>
             {isAuthenticated ? user?.name : t('topbar.guest', 'Guest')}
           </span>
-          <ChevronDown size={12} style={{ color: 'var(--text-muted)' }} />
+          <ChevronDown size={11} style={{ color: 'var(--text-muted)' }} />
         </button>
       </div>
     </header>

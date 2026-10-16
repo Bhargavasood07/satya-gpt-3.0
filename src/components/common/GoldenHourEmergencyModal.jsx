@@ -82,12 +82,12 @@ const GoldenHourEmergencyModal = memo(({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md font-mono text-slate-200">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center p-2.5 sm:p-4 bg-slate-950/90 backdrop-blur-md font-mono text-slate-200">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-xl bg-[#131B2E] border-2 border-rose-500/80 rounded-2xl p-5 sm:p-6 shadow-[0_0_50px_rgba(239,68,68,0.4)] relative max-h-[90vh] overflow-y-auto space-y-4 cyber-bracket"
+        className="w-full max-w-xl bg-[#131B2E] border-2 border-rose-500/80 rounded-2xl p-4 sm:p-6 shadow-[0_0_50px_rgba(239,68,68,0.4)] relative max-h-[88dvh] overflow-y-auto space-y-3.5 sm:space-y-4 cyber-bracket"
       >
         <button
           onClick={onClose}

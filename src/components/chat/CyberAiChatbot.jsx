@@ -110,7 +110,7 @@ export default function CyberAiChatbot({ isOpen, onToggle }) {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-32 right-3 sm:right-6 w-[92vw] sm:w-[420px] h-[540px] sm:h-[580px] bg-[#131B2E] border border-[#27395C] rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden cyber-bracket"
+            className="fixed inset-x-3 bottom-20 top-16 sm:top-auto sm:inset-auto sm:bottom-24 sm:right-6 sm:w-[420px] sm:h-[580px] max-h-[calc(100dvh-5rem)] bg-[#131B2E] border border-[#27395C] rounded-2xl sm:rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden cyber-bracket"
           >
             {/* Header with Model Selector */}
             <div className="p-3 bg-[#0B0F19] border-b border-[#1E2D4A] flex items-center justify-between font-mono">

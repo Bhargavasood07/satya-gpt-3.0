@@ -148,9 +148,9 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
       />
 
       {/* ── Content ── */}
-      <div className="relative p-5 sm:p-7 lg:p-9" style={{ transformStyle: 'preserve-3d' }}>
+      <div className="relative p-4 sm:p-7 lg:p-9" style={{ transformStyle: 'preserve-3d' }}>
         {/* Tactical Telemetry Header */}
-        <div className="flex flex-wrap items-center gap-2 mb-3.5 font-mono text-[10px]">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-3 font-mono text-[9.5px] sm:text-[10px]">
           <span className="cyber-telemetry-badge">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan-500)] animate-ping" />
             [DEFCON 4 // ACTIVE DEFENSE]
@@ -163,13 +163,13 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
           </span>
         </div>
 
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-8">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-8">
 
           {/* Left: Text & Badges */}
-          <div className="space-y-4 max-w-xl min-w-0" style={{ transform: 'translateZ(20px)', transformStyle: 'preserve-3d' }}>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="badge badge--primary"><Sparkles size={9} />{t('hero.badgeIndia', "India's #1 AI Cyber Defense")}</span>
-              <span className="badge badge--warning"><Award size={9} />{t('hero.badgeMeity', "MeitY / CERT-In Aligned")}</span>
+          <div className="space-y-3.5 sm:space-y-4 max-w-xl min-w-0" style={{ transform: 'translateZ(20px)', transformStyle: 'preserve-3d' }}>
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <span className="badge badge--primary text-[10px] sm:text-[11px]"><Sparkles size={9} />{t('hero.badgeIndia', "India's #1 AI Cyber Defense")}</span>
+              <span className="badge badge--warning text-[10px] sm:text-[11px]"><Award size={9} />{t('hero.badgeMeity', "MeitY / CERT-In Aligned")}</span>
             </div>
 
             <div>
@@ -179,7 +179,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
                   {t('hero.titleLine2', 'Intelligence & Protection')}
                 </span>
               </h1>
-              <p className="text-small mt-3 font-medium break-words max-w-full" style={{ color: 'var(--text-secondary)', lineHeight: '1.75' }}>
+              <p className="text-small mt-2.5 sm:mt-3 font-medium break-words max-w-full" style={{ color: 'var(--text-secondary)', lineHeight: '1.65' }}>
                 {t('hero.subtitle', '92-engine VirusTotal v3 · KAVACH AI voice assistant · 15-min emergency bank lock protocol.')} <br />
                 <span style={{ color: 'var(--text-muted)' }}>{t('hero.founder', 'Founder: Bhargava Sood.')}</span>
               </p>
@@ -204,7 +204,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
             style={{ transform: 'translateZ(30px)', transformStyle: 'preserve-3d' }}>
             <button
               onClick={onScanClick}
-              className="btn btn--primary w-full text-center py-3.5 px-4 font-bold text-sm shadow-xl"
+              className="btn btn--primary w-full text-center py-3 sm:py-3.5 px-4 font-bold text-sm shadow-xl"
             >
               <ScanLine size={16} className="shrink-0" />
               <span className="break-words min-w-0">{t('hero.scanBtn', 'Scan a Threat')}</span>
@@ -254,32 +254,32 @@ function StatCard({ icon: Icon, label, value, color, accentBg }) {
       ref={ref}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      className="stat-card cyber-bracket p-4 sm:p-5 flex flex-col justify-between overflow-hidden"
+      className="stat-card cyber-bracket p-3.5 sm:p-5 flex flex-col justify-between overflow-hidden"
       style={{ '--card-accent': color, '--card-accent-muted': accentBg, transformStyle: 'preserve-3d' }}
     >
       {/* Shine overlay */}
       <div className="tilt-shine" data-tilt-shine="true" />
 
-      <div className="flex items-center justify-between mb-3" style={{ transform: 'translateZ(8px)' }}>
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+      <div className="flex items-center justify-between mb-2.5 sm:mb-3" style={{ transform: 'translateZ(8px)' }}>
+        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0"
           style={{ background: accentBg, border: `1px solid ${color}50`, boxShadow: `0 4px 12px ${color}25` }}>
-          <Icon size={17} style={{ color }} />
+          <Icon size={16} style={{ color }} />
         </div>
-        <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase"
+        <span className="font-mono text-[8.5px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase"
           style={{ borderColor: `${color}40`, color: color, background: accentBg }}>
           ONLINE
         </span>
       </div>
 
       <div className="min-w-0">
-        <div className="text-h2 font-bold font-mono truncate" style={{ color: 'var(--text-primary)', lineHeight: 1.1, transform: 'translateZ(12px)' }}>
+        <div className="text-xl sm:text-h2 font-bold font-mono truncate" style={{ color: 'var(--text-primary)', lineHeight: 1.1, transform: 'translateZ(12px)' }}>
           {value}
         </div>
-        <div className="text-caption uppercase tracking-wider mt-1.5 break-words" style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
+        <div className="text-[10px] sm:text-caption uppercase tracking-wider mt-1.5 break-words" style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
           {label}
         </div>
       </div>
-      <div className="mt-3.5 h-px rounded-full"
+      <div className="mt-3 sm:mt-3.5 h-px rounded-full"
         style={{ background: `linear-gradient(90deg, ${color}80, ${color}25, transparent)` }} />
     </div>
   );
@@ -293,7 +293,7 @@ function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick 
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
-      className="module-card-3d cyber-bracket p-5 text-left w-full overflow-hidden flex flex-col justify-between"
+      className="module-card-3d cyber-bracket p-4 sm:p-5 text-left w-full overflow-hidden flex flex-col justify-between"
       style={{ transformStyle: 'preserve-3d' }}
       onFocus={e => e.currentTarget.style.outline = '2px solid var(--border-focus)'}
       onBlur={e => e.currentTarget.style.outline = 'none'}
@@ -460,11 +460,12 @@ export default function App() {
       <LiveScamTicker />
 
       {/* Real-Time Cyber Security Defense Network Bar */}
-      <div className="w-full py-1 px-3 sm:px-6 bg-[var(--surface-void)] border-b border-[var(--border-subtle)] flex items-center justify-between text-[10px] font-mono select-none overflow-x-auto gap-4">
-        <div className="flex items-center gap-3 shrink-0 min-w-0">
+      <div className="w-full py-1 px-2.5 sm:px-6 bg-[var(--surface-void)] border-b border-[var(--border-subtle)] flex items-center justify-between text-[9.5px] sm:text-[10px] font-mono select-none gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
           <span className="flex items-center gap-1.5 text-[var(--cyan-400)] font-bold shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan-400)] animate-ping" />
-            [DEFENSE_GRID: DEFCON-4 ACTIVE]
+            <span className="hidden sm:inline">[DEFENSE_GRID: DEFCON-4 ACTIVE]</span>
+            <span className="sm:hidden">[GRID: ACTIVE]</span>
           </span>
           <span className="text-[var(--text-muted)] hidden sm:inline">|</span>
           <span className="text-[var(--text-secondary)] hidden sm:inline truncate">
@@ -475,11 +476,11 @@ export default function App() {
             PROTOCOL: AES-256-GCM
           </span>
         </div>
-        <div className="flex items-center gap-3 shrink-0 ml-auto font-bold">
-          <span className="text-[var(--text-secondary)]">
-            92 ENGINES SYNCED
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 ml-auto font-bold">
+          <span className="text-[var(--text-secondary)] hidden xs:inline">
+            92 ENGINES
           </span>
-          <span className="text-[var(--text-muted)]">|</span>
+          <span className="text-[var(--text-muted)] hidden xs:inline">|</span>
           <span className="text-[var(--cyan-400)]">
             14ms
           </span>
@@ -503,7 +504,7 @@ export default function App() {
           style={{ background: 'var(--surface-base)' }}
         >
           {/* Content wrapper — max-width + consistent padding */}
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-24 md:pb-8 space-y-6">
+          <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-8 pb-28 md:pb-8 space-y-5 sm:space-y-6">
 
             {/* Update banner */}
             {hasNewVersion && (
