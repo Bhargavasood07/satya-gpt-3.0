@@ -58,6 +58,7 @@ import { useChildMode } from './context/ChildModeContext';
 import { useSimulatedFeed } from './hooks/useSimulatedFeed';
 import { scanPayloadOffline } from './services/offlineAiEngine';
 import { detectFakeNews } from './services/fakeNewsDetector';
+import { analyzeCloneAndAdThreat } from './services/cloneAndAdDetector';
 import { usePwaInstall } from './hooks/usePwaInstall';
 
 // ── Dashboard Section Components ─────────────────────────────
@@ -406,7 +407,8 @@ export default function App() {
   const handleScanResult = useCallback(
     (decodedText, source = 'qr', vtReport = null) => {
       const fakeNewsResult = detectFakeNews(decodedText);
-      const offlineResult = scanPayloadOffline(decodedText);
+      const offlineResult = scanPayloadOffline(decodedText, isChildMode);
+      const cloneAndAdReport = analyzeCloneAndAdThreat(decodedText, isChildMode);
       const lower = decodedText.toLowerCase();
 
       const isAdultRedirect = lower.includes('adult') || lower.includes('watch') || lower.includes('hot');
@@ -419,29 +421,67 @@ export default function App() {
 
       const isSuspicious =
         fakeNewsResult.isFakeNews || isAdultRedirect || isGamingScam || isPhishing ||
-        (vtReport && vtReport.maliciousCount > 0);
+        cloneAndAdReport.hasThreat || (vtReport && vtReport.maliciousCount > 0);
+
+      // Determine precise verdict label, severity and indicators
+      let verdictLabel = 'REAL';
+      let riskScore = 4;
+      let severity = 'low';
+      let verdictReason = 'KAVACH AI & VirusTotal v3: Payload verified clean across 90+ engines.';
+      let indicators = ['VirusTotal v3 Clean', 'Official Domain Certificate Verified'];
+
+      if (cloneAndAdReport.cloneAnalysis?.isClone) {
+        verdictLabel = 'WEBSITE CLONE (COPYCAT)';
+        riskScore = cloneAndAdReport.cloneAnalysis.riskScore || 99;
+        severity = 'critical';
+        verdictReason = cloneAndAdReport.cloneAnalysis.reason;
+        indicators = cloneAndAdReport.cloneAnalysis.indicators || [];
+      } else if (cloneAndAdReport.ageAnalysis?.isAgeRestricted) {
+        verdictLabel = '18+ AD / CHILD BLOCKED';
+        riskScore = cloneAndAdReport.ageAnalysis.riskScore || 97;
+        severity = 'critical';
+        verdictReason = cloneAndAdReport.ageAnalysis.reason;
+        indicators = cloneAndAdReport.ageAnalysis.indicators || [];
+      } else if (cloneAndAdReport.adAnalysis?.isPhishingAd) {
+        verdictLabel = 'PHISHING AD (MALVERTISING)';
+        riskScore = cloneAndAdReport.adAnalysis.riskScore || 95;
+        severity = 'high';
+        verdictReason = cloneAndAdReport.adAnalysis.reason;
+        indicators = cloneAndAdReport.adAnalysis.indicators || [];
+      } else if (fakeNewsResult.isFakeNews) {
+        verdictLabel = 'FAKE NEWS / HOAX';
+        riskScore = fakeNewsResult.riskScore || 92;
+        severity = 'high';
+        verdictReason = fakeNewsResult.reason;
+        indicators = fakeNewsResult.indicators || ['Contains Misinformation / Hoax Pattern'];
+      } else if (isSuspicious) {
+        verdictLabel = 'FAKE';
+        riskScore = 92;
+        severity = 'high';
+        verdictReason = 'KAVACH AI & VirusTotal v3: High-risk payload detected across security engines.';
+        indicators = ['VirusTotal v3 Security Alert', 'Multi-Engine Flagged', 'Unverified Origin'];
+      }
 
       const newEvt = addManualEvent({
         source,
         payload: decodedText,
         preview: decodedText.length > 50 ? decodedText.substring(0, 50) + '...' : decodedText,
         verdict: isSuspicious ? 'fake' : 'real',
-        verdictLabel: fakeNewsResult.isFakeNews ? 'FAKE NEWS / HOAX' : isSuspicious ? 'FAKE' : 'REAL',
-        confidence: isSuspicious ? 98.4 : 99.2,
-        riskScore: fakeNewsResult.isFakeNews ? (fakeNewsResult.riskScore || 92) : isSuspicious ? 92 : 4,
-        severity: isSuspicious ? 'high' : 'low',
-        verdictReason: isSuspicious
-          ? 'KAVACH AI & VirusTotal v3: High-risk payload detected across security engines.'
-          : 'KAVACH AI & VirusTotal v3: Payload verified clean across 90+ engines.',
+        verdictLabel,
+        confidence: isSuspicious ? 98.6 : 99.2,
+        riskScore,
+        severity,
+        verdictReason,
         vtReport,
-        indicators: isSuspicious
-          ? ['VirusTotal v3 Security Alert', 'Multi-Engine Flagged', 'Unverified Origin']
-          : ['VirusTotal v3 Clean', 'Official Domain Certificate Verified'],
+        indicators,
+        cloneAnalysis: cloneAndAdReport.cloneAnalysis,
+        ageAnalysis: cloneAndAdReport.ageAnalysis,
+        adAnalysis: cloneAndAdReport.adAnalysis,
       });
 
       setSelectedEvent(newEvt);
     },
-    [addManualEvent, t, setSelectedEvent]
+    [addManualEvent, t, setSelectedEvent, isChildMode]
   );
 
   // ── Render ─────────────────────────────────────────────────

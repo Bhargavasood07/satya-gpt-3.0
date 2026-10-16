@@ -4,6 +4,8 @@
  * API Key is hidden inside environment variables VITE_VT_API_KEY
  */
 
+import { analyzeCloneAndAdThreat } from './cloneAndAdDetector';
+
 // In-Memory VirusTotal High Speed Result Cache (0ms Instant Retrieval)
 const vtCacheMap = new Map();
 
@@ -44,6 +46,9 @@ export async function analyzeScamGlobally(payload, source = 'link') {
     return vtCacheMap.get(cacheKey);
   }
 
+  // Check clone and ad trap heuristics
+  const cloneAndAdReport = analyzeCloneAndAdThreat(cleanPayload);
+
   // Hidden API Key from environment variable
   const apiKey = import.meta.env.VITE_VT_API_KEY || '4a2b89c01d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a';
   const urlId = getVtUrlId(cleanPayload);
@@ -60,7 +65,7 @@ export async function analyzeScamGlobally(payload, source = 'link') {
     lower.includes('pan immediately') ||
     lower.includes('.exe');
 
-  const isSuspicious = isAdultRedirect || isGamingScam || isPhishing;
+  const isSuspicious = isAdultRedirect || isGamingScam || isPhishing || cloneAndAdReport.hasThreat;
 
   // Try live VirusTotal v3 endpoint if API key present
   if (apiKey && (cleanPayload.startsWith('http://') || cleanPayload.startsWith('https://'))) {
@@ -136,6 +141,9 @@ export async function analyzeScamGlobally(payload, source = 'link') {
     vendors: generateFallbackVendors(isSuspicious),
     reputation: isSuspicious ? -78 : 95,
     permalink: `https://www.virustotal.com/gui/search/${encodeURIComponent(cleanPayload)}`,
+    cloneAnalysis: cloneAndAdReport.cloneAnalysis,
+    ageAnalysis: cloneAndAdReport.ageAnalysis,
+    adAnalysis: cloneAndAdReport.adAnalysis,
   };
 
   vtCacheMap.set(cacheKey, fallbackReport);

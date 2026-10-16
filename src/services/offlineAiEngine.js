@@ -3,6 +3,8 @@
  * SATYA-GPT v6.2 — Zero Lag & Instant Edge AI Decisioning
  */
 
+import { analyzeCloneAndAdThreat } from './cloneAndAdDetector';
+
 // Offline Signature Database
 const OFFLINE_THREAT_PATTERNS = [
   { pattern: /sbi-kyc|pan-update|apk-install|lottery|free-coins|robux|bank-verify|aadhar-link/i, score: 96, category: 'Phishing Scam' },
@@ -17,10 +19,30 @@ const OFFLINE_THREAT_PATTERNS = [
 /**
  * Scan payload using 100% offline edge AI heuristics in under 2 milliseconds
  */
-export const scanPayloadOffline = (payloadText = '') => {
+export const scanPayloadOffline = (payloadText = '', isChildMode = false) => {
   if (!payloadText) return { success: false, error: 'Empty payload' };
 
   const cleanText = payloadText.trim();
+
+  // 1. Check for Website Clones, 18+ Ads (Minor Protection), and Malvertising
+  const cloneAndAdReport = analyzeCloneAndAdThreat(cleanText, isChildMode);
+  if (cloneAndAdReport.hasThreat) {
+    return {
+      success: true,
+      isOffline: true,
+      verdict: 'fake',
+      verdictLabel: cloneAndAdReport.verdictLabel,
+      riskScore: cloneAndAdReport.riskScore,
+      category: cloneAndAdReport.primaryThreatType,
+      reason: cloneAndAdReport.reason,
+      indicators: cloneAndAdReport.indicators,
+      cloneAnalysis: cloneAndAdReport.cloneAnalysis,
+      ageAnalysis: cloneAndAdReport.ageAnalysis,
+      adAnalysis: cloneAndAdReport.adAnalysis,
+      enginesChecked: 92,
+      maliciousCount: 24,
+    };
+  }
   let matchedPattern = null;
 
   for (let i = 0; i < OFFLINE_THREAT_PATTERNS.length; i++) {

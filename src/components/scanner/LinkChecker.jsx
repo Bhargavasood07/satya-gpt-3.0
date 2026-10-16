@@ -12,9 +12,10 @@ export default function LinkChecker({ onScanResult }) {
   const [scanStep, setScanStep] = useState(0);
 
   const samples = [
-    { label: t('satyaGpt.samplePhishingUrl', '🔴 SBI KYC Scam Link'), value: 'http://sbi-kyc-update-verify99.tk/login', type: 'phish' },
-    { label: t('satyaGpt.sampleGamingScam', '🟣 Gaming Robux Scam'), value: 'http://free-robux-fire-coins-generator.xyz/claim', type: 'game' },
-    { label: t('satyaGpt.sampleSafeUrl', '🟢 Official Bank Portal'), value: 'https://www.sbi.co.in/portal/web/home', type: 'safe' },
+    { label: t('satyaGpt.sampleCloneUrl', '🔴 Fake SBI Clone Website'), value: 'http://sbi.co.in.kyc-verify-portal.tk/login', type: 'clone' },
+    { label: t('satyaGpt.sampleAgeAdUrl', '🔞 18+ Betting Ad (Minor Risk)'), value: 'http://teenpatti-18plus-realcash-casino.xyz/play?ad=mobile_game', type: 'ad18' },
+    { label: t('satyaGpt.sampleMalvertisingUrl', '📢 Malvertising Search Ad'), value: 'https://sponsored-adclick.fake-support.online/customer-care-refund', type: 'ad' },
+    { label: t('satyaGpt.sampleSafeUrl', '🟢 Official Real Portal'), value: 'https://www.sbi.co.in/portal/web/home', type: 'safe' },
   ];
 
   const handleVerify = async (urlToTest) => {
@@ -49,7 +50,7 @@ export default function LinkChecker({ onScanResult }) {
             type="url"
             value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
-            placeholder={t('satyaGpt.inputPlaceholderUrl', 'Paste URL or Link to scan (e.g. sbi-kyc-verify.tk)...')}
+            placeholder={t('satyaGpt.inputPlaceholderUrl', 'Paste URL or Link to scan (e.g. sbi-kyc-verify.tk, 18+ ad)...')}
             className="w-full pl-11 pr-4 sm:pr-36 py-3.5 bg-[var(--surface-raised)] border border-[var(--border-default)] rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary-glow)] transition-all shadow-inner break-all"
             onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
           />
@@ -98,9 +99,9 @@ export default function LinkChecker({ onScanResult }) {
           <div className="flex items-center justify-between text-xs font-bold text-[var(--primary)]">
             <span className="flex items-center gap-1.5">
               <Activity size={14} className="animate-pulse text-[var(--cyan-500)]" />
-              {scanStep === 1 && (t('scanner.step1', '1/3 Querying 92 VirusTotal engines...'))}
-              {scanStep === 2 && (t('scanner.step2', '2/3 KAVACH Edge AI heuristics check...'))}
-              {scanStep === 3 && (t('scanner.step3', '3/3 Verifying SSL certificate & DNS...'))}
+              {scanStep === 1 && (t('scanner.step1', '1/3 Querying 92 VirusTotal engines & Clone Registry...'))}
+              {scanStep === 2 && (t('scanner.step2', '2/3 Checking 18+ Minor Safety & Malvertising heuristics...'))}
+              {scanStep === 3 && (t('scanner.step3', '3/3 Verifying SSL certificate, DNS & brand identity...'))}
             </span>
             <span className="text-[var(--cyan-500)] font-mono">{scanStep * 33}%</span>
           </div>
@@ -119,7 +120,7 @@ export default function LinkChecker({ onScanResult }) {
           <Sparkles size={13} className="text-[var(--amber-500)]" />
           <span>{t('satyaGpt.quickExamples', 'Try One-Click Test Cases:')}</span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
           {samples.map((s, idx) => (
             <button
               key={idx}

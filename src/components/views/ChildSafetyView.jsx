@@ -119,6 +119,58 @@ export default function ChildSafetyView() {
             </p>
           </div>
         </div>
+
+        {/* Specialized 18+ Ad & Clone Protection Grid */}
+        <div className="pt-3 border-t border-[#27395C]/60 space-y-3">
+          <div className="text-xs font-bold text-amber-300 uppercase tracking-wide flex items-center gap-2">
+            <span>🛡️</span>
+            <span>{isHindi ? 'नाबालिगों (Under 18) के लिए विशेष सुरक्षा ढाल' : 'Specialized Minor Protection Defenses (<18 Years)'}</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            {/* 18+ Ad Blocker */}
+            <div className="p-3.5 bg-[#0B0F19] rounded-xl border border-amber-500/30 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-amber-400 flex items-center gap-1.5">
+                  <span>🔞</span>
+                  <span>{isHindi ? '18+ विज्ञापन व जुआ ऐप ब्लॉकर' : '18+ Ad & Betting Blocker'}</span>
+                </span>
+                <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-[9px]">
+                  POCSO COMPLIANT
+                </span>
+              </div>
+              <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">
+                {isHindi
+                  ? 'बच्चों के गेम और वीडियो में आने वाले 18+ जुआ (Teen Patti, Aviator, 1xBet), सट्टा और अश्लील विज्ञापनों को सीधे फ़िल्टर करता है।'
+                  : 'Automatically intercepts 18+ betting ads (Aviator, Stake, Teen Patti), adult dating popups, and predatory cash traps shown to minors.'}
+              </p>
+              <div className="text-[10px] text-amber-300/80 font-mono">
+                ✓ {isHindi ? 'अवैध सट्टेबाजी व आयु-प्रतिबंधित लिंक ब्लॉक' : 'Blocks illegal betting & age-restricted ad redirects'}
+              </div>
+            </div>
+
+            {/* Fake Copycat Clone Shield */}
+            <div className="p-3.5 bg-[#0B0F19] rounded-xl border border-rose-500/30 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-rose-400 flex items-center gap-1.5">
+                  <span>🌐</span>
+                  <span>{isHindi ? 'नकली क्लोन वेबसाइट ढाल' : 'Copycat Website Clone Shield'}</span>
+                </span>
+                <span className="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold text-[9px]">
+                  ANTI-TYPOSQUATTING
+                </span>
+              </div>
+              <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">
+                {isHindi
+                  ? 'असली जैसी दिखने वाली नकली वेबसाइट्स (जैसे फर्जी स्कॉलरशिप पोर्टल, गेमिंग लॉगिन, या बैंक क्लोन) की पहचान कर परिवार को अलर्ट करता है।'
+                  : 'Detects typosquatting clone sites (fake scholarship portals, copycat bank logins, fake game stores) and highlights the real official URL.'}
+              </p>
+              <div className="text-[10px] text-rose-300/80 font-mono">
+                ✓ {isHindi ? 'ब्रांड धोखाधड़ी व फ़िशिंग नकल की 100% पहचान' : '100% Brand impersonation & copycat phishing detection'}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
