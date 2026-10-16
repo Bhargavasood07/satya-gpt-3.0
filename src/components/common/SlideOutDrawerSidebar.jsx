@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, ScanLine, BookOpen, Sparkles, GraduationCap, Building2, Baby, BarChart3, ShieldAlert, Share2, ShieldCheck, MapPin, KeyRound, Download, X, Bot, Award, PhoneCall, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, ScanLine, BookOpen, Sparkles, GraduationCap, Building2, Baby, BarChart3, ShieldAlert, Share2, ShieldCheck, MapPin, KeyRound, Download, X, Bot, Award, PhoneCall, ExternalLink, Flame, Calculator, Scale, Code2, TrendingUp } from 'lucide-react';
 import { GitHubIcon } from './GitHubIcon';
 import { useChildMode } from '../../context/ChildModeContext';
 
@@ -17,6 +17,11 @@ const SlideOutDrawerSidebar = memo(({
   onOpenBankFreeze,
   onOpenFamilyShare,
   onOpenTrustBadge,
+  onOpenSimulator,
+  onOpenCalculator,
+  onOpenForensics,
+  onOpenApiPlayground,
+  onOpenInvestorDataRoom,
   onOpenChat,
   onInstallApp,
   isAppInstalled
@@ -194,7 +199,55 @@ const SlideOutDrawerSidebar = memo(({
           </button>
         </div>
 
-        {/* 3. Government & Verification */}
+        {/* 3. Enterprise & Investor Suite */}
+        <div className="space-y-1.5 pt-2 border-t border-[#1b2a47]">
+          <div className="text-[10px] font-extrabold text-purple-400 uppercase tracking-wider px-1 flex items-center justify-between">
+            <span>{isHindi ? 'एंटरप्राइज व निवेशक सूट' : 'Enterprise & Investor Suite'}</span>
+            <span className="text-[9px] text-cyan-400 font-mono">B2B & SEED</span>
+          </div>
+
+          <button
+            onClick={() => { onClose(); if (onOpenSimulator) onOpenSimulator(); }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-rose-300 hover:bg-slate-800 border border-rose-500/30 cursor-pointer"
+          >
+            <Flame size={16} className="text-rose-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'जीरो-डे साइबर हमला सिम्युलेटर' : 'Zero-Day Attack Simulator'}</span>
+          </button>
+
+          <button
+            onClick={() => { onClose(); if (onOpenCalculator) onOpenCalculator(); }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-emerald-300 hover:bg-slate-800 border border-emerald-500/30 cursor-pointer"
+          >
+            <Calculator size={16} className="text-emerald-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'फ्रॉड लॉस व ROI कैलकुलेटर' : 'Fraud Loss & ROI Calculator'}</span>
+          </button>
+
+          <button
+            onClick={() => { onClose(); if (onOpenForensics) onOpenForensics(); }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-cyan-300 hover:bg-slate-800 border border-cyan-500/30 cursor-pointer"
+          >
+            <Scale size={16} className="text-cyan-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'धारा 65B डिजिटल साक्ष्य (FIR)' : 'Sec 65B Cyber Forensics (FIR)'}</span>
+          </button>
+
+          <button
+            onClick={() => { onClose(); if (onOpenApiPlayground) onOpenApiPlayground(); }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-blue-300 hover:bg-slate-800 border border-blue-500/30 cursor-pointer"
+          >
+            <Code2 size={16} className="text-blue-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'डेवलपर हब व API सैंडबॉक्स' : 'Developer Hub & API Sandbox'}</span>
+          </button>
+
+          <button
+            onClick={() => { onClose(); if (onOpenInvestorDataRoom) onOpenInvestorDataRoom(); }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-purple-300 hover:bg-slate-800 border border-purple-500/30 cursor-pointer"
+          >
+            <TrendingUp size={16} className="text-purple-400 shrink-0" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? 'संस्थापक निवेशक डेटा रूम' : 'Investor Executive Data Room'}</span>
+          </button>
+        </div>
+
+        {/* 4. Government & Verification */}
         <div className="space-y-1.5 pt-2 border-t border-[#1b2a47]">
           <div className="text-[10px] font-extrabold text-amber-400 uppercase tracking-wider px-1">
             {isHindi ? 'सरकारी व नोडल इंटेलिजेंस' : 'Govt & Nodal Intelligence'}

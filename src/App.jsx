@@ -40,6 +40,12 @@ import CommandPaletteModal from './components/common/CommandPaletteModal';
 import SocTelemetryBento from './components/common/SocTelemetryBento';
 import LoginModal from './components/auth/LoginModal';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import AttackSimulatorModal from './components/common/AttackSimulatorModal';
+import EnterpriseRoiCalculatorModal from './components/common/EnterpriseRoiCalculatorModal';
+import ForensicReportModal from './components/common/ForensicReportModal';
+import EnterpriseApiPlaygroundModal from './components/common/EnterpriseApiPlaygroundModal';
+import InvestorDataRoomModal from './components/common/InvestorDataRoomModal';
+import EnterpriseShowcaseBento from './components/common/EnterpriseShowcaseBento';
 import { useAuth } from './context/AuthContext';
 import { useTheme } from './context/ThemeContext';
 
@@ -357,6 +363,14 @@ export default function App() {
   const [isIpProtectionOpen, setIsIpProtectionOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  // Enterprise & Investor Suite Modals
+  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+  const [isForensicsOpen, setIsForensicsOpen] = useState(false);
+  const [isApiPlaygroundOpen, setIsApiPlaygroundOpen] = useState(false);
+  const [isInvestorDataRoomOpen, setIsInvestorDataRoomOpen] = useState(false);
+  const [selectedForensicThreat, setSelectedForensicThreat] = useState(null);
+
   const mainScrollRef = useRef(null);
 
   const [isFounderSession] = useState(
@@ -495,6 +509,7 @@ export default function App() {
         onOpenAdmin={handleOpenAdmin}
         onToggleDrawer={() => setIsDrawerOpen(true)}
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+        onOpenSimulator={() => setIsSimulatorOpen(true)}
       />
 
       {/* Live scam ticker */}
@@ -599,6 +614,15 @@ export default function App() {
                   onScanClick={() => setActiveTab('scanner')}
                   onFreezeClick={() => setIsEmergencyFreezeOpen(true)}
                   onOpenMap={() => setIsThreatMapOpen(true)}
+                />
+
+                {/* 3.5. Enterprise & Investor Command Suite */}
+                <EnterpriseShowcaseBento
+                  onOpenSimulator={() => setIsSimulatorOpen(true)}
+                  onOpenCalculator={() => setIsCalculatorOpen(true)}
+                  onOpenForensics={() => setIsForensicsOpen(true)}
+                  onOpenApiPlayground={() => setIsApiPlaygroundOpen(true)}
+                  onOpenInvestorDataRoom={() => setIsInvestorDataRoomOpen(true)}
                 />
 
                 {/* 4. Core modules */}
@@ -758,6 +782,11 @@ export default function App() {
               onOpenBankFreeze={() => setIsEmergencyFreezeOpen(true)}
               onOpenFamilyShare={() => setIsFamilyShareOpen(true)}
               onOpenTrustBadge={() => setIsTrustBadgeOpen(true)}
+              onOpenSimulator={() => setIsSimulatorOpen(true)}
+              onOpenCalculator={() => setIsCalculatorOpen(true)}
+              onOpenForensics={() => setIsForensicsOpen(true)}
+              onOpenApiPlayground={() => setIsApiPlaygroundOpen(true)}
+              onOpenInvestorDataRoom={() => setIsInvestorDataRoomOpen(true)}
               onOpenChat={handleToggleChat}
               onInstallApp={installApp}
               isAppInstalled={isInstalled}
@@ -783,6 +812,63 @@ export default function App() {
           {isLoginModalOpen && <LoginModal onClose={closeLoginModal} />}
         </AnimatePresence>
 
+        {/* ── Enterprise & Investor Modals ── */}
+        <AnimatePresence>
+          {isSimulatorOpen && (
+            <ErrorBoundary inline title="Simulator Protected" onReset={() => setIsSimulatorOpen(false)}>
+              <AttackSimulatorModal
+                onClose={() => setIsSimulatorOpen(false)}
+                onOpenForensicCertificate={(threat) => {
+                  setSelectedForensicThreat(threat);
+                  setIsForensicsOpen(true);
+                }}
+              />
+            </ErrorBoundary>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isCalculatorOpen && (
+            <ErrorBoundary inline title="ROI Calculator Protected" onReset={() => setIsCalculatorOpen(false)}>
+              <EnterpriseRoiCalculatorModal
+                onClose={() => setIsCalculatorOpen(false)}
+                onOpenEnterprisePartnership={() => setIsPartnerOpen(true)}
+              />
+            </ErrorBoundary>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isForensicsOpen && (
+            <ErrorBoundary inline title="Forensics Protected" onReset={() => setIsForensicsOpen(false)}>
+              <ForensicReportModal
+                initialThreatData={selectedForensicThreat}
+                onClose={() => setIsForensicsOpen(false)}
+              />
+            </ErrorBoundary>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isApiPlaygroundOpen && (
+            <ErrorBoundary inline title="API Playground Protected" onReset={() => setIsApiPlaygroundOpen(false)}>
+              <EnterpriseApiPlaygroundModal onClose={() => setIsApiPlaygroundOpen(false)} />
+            </ErrorBoundary>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isInvestorDataRoomOpen && (
+            <ErrorBoundary inline title="Investor Data Room Protected" onReset={() => setIsInvestorDataRoomOpen(false)}>
+              <InvestorDataRoomModal
+                onClose={() => setIsInvestorDataRoomOpen(false)}
+                onOpenCalculator={() => setIsCalculatorOpen(true)}
+                onOpenSimulator={() => setIsSimulatorOpen(true)}
+              />
+            </ErrorBoundary>
+          )}
+        </AnimatePresence>
+
         <CommandPaletteModal
           isOpen={isCommandPaletteOpen}
           onClose={() => setIsCommandPaletteOpen(false)}
@@ -790,6 +876,11 @@ export default function App() {
           onScanSample={handleScanResult}
           onTriggerFreeze={() => setIsEmergencyFreezeOpen(true)}
           onOpenThreatMap={() => setIsThreatMapOpen(true)}
+          onOpenSimulator={() => setIsSimulatorOpen(true)}
+          onOpenCalculator={() => setIsCalculatorOpen(true)}
+          onOpenForensics={() => setIsForensicsOpen(true)}
+          onOpenApiPlayground={() => setIsApiPlaygroundOpen(true)}
+          onOpenInvestorDataRoom={() => setIsInvestorDataRoomOpen(true)}
           toggleTheme={toggleTheme}
           currentTheme={theme}
           toggleLanguage={() => {

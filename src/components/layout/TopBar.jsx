@@ -2,13 +2,13 @@ import React, { useState, useEffect, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Shield, Globe, Sun, Moon, User, ChevronDown, Menu, Zap,
-  Search, Radio, Bell
+  Search, Radio, Bell, Flame
 } from 'lucide-react';
 import { GitHubIcon } from '../common/GitHubIcon';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 
-const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
+const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette, onOpenSimulator }) => {
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, openLoginModal } = useAuth();
@@ -106,6 +106,18 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette }) => {
           <span className="font-semibold">{t('topbar.socOnline', 'SOC Online')}</span>
           <span className="text-emerald-500/70 font-mono text-[10px]">14ms</span>
         </div>
+
+        {/* Attack Simulator Button */}
+        {onOpenSimulator && (
+          <button
+            onClick={onOpenSimulator}
+            className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-rose-500/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 text-[11px] font-bold transition-all cursor-pointer shadow-xs"
+            title="Launch Zero-Day Cyber Attack Simulator"
+          >
+            <Flame size={12} className="text-rose-400" />
+            <span>Simulator</span>
+          </button>
+        )}
 
         {/* Lang Toggle */}
         <button

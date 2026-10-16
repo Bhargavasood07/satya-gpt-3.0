@@ -2,7 +2,8 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, ScanLine, Bot, ShieldAlert, PhoneCall, MapPin, GraduationCap,
-  Baby, Sun, Moon, Globe, ArrowRight, ShieldCheck, Zap, X, Terminal, CornerDownLeft
+  Baby, Sun, Moon, Globe, ArrowRight, ShieldCheck, Zap, X, Terminal, CornerDownLeft,
+  Flame, Calculator, Scale, Code2, TrendingUp
 } from 'lucide-react';
 
 export default function CommandPaletteModal({
@@ -12,6 +13,11 @@ export default function CommandPaletteModal({
   onScanSample,
   onTriggerFreeze,
   onOpenThreatMap,
+  onOpenSimulator,
+  onOpenCalculator,
+  onOpenForensics,
+  onOpenApiPlayground,
+  onOpenInvestorDataRoom,
   toggleTheme,
   currentTheme,
   toggleLanguage,
@@ -92,6 +98,56 @@ export default function CommandPaletteModal({
       action: () => { onNavigate('academy'); onClose(); },
     },
     {
+      id: 'simulator',
+      category: isHindi ? 'एंटरप्राइज व निवेशक' : 'Enterprise & Investor',
+      title: isHindi ? 'लाइव जीरो-डे साइबर हमला सिम्युलेटर' : 'Live Zero-Day Cyber Attack Simulator',
+      subtitle: isHindi ? '14ms में 4-स्तरीय AI डिफेंस का लाइव डेमो' : 'Experience 4-stage neural defense in 14ms',
+      icon: Flame,
+      color: 'var(--crimson-500)',
+      badge: 'Demo',
+      action: () => { if (onOpenSimulator) onOpenSimulator(); onClose(); },
+    },
+    {
+      id: 'calculator',
+      category: isHindi ? 'एंटरप्राइज व निवेशक' : 'Enterprise & Investor',
+      title: isHindi ? 'एंटरप्राइज फ्रॉड लॉस व ROI कैलकुलेटर' : 'Enterprise Fraud Loss & ROI Calculator',
+      subtitle: isHindi ? 'बैंकों व फिनटेक हेतु वार्षिक बचत व 18.5x ROI' : 'Calculate annual loss prevention and 18.5x ROI',
+      icon: Calculator,
+      color: 'var(--emerald-500)',
+      badge: 'CFO',
+      action: () => { if (onOpenCalculator) onOpenCalculator(); onClose(); },
+    },
+    {
+      id: 'forensics',
+      category: isHindi ? 'एंटरप्राइज व निवेशक' : 'Enterprise & Investor',
+      title: isHindi ? 'धारा 65B डिजिटल साक्ष्य प्रमाणपत्र' : 'Section 65B Cyber Forensic Certificate',
+      subtitle: isHindi ? 'कोर्ट व 1930 पुलिस पोर्टल हेतु प्रमाणित रिपोर्ट' : 'Generate court-admissible SHA-256 sealed FIR evidence',
+      icon: Scale,
+      color: 'var(--cyan-500)',
+      badge: 'Legal',
+      action: () => { if (onOpenForensics) onOpenForensics(); onClose(); },
+    },
+    {
+      id: 'api-sandbox',
+      category: isHindi ? 'एंटरप्राइज व निवेशक' : 'Enterprise & Investor',
+      title: isHindi ? 'डेवलपर हब व लाइव API सैंडबॉक्स' : 'Developer Hub & API Sandbox',
+      subtitle: isHindi ? 'cURL, Python व Android Kotlin SDKs' : 'Explore REST endpoints with cURL, Python & Android SDK',
+      icon: Code2,
+      color: 'var(--primary)',
+      badge: 'SDK',
+      action: () => { if (onOpenApiPlayground) onOpenApiPlayground(); onClose(); },
+    },
+    {
+      id: 'investor-room',
+      category: isHindi ? 'एंटरप्राइज व निवेशक' : 'Enterprise & Investor',
+      title: isHindi ? 'संस्थापक निवेशक डेटा रूम व अनुपालन केंद्र' : 'Investor Executive Data Room & Diligence',
+      subtitle: isHindi ? '$15.2B बाजार अवसर, AI तकनीकी विशिष्टता व DPDP अनुपालन' : '$15.2B TAM, proprietary moat, and DPDP/RBI matrix',
+      icon: TrendingUp,
+      color: 'var(--violet-500)',
+      badge: 'Seed',
+      action: () => { if (onOpenInvestorDataRoom) onOpenInvestorDataRoom(); onClose(); },
+    },
+    {
       id: 'test-phish',
       category: isHindi ? 'त्वरित परीक्षण' : 'One-Click Test Samples',
       title: isHindi ? 'फिशिंग लिंक परीक्षण: नकली SBI KYC' : 'Test Phishing Link: SBI KYC Scam',
@@ -151,7 +207,7 @@ export default function CommandPaletteModal({
       color: 'var(--cyan-500)',
       action: () => { if (toggleLanguage) toggleLanguage(); onClose(); },
     },
-  ], [onNavigate, onClose, onTriggerFreeze, onOpenThreatMap, onScanSample, toggleChildMode, isChildMode, currentTheme, toggleTheme, currentLanguage, toggleLanguage, isHindi]);
+  ], [onNavigate, onClose, onTriggerFreeze, onOpenThreatMap, onOpenSimulator, onOpenCalculator, onOpenForensics, onOpenApiPlayground, onOpenInvestorDataRoom, onScanSample, toggleChildMode, isChildMode, currentTheme, toggleTheme, currentLanguage, toggleLanguage, isHindi]);
 
   const filteredCommands = useMemo(() => {
     if (!query.trim()) return commands;
