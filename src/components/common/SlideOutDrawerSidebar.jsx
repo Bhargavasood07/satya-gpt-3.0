@@ -15,6 +15,7 @@ const SlideOutDrawerSidebar = memo(({
   onOpenGovtVerification,
   onOpenThreatMap,
   onOpenBankFreeze,
+  onOpen1930Helpline,
   onOpenFamilyShare,
   onOpenTrustBadge,
   onOpenSimulator,
@@ -168,6 +169,14 @@ const SlideOutDrawerSidebar = memo(({
           >
             <ShieldAlert size={17} className="shrink-0" />
             <span className="break-words min-w-0 flex-1 text-left">{isHindi ? '15-मिनट आपातकालीन बैंक खाता फ्रीज' : '15-Min Emergency Bank Freeze'}</span>
+          </button>
+
+          <button
+            onClick={() => { onClose(); if (onOpen1930Helpline) onOpen1930Helpline(); }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-[#0d1629] text-amber-300 hover:bg-slate-800 border border-amber-500/30 cursor-pointer"
+          >
+            <PhoneCall size={16} className="text-amber-400 shrink-0 animate-pulse" />
+            <span className="break-words min-w-0 flex-1 text-left">{isHindi ? '1930 राष्ट्रीय साइबर हेल्पलाइन' : '1930 National Cyber Crime Helpline'}</span>
           </button>
 
           <button

@@ -41,6 +41,7 @@ import SocTelemetryBento from './components/common/SocTelemetryBento';
 import LoginModal from './components/auth/LoginModal';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import AttackSimulatorModal from './components/common/AttackSimulatorModal';
+import Helpline1930Modal from './components/common/Helpline1930Modal';
 import EnterpriseRoiCalculatorModal from './components/common/EnterpriseRoiCalculatorModal';
 import ForensicReportModal from './components/common/ForensicReportModal';
 import EnterpriseApiPlaygroundModal from './components/common/EnterpriseApiPlaygroundModal';
@@ -86,7 +87,7 @@ function FloatingOrb({ size, color, style }) {
   );
 }
 
-function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
+function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick }) {
   const { t, i18n } = useTranslation();
   const isHindi = i18n.language?.startsWith('hi');
   const heroRef = useRef(null);
@@ -222,23 +223,29 @@ function HeroBanner({ onScanClick, onFreezeClick, onMapClick }) {
             <div className="grid grid-cols-2 gap-2 w-full">
               <button
                 onClick={onFreezeClick}
-                className="btn btn--danger py-2.5 px-2 text-xs font-bold"
+                className="btn btn--danger py-2.5 px-2 text-xs font-bold flex items-center justify-center gap-1.5 shadow-md"
+                title="Emergency Account Freeze"
               >
                 <ShieldAlert size={14} className="shrink-0" />
-                <span className="break-words min-w-0">{t('hero.freezeBtn', 'Freeze')}</span>
+                <span className="break-words min-w-0 text-center leading-tight">
+                  {isHindi ? 'खाता फ्रीज' : 'Emergency Freeze'}
+                </span>
               </button>
-              <a
-                href="tel:1930"
-                className="btn btn--ghost py-2.5 px-2 text-xs font-bold"
+              <button
+                onClick={onHelplineClick}
+                className="btn btn--ghost py-2.5 px-2 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
                 style={{
                   color: 'var(--warning)',
                   borderColor: 'var(--warning)',
                   background: 'var(--warning-muted)',
                 }}
+                title="1930 National Cyber Crime Citizen Helpline"
               >
-                <PhoneCall size={14} className="shrink-0" />
-                <span className="break-words min-w-0">{t('hero.call1930', '1930')}</span>
-              </a>
+                <PhoneCall size={14} className="shrink-0 animate-pulse" />
+                <span className="break-words min-w-0 text-center leading-tight">
+                  {isHindi ? '1930 हेल्पलाइन' : 'Call 1930 Helpline'}
+                </span>
+              </button>
             </div>
 
             <button
@@ -370,6 +377,10 @@ export default function App() {
   const [isApiPlaygroundOpen, setIsApiPlaygroundOpen] = useState(false);
   const [isInvestorDataRoomOpen, setIsInvestorDataRoomOpen] = useState(false);
   const [selectedForensicThreat, setSelectedForensicThreat] = useState(null);
+
+  // 1930 National Helpline Modal
+  const [isHelplineOpen, setIsHelplineOpen] = useState(false);
+  const [helplineDossier, setHelplineDossier] = useState(null);
 
   const mainScrollRef = useRef(null);
 
@@ -593,6 +604,7 @@ export default function App() {
                 <HeroBanner
                   onScanClick={() => setActiveTab('scanner')}
                   onFreezeClick={() => setIsEmergencyFreezeOpen(true)}
+                  onHelplineClick={() => setIsHelplineOpen(true)}
                   onMapClick={() => setIsThreatMapOpen(true)}
                 />
 
@@ -613,6 +625,7 @@ export default function App() {
                 <SocTelemetryBento
                   onScanClick={() => setActiveTab('scanner')}
                   onFreezeClick={() => setIsEmergencyFreezeOpen(true)}
+                  onHelplineClick={() => setIsHelplineOpen(true)}
                   onOpenMap={() => setIsThreatMapOpen(true)}
                 />
 
@@ -782,6 +795,7 @@ export default function App() {
               onOpenBankFreeze={() => setIsEmergencyFreezeOpen(true)}
               onOpenFamilyShare={() => setIsFamilyShareOpen(true)}
               onOpenTrustBadge={() => setIsTrustBadgeOpen(true)}
+              onOpen1930Helpline={() => setIsHelplineOpen(true)}
               onOpenSimulator={() => setIsSimulatorOpen(true)}
               onOpenCalculator={() => setIsCalculatorOpen(true)}
               onOpenForensics={() => setIsForensicsOpen(true)}
@@ -796,7 +810,25 @@ export default function App() {
 
         <AnimatePresence>
           {isEmergencyFreezeOpen && (
-            <GoldenHourEmergencyModal onClose={() => setIsEmergencyFreezeOpen(false)} />
+            <GoldenHourEmergencyModal
+              onClose={() => setIsEmergencyFreezeOpen(false)}
+              onOpen1930Helpline={(dossier) => {
+                setHelplineDossier(dossier);
+                setIsHelplineOpen(true);
+              }}
+            />
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isHelplineOpen && (
+            <ErrorBoundary inline title="1930 Helpline Protected" onReset={() => setIsHelplineOpen(false)}>
+              <Helpline1930Modal
+                initialDossier={helplineDossier}
+                onClose={() => setIsHelplineOpen(false)}
+                onOpenBankFreeze={() => setIsEmergencyFreezeOpen(true)}
+              />
+            </ErrorBoundary>
           )}
         </AnimatePresence>
 
@@ -875,6 +907,7 @@ export default function App() {
           onNavigate={setActiveTab}
           onScanSample={handleScanResult}
           onTriggerFreeze={() => setIsEmergencyFreezeOpen(true)}
+          onOpen1930Helpline={() => setIsHelplineOpen(true)}
           onOpenThreatMap={() => setIsThreatMapOpen(true)}
           onOpenSimulator={() => setIsSimulatorOpen(true)}
           onOpenCalculator={() => setIsCalculatorOpen(true)}

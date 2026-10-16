@@ -12,6 +12,7 @@ export default function CommandPaletteModal({
   onNavigate,
   onScanSample,
   onTriggerFreeze,
+  onOpen1930Helpline,
   onOpenThreatMap,
   onOpenSimulator,
   onOpenCalculator,
@@ -77,7 +78,14 @@ export default function CommandPaletteModal({
       icon: PhoneCall,
       color: 'var(--amber-500)',
       badge: isHindi ? 'सरकारी' : 'Govt',
-      action: () => { window.location.href = 'tel:1930'; onClose(); },
+      action: () => {
+        if (onOpen1930Helpline) {
+          onOpen1930Helpline();
+        } else {
+          window.location.href = 'tel:1930';
+        }
+        onClose();
+      },
     },
     {
       id: 'threatmap',
@@ -207,7 +215,7 @@ export default function CommandPaletteModal({
       color: 'var(--cyan-500)',
       action: () => { if (toggleLanguage) toggleLanguage(); onClose(); },
     },
-  ], [onNavigate, onClose, onTriggerFreeze, onOpenThreatMap, onOpenSimulator, onOpenCalculator, onOpenForensics, onOpenApiPlayground, onOpenInvestorDataRoom, onScanSample, toggleChildMode, isChildMode, currentTheme, toggleTheme, currentLanguage, toggleLanguage, isHindi]);
+  ], [onNavigate, onClose, onTriggerFreeze, onOpen1930Helpline, onOpenThreatMap, onOpenSimulator, onOpenCalculator, onOpenForensics, onOpenApiPlayground, onOpenInvestorDataRoom, onScanSample, toggleChildMode, isChildMode, currentTheme, toggleTheme, currentLanguage, toggleLanguage, isHindi]);
 
   const filteredCommands = useMemo(() => {
     if (!query.trim()) return commands;

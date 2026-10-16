@@ -14,7 +14,7 @@ const RADAR_BLIPS = [
   { id: 5, x: 80, y: 80, label: 'Fake Job Link', city: 'Hyderabad', cityHi: 'हैदराबाद', labelHi: 'नौकरी झांसा लिंक' },
 ];
 
-const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
+const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onHelplineClick, onOpenMap }) => {
   const { t, i18n } = useTranslation();
   const isHindi = i18n.language?.startsWith('hi');
 
@@ -316,9 +316,9 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
                 <ArrowUpRight size={13} className="text-[var(--crimson-500)] shrink-0" />
               </button>
 
-              <a
-                href="tel:1930"
-                className="w-full py-2.5 px-3 rounded-xl bg-[var(--surface-raised)] hover:bg-[var(--surface-overlay)] border border-[var(--border-subtle)] text-left flex items-center justify-between group transition-all"
+              <button
+                onClick={onHelplineClick}
+                className="w-full py-2.5 px-3 rounded-xl bg-[var(--surface-raised)] hover:bg-[var(--surface-overlay)] border border-[var(--border-subtle)] text-left flex items-center justify-between group transition-all cursor-pointer"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-xs font-bold text-[var(--amber-500)] shrink-0 font-mono">1930</span>
@@ -327,7 +327,7 @@ const SocTelemetryBento = memo(({ onScanClick, onFreezeClick, onOpenMap }) => {
                   </span>
                 </div>
                 <ArrowUpRight size={13} className="text-[var(--text-muted)] group-hover:text-[var(--amber-500)] transition-colors shrink-0" />
-              </a>
+              </button>
             </div>
           </div>
 
