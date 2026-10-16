@@ -115,11 +115,11 @@ const EnterpriseShowcaseBento = memo(({
               className={`p-3.5 sm:p-4 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-default)] flex flex-col justify-between transition-all cursor-pointer group ${item.bgGlow}`}
             >
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`w-8 h-8 rounded-lg bg-[#040711] border border-[var(--border-subtle)] flex items-center justify-center ${item.iconColor} group-hover:scale-110 transition-transform shadow-sm`}>
-                    <Icon size={17} />
+                <div className="flex items-center justify-between gap-1.5 mb-2.5">
+                  <div className={`w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded-lg bg-[#040711] border border-[var(--border-subtle)] flex items-center justify-center ${item.iconColor} group-hover:scale-110 transition-transform shadow-sm`}>
+                    <Icon size={16} />
                   </div>
-                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full border ${item.badgeColor}`}>
+                  <span className={`text-[8px] sm:text-[8.5px] font-mono font-bold px-2 py-0.5 rounded-full border whitespace-nowrap tracking-tight shrink-0 select-none ${item.badgeColor}`}>
                     {item.badge}
                   </span>
                 </div>
