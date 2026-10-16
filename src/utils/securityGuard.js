@@ -58,19 +58,8 @@ export function initializeWebsiteSecurityGuard() {
     document.head.appendChild(styleEl);
   } catch (e) {}
 
-  // 3. Dynamic Anti-Debugger Freeze Trap (Freezes browser execution if DevTools is opened)
-  setInterval(() => {
-    try {
-      const start = performance.now();
-      (function () {
-        return false;
-      })['constructor']('debugger')['call']();
-      const end = performance.now();
-      if (end - start > 100) {
-        console.clear();
-      }
-    } catch (e) {}
-  }, 800);
+  // 3. Browser Performance & Session Integrity Monitor
+  // (Anti-debugger debugger trap removed to prevent browser event loop freezing and cursor stutter)
 
   // 4. Console Purge & Intellectual Property Warning Notice
   setInterval(() => {

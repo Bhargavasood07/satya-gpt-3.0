@@ -92,7 +92,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
   const isHindi = i18n.language?.startsWith('hi');
   const heroRef = useRef(null);
 
-  // Mouse-parallax on hero background layers
+  // Subtle radial glow tracking (CSS variables only — NO DOM 3D tilting to avoid cursor flicker & missed clicks)
   const handleMouseMove = useCallback((e) => {
     const el = heroRef.current;
     if (!el) return;
@@ -101,18 +101,13 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
     const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
     el.style.setProperty('--mx', x.toFixed(3));
     el.style.setProperty('--my', y.toFixed(3));
-    // Subtle whole-card tilt
-    const rotX = y * -4;
-    const rotY = x * 6;
-    el.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-    el.style.transition = 'transform 0.05s ease';
   }, []);
 
   const handleMouseLeave = useCallback(() => {
     const el = heroRef.current;
     if (!el) return;
-    el.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
-    el.style.transition = 'transform 0.6s cubic-bezier(.03,.98,.52,.99)';
+    el.style.removeProperty('--mx');
+    el.style.removeProperty('--my');
   }, []);
 
   return (
@@ -121,14 +116,10 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="hero-banner cyber-bracket rounded-2xl relative overflow-hidden animate-fade-in cyber-network-grid transition-colors duration-300"
-      style={{
-        transformStyle: 'preserve-3d',
-        willChange: 'transform',
-      }}
     >
       <div className="cyber-scan-glow" />
 
-      {/* ── 3D Floating Geometry ── */}
+      {/* ── 3D Floating Geometry (pointer-events-none strictly enforced) ── */}
       <FloatingOrb size="280px" color="#3b82f6" style={{ top: '-60px', right: '-40px', animation: 'float-a 7s ease-in-out infinite', opacity: 0.7 }} />
       <FloatingOrb size="160px" color="#a855f7" style={{ bottom: '-30px', left: '10%', animation: 'float-b 9s ease-in-out infinite', opacity: 0.5 }} />
       <FloatingOrb size="100px" color="#00c8ef" style={{ top: '30%', right: '28%', animation: 'float-c 11s ease-in-out infinite', opacity: 0.4 }} />
@@ -157,7 +148,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
       />
 
       {/* ── Content ── */}
-      <div className="relative p-4 sm:p-7 lg:p-9" style={{ transformStyle: 'preserve-3d' }}>
+      <div className="relative z-10 p-4 sm:p-7 lg:p-9">
         {/* Tactical Telemetry Header */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-3 font-mono text-[9.5px] sm:text-[10px]">
           <span className="cyber-telemetry-badge">
@@ -175,7 +166,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-8">
 
           {/* Left: Text & Badges */}
-          <div className="space-y-3.5 sm:space-y-4 max-w-xl min-w-0" style={{ transform: 'translateZ(20px)', transformStyle: 'preserve-3d' }}>
+          <div className="space-y-3.5 sm:space-y-4 max-w-xl min-w-0">
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <span className="badge badge--primary text-[10px] sm:text-[11px]"><Sparkles size={9} />{t('hero.badgeIndia', "India's #1 AI Cyber Defense")}</span>
               <span className="badge badge--warning text-[10px] sm:text-[11px]"><Award size={9} />{t('hero.badgeMeity', "MeitY / CERT-In Aligned")}</span>
@@ -208,32 +199,43 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
             </div>
           </div>
 
-          {/* Right: CTAs — Strict containment & responsive sizing */}
-          <div className="flex flex-col gap-2.5 shrink-0 w-full sm:w-[260px] lg:w-[270px] max-w-full"
-            style={{ transform: 'translateZ(30px)', transformStyle: 'preserve-3d' }}>
+          {/* Right: CTAs — Strict containment, rock-solid clickability, no jitter */}
+          <div className="relative z-20 flex flex-col gap-2.5 shrink-0 w-full sm:w-[260px] lg:w-[270px] max-w-full">
             <button
-              onClick={onScanClick}
-              className="btn btn--primary w-full text-center py-3 sm:py-3.5 px-4 font-bold text-sm shadow-xl"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onScanClick?.();
+              }}
+              className="btn btn--primary w-full text-center py-3 sm:py-3.5 px-4 font-bold text-sm shadow-xl cursor-pointer select-none"
             >
-              <ScanLine size={16} className="shrink-0" />
-              <span className="break-words min-w-0">{t('hero.scanBtn', 'Scan a Threat')}</span>
-              <ArrowRight size={14} className="shrink-0" />
+              <ScanLine size={16} className="shrink-0 pointer-events-none" />
+              <span className="break-words min-w-0 pointer-events-none">{t('hero.scanBtn', 'Scan a Threat')}</span>
+              <ArrowRight size={14} className="shrink-0 pointer-events-none" />
             </button>
 
             <div className="grid grid-cols-2 gap-2 w-full">
               <button
-                onClick={onFreezeClick}
-                className="btn btn--danger py-2.5 px-2 text-xs font-bold flex items-center justify-center gap-1.5 shadow-md"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFreezeClick?.();
+                }}
+                className="btn btn--danger py-2.5 px-2 text-xs font-bold flex items-center justify-center gap-1.5 shadow-md cursor-pointer select-none"
                 title="Emergency Account Freeze"
               >
-                <ShieldAlert size={14} className="shrink-0" />
-                <span className="break-words min-w-0 text-center leading-tight">
+                <ShieldAlert size={14} className="shrink-0 pointer-events-none" />
+                <span className="break-words min-w-0 text-center leading-tight pointer-events-none">
                   {isHindi ? 'खाता फ्रीज' : 'Emergency Freeze'}
                 </span>
               </button>
               <button
-                onClick={onHelplineClick}
-                className="btn btn--ghost py-2.5 px-2 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onHelplineClick?.();
+                }}
+                className="btn btn--ghost py-2.5 px-2 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md select-none"
                 style={{
                   color: 'var(--warning)',
                   borderColor: 'var(--warning)',
@@ -241,19 +243,23 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
                 }}
                 title="1930 National Cyber Crime Citizen Helpline"
               >
-                <PhoneCall size={14} className="shrink-0 animate-pulse" />
-                <span className="break-words min-w-0 text-center leading-tight">
+                <PhoneCall size={14} className="shrink-0 animate-pulse pointer-events-none" />
+                <span className="break-words min-w-0 text-center leading-tight pointer-events-none">
                   {isHindi ? '1930 हेल्पलाइन' : 'Call 1930 Helpline'}
                 </span>
               </button>
             </div>
 
             <button
-              onClick={onMapClick}
-              className="btn btn--ghost w-full py-2.5 px-3 text-xs font-semibold"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMapClick?.();
+              }}
+              className="btn btn--ghost w-full py-2.5 px-3 text-xs font-semibold cursor-pointer select-none"
             >
-              <MapPin size={13} className="text-[var(--cyan-500)] shrink-0" />
-              <span className="break-words min-w-0">{t('hero.threatMapBtn', 'Live Threat Map')}</span>
+              <MapPin size={13} className="text-[var(--cyan-500)] shrink-0 pointer-events-none" />
+              <span className="break-words min-w-0 pointer-events-none">{t('hero.threatMapBtn', 'Live Threat Map')}</span>
             </button>
           </div>
         </div>
@@ -810,13 +816,15 @@ export default function App() {
 
         <AnimatePresence>
           {isEmergencyFreezeOpen && (
-            <GoldenHourEmergencyModal
-              onClose={() => setIsEmergencyFreezeOpen(false)}
-              onOpen1930Helpline={(dossier) => {
-                setHelplineDossier(dossier);
-                setIsHelplineOpen(true);
-              }}
-            />
+            <ErrorBoundary inline title="Emergency Freeze Protected" onReset={() => setIsEmergencyFreezeOpen(false)}>
+              <GoldenHourEmergencyModal
+                onClose={() => setIsEmergencyFreezeOpen(false)}
+                onOpen1930Helpline={(dossier) => {
+                  setHelplineDossier(dossier);
+                  setIsHelplineOpen(true);
+                }}
+              />
+            </ErrorBoundary>
           )}
         </AnimatePresence>
 
