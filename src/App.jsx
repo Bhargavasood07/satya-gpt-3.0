@@ -72,7 +72,8 @@ import { usePwaInstall } from './hooks/usePwaInstall';
 // ── Dashboard Section Components ─────────────────────────────
 
 /* Floating 3D geometry for hero backdrop */
-function FloatingOrb({ size, color, style }) {
+/* Floating 3D geometry for hero backdrop — moves in cursor direction */
+function FloatingOrb({ size, color, style, factor = 1 }) {
   return (
     <div
       className="floating-orb absolute pointer-events-none rounded-full"
@@ -81,6 +82,9 @@ function FloatingOrb({ size, color, style }) {
         background: `radial-gradient(circle at 35% 35%, ${color}55, ${color}10 60%, transparent 80%)`,
         border: `1px solid ${color}25`,
         filter: `blur(0.5px)`,
+        transform: `translate(calc(var(--mx, 0) * ${28 * factor}px), calc(var(--my, 0) * ${28 * factor}px))`,
+        transition: 'transform 0.15s cubic-bezier(0.2, 0, 0, 1)',
+        willChange: 'transform',
         ...style,
       }}
     />
@@ -92,7 +96,7 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
   const isHindi = i18n.language?.startsWith('hi');
   const heroRef = useRef(null);
 
-  // Subtle radial glow tracking (CSS variables only — NO DOM 3D tilting to avoid cursor flicker & missed clicks)
+  // Directional mouse tracking — smoothly moves elements in the cursor's direction
   const handleMouseMove = useCallback((e) => {
     const el = heroRef.current;
     if (!el) return;
@@ -101,13 +105,15 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
     const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
     el.style.setProperty('--mx', x.toFixed(3));
     el.style.setProperty('--my', y.toFixed(3));
+    el.style.setProperty('--has-mouse', '1');
   }, []);
 
   const handleMouseLeave = useCallback(() => {
     const el = heroRef.current;
     if (!el) return;
-    el.style.removeProperty('--mx');
-    el.style.removeProperty('--my');
+    el.style.setProperty('--mx', '0');
+    el.style.setProperty('--my', '0');
+    el.style.setProperty('--has-mouse', '0');
   }, []);
 
   return (
@@ -116,15 +122,28 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="hero-banner cyber-bracket rounded-2xl relative overflow-hidden animate-fade-in cyber-network-grid transition-colors duration-300"
+      style={{
+        backgroundPosition: 'calc(50% + var(--mx, 0) * 12px) calc(50% + var(--my, 0) * 12px)',
+        transition: 'background-position 0.15s cubic-bezier(0.2, 0, 0, 1)',
+      }}
     >
       <div className="cyber-scan-glow" />
 
-      {/* ── 3D Floating Geometry (pointer-events-none strictly enforced) ── */}
-      <FloatingOrb size="280px" color="#3b82f6" style={{ top: '-60px', right: '-40px', animation: 'float-a 7s ease-in-out infinite', opacity: 0.7 }} />
-      <FloatingOrb size="160px" color="#a855f7" style={{ bottom: '-30px', left: '10%', animation: 'float-b 9s ease-in-out infinite', opacity: 0.5 }} />
-      <FloatingOrb size="100px" color="#00c8ef" style={{ top: '30%', right: '28%', animation: 'float-c 11s ease-in-out infinite', opacity: 0.4 }} />
+      {/* Dynamic Cursor Spotlight — illuminates area directly under the moving cursor */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+        style={{
+          background: 'radial-gradient(circle 420px at calc(50% + var(--mx, 0) * 42%) calc(50% + var(--my, 0) * 42%), rgba(0, 200, 239, 0.16), transparent 75%)',
+          opacity: 'var(--has-mouse, 0)',
+        }}
+      />
 
-      {/* Rotating wireframe hexagon */}
+      {/* ── Floating Geometry (Parallax layers moving in same direction as cursor) ── */}
+      <FloatingOrb size="280px" color="#3b82f6" factor={1.2} style={{ top: '-60px', right: '-40px', animation: 'float-a 7s ease-in-out infinite', opacity: 0.7 }} />
+      <FloatingOrb size="160px" color="#a855f7" factor={0.8} style={{ bottom: '-30px', left: '10%', animation: 'float-b 9s ease-in-out infinite', opacity: 0.5 }} />
+      <FloatingOrb size="100px" color="#00c8ef" factor={1.5} style={{ top: '30%', right: '28%', animation: 'float-c 11s ease-in-out infinite', opacity: 0.4 }} />
+
+      {/* Rotating wireframe hexagon — moves in cursor direction */}
       <div
         className="hero-wireframe-blob absolute pointer-events-none spin-slow"
         style={{
@@ -134,6 +153,9 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
           border: '1px solid rgba(0,200,239,0.18)',
           borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
           boxShadow: 'inset 0 0 40px rgba(0,200,239,0.08)',
+          transform: 'translate(calc(var(--mx, 0) * 36px), calc(var(--my, 0) * 36px))',
+          transition: 'transform 0.15s cubic-bezier(0.2, 0, 0, 1)',
+          willChange: 'transform',
         }}
       />
       <div
@@ -144,13 +166,23 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
           border: '1px dashed rgba(168,85,247,0.22)',
           borderRadius: '50%',
           animation: 'spin-slow 30s linear infinite reverse',
+          transform: 'translate(calc(var(--mx, 0) * 48px), calc(var(--my, 0) * 48px))',
+          transition: 'transform 0.15s cubic-bezier(0.2, 0, 0, 1)',
+          willChange: 'transform',
         }}
       />
 
       {/* ── Content ── */}
       <div className="relative z-10 p-4 sm:p-7 lg:p-9">
-        {/* Tactical Telemetry Header */}
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-3 font-mono text-[9.5px] sm:text-[10px]">
+        {/* Tactical Telemetry Header — moves subtly in cursor direction */}
+        <div
+          className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-3 font-mono text-[9.5px] sm:text-[10px]"
+          style={{
+            transform: 'translate(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 4px))',
+            transition: 'transform 0.12s cubic-bezier(0.2, 0, 0, 1)',
+            willChange: 'transform',
+          }}
+        >
           <span className="cyber-telemetry-badge">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan-500)] animate-ping" />
             [DEFCON 4 // ACTIVE DEFENSE]
@@ -165,8 +197,15 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-8">
 
-          {/* Left: Text & Badges */}
-          <div className="space-y-3.5 sm:space-y-4 max-w-xl min-w-0">
+          {/* Left: Text & Badges — moves smoothly in cursor direction */}
+          <div
+            className="space-y-3.5 sm:space-y-4 max-w-xl min-w-0"
+            style={{
+              transform: 'translate(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 8px))',
+              transition: 'transform 0.12s cubic-bezier(0.2, 0, 0, 1)',
+              willChange: 'transform',
+            }}
+          >
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <span className="badge badge--primary text-[10px] sm:text-[11px]"><Sparkles size={9} />{t('hero.badgeIndia', "India's #1 AI Cyber Defense")}</span>
               <span className="badge badge--warning text-[10px] sm:text-[11px]"><Award size={9} />{t('hero.badgeMeity', "MeitY / CERT-In Aligned")}</span>
@@ -199,8 +238,15 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
             </div>
           </div>
 
-          {/* Right: CTAs — Strict containment, rock-solid clickability, no jitter */}
-          <div className="relative z-20 flex flex-col gap-2.5 shrink-0 w-full sm:w-[260px] lg:w-[270px] max-w-full">
+          {/* Right: CTAs — moves smoothly in cursor direction while keeping 100% solid clickability */}
+          <div
+            className="relative z-20 flex flex-col gap-2.5 shrink-0 w-full sm:w-[260px] lg:w-[270px] max-w-full"
+            style={{
+              transform: 'translate(calc(var(--mx, 0) * 14px), calc(var(--my, 0) * 10px))',
+              transition: 'transform 0.12s cubic-bezier(0.2, 0, 0, 1)',
+              willChange: 'transform',
+            }}
+          >
             <button
               type="button"
               onClick={(e) => {
