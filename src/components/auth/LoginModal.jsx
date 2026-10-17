@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
-  ShieldAlert, X, Mail, ArrowRight, CheckCircle2, User, KeyRound,
-  LogOut, ArrowLeft, Sparkles, ShieldCheck, Loader2, Lock, ExternalLink,
-  Plus, Check, RefreshCw, Trash2
+  ShieldAlert, X, Mail, ArrowRight, CheckCircle2,
+  LogOut, ArrowLeft, Sparkles, ShieldCheck, Loader2, Lock,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -34,7 +33,7 @@ const LoginModal = memo(({ onClose }) => {
   const lastGoogleName = localStorage.getItem('satya_last_google_name') || 'Bhargava Sood';
 
   // Last used general account (for 1-click resume)
-  const [lastUsedSession, setLastUsedSession] = useState(() => {
+  const [lastUsedSession] = useState(() => {
     try {
       const stored = localStorage.getItem('satya_last_used_account');
       return stored ? JSON.parse(stored) : null;
@@ -44,7 +43,7 @@ const LoginModal = memo(({ onClose }) => {
   });
 
   // Saved GitHub accounts list
-  const [savedGithubAccounts, setSavedGithubAccounts] = useState(() => {
+  const [savedGithubAccounts] = useState(() => {
     try {
       const stored = localStorage.getItem('satya_saved_github_accounts');
       const list = stored ? JSON.parse(stored) : [];
@@ -78,7 +77,7 @@ const LoginModal = memo(({ onClose }) => {
   });
 
   // Saved Google accounts list
-  const [savedGoogleAccounts, setSavedGoogleAccounts] = useState(() => {
+  const [savedGoogleAccounts] = useState(() => {
     try {
       const stored = localStorage.getItem('satya_saved_google_accounts');
       const list = stored ? JSON.parse(stored) : [];

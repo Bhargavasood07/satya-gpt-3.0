@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, RefreshCw, Cpu, AlertTriangle } from 'lucide-react';
+import { ShieldAlert, RefreshCw, AlertTriangle } from 'lucide-react';
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ export default class ErrorBoundary extends React.Component {
     try {
       sessionStorage.removeItem('satya_scan_temp');
       sessionStorage.removeItem('active_modal');
-    } catch (_) {}
+    } catch {}
 
     this.setState({ hasError: false, error: null, errorInfo: null });
 

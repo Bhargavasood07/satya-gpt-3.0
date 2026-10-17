@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Bot, Send, Sparkles, RefreshCw, Check, Code, BookOpen, Globe, PenTool, ShieldAlert } from 'lucide-react';
 import { askKavachAi } from '../../services/nemotronChatService';
 import { useChildMode } from '../../context/ChildModeContext';
@@ -118,7 +118,7 @@ const AIPersonaSelector = memo(() => {
         timestamp: new Date(),
       }
     ]);
-  }, [activeId]);
+  }, [activeId, activePersona?.greeting]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

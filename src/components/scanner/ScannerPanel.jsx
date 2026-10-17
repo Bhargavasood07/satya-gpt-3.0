@@ -1,12 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScanLine, Camera, QrCode, Link, MessageSquare, Shield } from 'lucide-react';
-import CameraFeed from './CameraFeed';
-import QRScanner from './QRScanner';
+import { ScanLine, Camera, QrCode, Link, MessageSquare, Shield, Loader2 } from 'lucide-react';
 import LinkChecker from './LinkChecker';
 import TextChecker from './TextChecker';
 import ErrorBoundary from '../common/ErrorBoundary';
 import { useChildMode } from '../../context/ChildModeContext';
+
+const QRScanner = lazy(() => import('./QRScanner'));
+const CameraFeed = lazy(() => import('./CameraFeed'));
 
 const ScannerPanel = ({ onScanResult }) => {
   const { t, i18n } = useTranslation();
@@ -85,8 +86,26 @@ const ScannerPanel = ({ onScanResult }) => {
         <ErrorBoundary inline title="Scanner Module Protected" key={activeTab}>
           {activeTab === 'link' && <LinkChecker onScanResult={onScanResult} />}
           {activeTab === 'text' && <TextChecker onScanResult={onScanResult} />}
-          {activeTab === 'qr' && <QRScanner onScanResult={onScanResult} />}
-          {activeTab === 'camera' && <CameraFeed />}
+          {activeTab === 'qr' && (
+            <Suspense fallback={
+              <div className="flex flex-col items-center justify-center py-12 gap-3 text-cyan-400">
+                <Loader2 size={24} className="animate-spin" />
+                <span className="text-xs">Initializing Optical QR Scanner Engine...</span>
+              </div>
+            }>
+              <QRScanner onScanResult={onScanResult} />
+            </Suspense>
+          )}
+          {activeTab === 'camera' && (
+            <Suspense fallback={
+              <div className="flex flex-col items-center justify-center py-12 gap-3 text-cyan-400">
+                <Loader2 size={24} className="animate-spin" />
+                <span className="text-xs">Initializing Camera Hardware Stream...</span>
+              </div>
+            }>
+              <CameraFeed />
+            </Suspense>
+          )}
         </ErrorBoundary>
       </div>
     </div>

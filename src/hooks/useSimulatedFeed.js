@@ -1,31 +1,28 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { generateEvent, generateInitialEvents, getMetricsSnapshot } from '../data/mockEvents';
 
-export function useSimulatedFeed(addNotification, t) {
+export function useSimulatedFeed() {
   const [events, setEvents] = useState(() => generateInitialEvents(15));
-  const [metrics, setMetrics] = useState(() => getMetricsSnapshot([]));
   const [selectedEvent, setSelectedEvent] = useState(null);
   const intervalRef = useRef(null);
 
-  // Update metrics when events change
-  useEffect(() => {
-    setMetrics(getMetricsSnapshot(events));
-  }, [events]);
+  // Compute metrics in the same render tick without triggering a secondary re-render
+  const metrics = useMemo(() => getMetricsSnapshot(events), [events]);
 
-  // Auto-generate new stream events (capped at max 50 for zero memory bloat)
+  // Auto-generate new stream events (capped at max 40 for zero memory bloat)
   useEffect(() => {
     const generateNew = () => {
+      // Pause updates if tab is backgrounded to save CPU/battery
+      if (typeof document !== 'undefined' && document.hidden) return;
       const event = generateEvent();
-      setEvents(prev => [event, ...prev].slice(0, 50));
-      // Automatic popup notifications are disabled so user view remains 100% clean and clear
+      setEvents(prev => [event, ...prev].slice(0, 40));
     };
 
-    // Schedule next stream update (4s interval)
     const scheduleNext = () => {
       intervalRef.current = setTimeout(() => {
         generateNew();
         scheduleNext();
-      }, 4000);
+      }, 5000);
     };
 
     scheduleNext();
@@ -37,7 +34,7 @@ export function useSimulatedFeed(addNotification, t) {
 
   const addManualEvent = useCallback((overrides = {}) => {
     const event = { ...generateEvent(), ...overrides };
-    setEvents(prev => [event, ...prev].slice(0, 50));
+    setEvents(prev => [event, ...prev].slice(0, 40));
     return event;
   }, []);
 
@@ -49,3 +46,5 @@ export function useSimulatedFeed(addNotification, t) {
     addManualEvent,
   };
 }
+
+export default useSimulatedFeed;

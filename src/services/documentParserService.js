@@ -1,9 +1,3 @@
-import * as pdfjsLib from 'pdfjs-dist';
-import mammoth from 'mammoth';
-import * as XLSX from 'xlsx';
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-
 export const SUPPORTED_FILE_TYPES = [
   '.pdf', '.docx', '.txt', '.xlsx', '.xls', '.csv',
   'application/pdf',
@@ -14,6 +8,11 @@ export const SUPPORTED_FILE_TYPES = [
   'text/csv'
 ];
 
+/**
+ * High-performance on-demand document parser.
+ * Heavy parser engines (pdfjs-dist, mammoth, xlsx) are dynamically imported
+ * ONLY when the user actually uploads that file type, keeping the initial bundle super light.
+ */
 export const parseDocument = async (file) => {
   if (!file) return { success: false, error: 'No file provided' };
 
@@ -26,6 +25,10 @@ export const parseDocument = async (file) => {
     const arrayBuffer = await file.arrayBuffer();
 
     if (fileName.endsWith('.pdf') || fileType === 'application/pdf') {
+      const pdfjsLib = await import('pdfjs-dist');
+      if (pdfjsLib.GlobalWorkerOptions) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+      }
       const loadingTask = pdfjsLib.getDocument(new Uint8Array(arrayBuffer));
       const pdf = await loadingTask.promise;
       pageCount = pdf.numPages;
@@ -38,9 +41,12 @@ export const parseDocument = async (file) => {
       }
       text = fullText;
     } else if (fileName.endsWith('.docx') || fileType.includes('wordprocessingml')) {
+      const mammothModule = await import('mammoth');
+      const mammoth = mammothModule.default || mammothModule;
       const result = await mammoth.extractRawText({ arrayBuffer });
       text = result.value;
     } else if (fileName.match(/\.(xlsx|xls|csv)$/) || fileType.includes('spreadsheet') || fileType === 'text/csv') {
+      const XLSX = await import('xlsx');
       const workbook = XLSX.read(arrayBuffer, { type: 'array' });
       const sheets = workbook.SheetNames;
       let allCsv = '';
@@ -50,15 +56,14 @@ export const parseDocument = async (file) => {
         allCsv += XLSX.utils.sheet_to_csv(sheet) + '\n\n';
       });
       text = allCsv;
-    } else if (fileName.endsWith('.txt') || fileType === 'text/plain') {
+    } else {
+      // Plain text fallback
       text = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => resolve(e.target.result);
-        reader.onerror = (e) => reject(new Error('Failed to read text file'));
+        reader.onerror = () => reject(new Error('Failed to read text file'));
         reader.readAsText(file);
       });
-    } else {
-      return { success: false, error: 'Unsupported file type' };
     }
 
     return {
@@ -66,9 +71,12 @@ export const parseDocument = async (file) => {
       text: text.trim(),
       fileName,
       fileType,
-      pageCount: pageCount > 0 ? pageCount : undefined
+      pageCount: pageCount || 1,
     };
-  } catch (error) {
-    return { success: false, error: error.message, fileName: file.name };
+  } catch (err) {
+    return {
+      success: false,
+      error: err.message || 'Failed to parse document',
+    };
   }
 };

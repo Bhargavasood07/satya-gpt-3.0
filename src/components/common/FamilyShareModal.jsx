@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Baby, MessageSquare, Copy, X, CheckCircle2, Heart } from 'lucide-react';
+import { Baby, MessageSquare, Copy, X, CheckCircle2 } from 'lucide-react';
 
 const FamilyShareModal = memo(({ onClose }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isHindi = i18n.language?.startsWith('hi');
   const [copied, setCopied] = React.useState(false);
 

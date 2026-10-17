@@ -141,7 +141,7 @@ function getDirectSiteMatches(q) {
 }
 
 // Helper 2: Knowledge Base Fallback Results
-function getKnowledgeBaseResults(q) {
+function getKnowledgeBaseResults(_q) {
   return [
     {
       title: 'Cybersecurity & Web Privacy Protection Standard (CISA)',

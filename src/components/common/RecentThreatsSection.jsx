@@ -217,4 +217,4 @@ const RecentThreatsSection = () => {
   );
 };
 
-export default RecentThreatsSection;
+export default React.memo(RecentThreatsSection);

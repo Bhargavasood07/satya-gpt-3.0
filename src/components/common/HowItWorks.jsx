@@ -139,4 +139,4 @@ const HowItWorks = ({ onTryItClick }) => {
   );
 };
 
-export default HowItWorks;
+export default React.memo(HowItWorks);

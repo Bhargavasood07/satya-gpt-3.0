@@ -2,9 +2,9 @@ import React, { useState, useEffect, memo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
-  ShieldAlert, Play, CheckCircle2, AlertTriangle, Zap, RefreshCw, X,
-  Terminal, ShieldCheck, Flame, ArrowRight, Activity, Cpu, Sparkles,
-  FileCheck, Copy, Download
+  Play, CheckCircle2, RefreshCw, X,
+  Terminal, ShieldCheck, Flame, Activity,
+  FileCheck, Copy
 } from 'lucide-react';
 
 const SIMULATION_SCENARIOS = [
@@ -281,7 +281,7 @@ const AttackSimulatorModal = memo(({ onClose, onOpenForensicCertificate }) => {
             </div>
 
             <div className="space-y-2">
-              {selectedScenario.layers.map((layer, idx) => {
+              {selectedScenario.layers.map((layer) => {
                 const isStepActive = currentStep === layer.step;
                 const isStepDone = currentStep > layer.step || isCompleted;
 

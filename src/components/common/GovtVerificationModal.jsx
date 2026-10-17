@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, Building2, Award, CheckCircle2, Lock, ExternalLink, X, FileText, Globe } from 'lucide-react';
+import { ShieldCheck, Building2, Award, CheckCircle2, Lock, ExternalLink, X, Globe } from 'lucide-react';
 
 const GovtVerificationModal = memo(({ onClose }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isHindi = i18n.language?.startsWith('hi');
 
   return (

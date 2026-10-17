@@ -1,6 +1,6 @@
 import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Download, Copy, CheckCircle2, X, ShieldAlert, Building2 } from 'lucide-react';
+import { FileText, Download, Copy, CheckCircle2, X } from 'lucide-react';
 
 const CyberComplaintGeneratorModal = memo(({ threatPayload = 'http://suspicious-bank-update.xyz', onClose }) => {
   const [copied, setCopied] = useState(false);

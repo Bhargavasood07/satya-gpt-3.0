@@ -1,11 +1,11 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { useCardTilt } from './hooks/useCardTilt';
 import { useTranslation } from 'react-i18next';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import {
   RefreshCw, ArrowUpCircle, ScanLine, ShieldAlert, PhoneCall,
   MapPin, Sparkles, Bot, GraduationCap, ArrowRight, Award, Shield,
-  Activity, TrendingUp, Users, Zap, ChevronRight,
+  Activity, Users,
 } from 'lucide-react';
 import { GitHubIcon } from './components/common/GitHubIcon';
 
@@ -22,15 +22,12 @@ import LiveScamTicker from './components/common/LiveScamTicker';
 // Chatbot
 import CyberAiChatbot from './components/chat/CyberAiChatbot';
 
-// Modals
-import AdminPanelModal from './components/admin/AdminPanelModal';
+// Core In-View Components
 import EnterprisePartnershipModal from './components/common/EnterprisePartnershipModal';
 import GoldenHourEmergencyModal from './components/common/GoldenHourEmergencyModal';
 import TrustBadgeModal from './components/common/TrustBadgeModal';
 import FamilyShareModal from './components/common/FamilyShareModal';
-import AccountSwitcherModal from './components/common/AccountSwitcherModal';
 import GovtVerificationModal from './components/common/GovtVerificationModal';
-import CyberThreatMapModal from './components/common/CyberThreatMapModal';
 import IpProtectionModal from './components/common/IpProtectionModal';
 import SlideOutDrawerSidebar from './components/common/SlideOutDrawerSidebar';
 import HowItWorks from './components/common/HowItWorks';
@@ -40,26 +37,29 @@ import CommandPaletteModal from './components/common/CommandPaletteModal';
 import SocTelemetryBento from './components/common/SocTelemetryBento';
 import LoginModal from './components/auth/LoginModal';
 import ErrorBoundary from './components/common/ErrorBoundary';
-import AttackSimulatorModal from './components/common/AttackSimulatorModal';
-import Helpline1930Modal from './components/common/Helpline1930Modal';
-import EnterpriseRoiCalculatorModal from './components/common/EnterpriseRoiCalculatorModal';
-import ForensicReportModal from './components/common/ForensicReportModal';
-import EnterpriseApiPlaygroundModal from './components/common/EnterpriseApiPlaygroundModal';
-import InvestorDataRoomModal from './components/common/InvestorDataRoomModal';
 import EnterpriseShowcaseBento from './components/common/EnterpriseShowcaseBento';
-import { useAuth } from './context/AuthContext';
-import { useTheme } from './context/ThemeContext';
-
-// Views
-import AIHubView from './components/aihub/AIHubView';
-import AnalyticsView from './components/views/AnalyticsView';
-import ChildSafetyView from './components/views/ChildSafetyView';
-import KavachAcademyView from './components/views/KavachAcademyView';
-import GuideDocsView from './components/views/GuideDocsView';
-import MetricsBar from './components/feed/MetricsBar';
 import DeepDivePanel from './components/feed/DeepDivePanel';
 import MetricDetailModal from './components/feed/MetricDetailModal';
 
+// Code-split Heavy On-Demand Modals (Loaded only when user opens them)
+const AdminPanelModal = lazy(() => import('./components/admin/AdminPanelModal'));
+const CyberThreatMapModal = lazy(() => import('./components/common/CyberThreatMapModal'));
+const AttackSimulatorModal = lazy(() => import('./components/common/AttackSimulatorModal'));
+const Helpline1930Modal = lazy(() => import('./components/common/Helpline1930Modal'));
+const EnterpriseRoiCalculatorModal = lazy(() => import('./components/common/EnterpriseRoiCalculatorModal'));
+const ForensicReportModal = lazy(() => import('./components/common/ForensicReportModal'));
+const EnterpriseApiPlaygroundModal = lazy(() => import('./components/common/EnterpriseApiPlaygroundModal'));
+const InvestorDataRoomModal = lazy(() => import('./components/common/InvestorDataRoomModal'));
+
+// Code-split Alternate Tab Views (Loaded only when navigated to)
+const AIHubView = lazy(() => import('./components/aihub/AIHubView'));
+const AnalyticsView = lazy(() => import('./components/views/AnalyticsView'));
+const ChildSafetyView = lazy(() => import('./components/views/ChildSafetyView'));
+const KavachAcademyView = lazy(() => import('./components/views/KavachAcademyView'));
+const GuideDocsView = lazy(() => import('./components/views/GuideDocsView'));
+
+import { useAuth } from './context/AuthContext';
+import { useTheme } from './context/ThemeContext';
 import { initAutoUpdater, reloadToLatestVersion } from './utils/autoUpdater';
 import { secureStorage } from './utils/securityGuard';
 import { useChildMode } from './context/ChildModeContext';
@@ -91,24 +91,41 @@ function FloatingOrb({ size, color, style, factor = 1 }) {
   );
 }
 
-function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick }) {
+const HeroBanner = React.memo(function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick }) {
   const { t, i18n } = useTranslation();
   const isHindi = i18n.language?.startsWith('hi');
   const heroRef = useRef(null);
+  const rafRef = useRef(null);
 
-  // Directional mouse tracking — smoothly moves elements in the cursor's direction
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  // Directional mouse tracking — smoothly moves elements in the cursor's direction with RAF throttling (zero lag)
   const handleMouseMove = useCallback((e) => {
-    const el = heroRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
-    el.style.setProperty('--mx', x.toFixed(3));
-    el.style.setProperty('--my', y.toFixed(3));
-    el.style.setProperty('--has-mouse', '1');
+    if (rafRef.current) return;
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const el = heroRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const x = ((clientX - rect.left) / rect.width - 0.5) * 2;
+      const y = ((clientY - rect.top)  / rect.height - 0.5) * 2;
+      el.style.setProperty('--mx', x.toFixed(3));
+      el.style.setProperty('--my', y.toFixed(3));
+      el.style.setProperty('--has-mouse', '1');
+    });
   }, []);
 
   const handleMouseLeave = useCallback(() => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
     const el = heroRef.current;
     if (!el) return;
     el.style.setProperty('--mx', '0');
@@ -238,15 +255,8 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
             </div>
           </div>
 
-          {/* Right: CTAs — moves smoothly in cursor direction while keeping 100% solid clickability */}
-          <div
-            className="relative z-20 flex flex-col gap-2.5 shrink-0 w-full sm:w-[260px] lg:w-[270px] max-w-full"
-            style={{
-              transform: 'translate(calc(var(--mx, 0) * 14px), calc(var(--my, 0) * 10px))',
-              transition: 'transform 0.12s cubic-bezier(0.2, 0, 0, 1)',
-              willChange: 'transform',
-            }}
-          >
+          {/* Right: CTAs — solid containment & instantaneous clickability */}
+          <div className="relative z-20 flex flex-col gap-2.5 shrink-0 w-full sm:w-[260px] lg:w-[270px] max-w-full">
             <button
               type="button"
               onClick={(e) => {
@@ -312,10 +322,10 @@ function HeroBanner({ onScanClick, onFreezeClick, onHelplineClick, onMapClick })
       </div>
     </section>
   );
-}
+});
 
-function StatCard({ icon: Icon, label, value, color, accentBg }) {
-  const { ref, onMouseMove, onMouseLeave } = useCardTilt({ max: 12, scale: 1.04 });
+const StatCard = React.memo(function StatCard({ icon: Icon, label, value, color, accentBg }) {
+  const { ref, onMouseMove, onMouseLeave } = useCardTilt({ max: 8, scale: 1.02 });
   return (
     <div
       ref={ref}
@@ -350,10 +360,10 @@ function StatCard({ icon: Icon, label, value, color, accentBg }) {
         style={{ background: `linear-gradient(90deg, ${color}80, ${color}25, transparent)` }} />
     </div>
   );
-}
+});
 
-function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick }) {
-  const { ref, onMouseMove, onMouseLeave } = useCardTilt({ max: 10, scale: 1.035 });
+const ModuleCard = React.memo(function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick }) {
+  const { ref, onMouseMove, onMouseLeave } = useCardTilt({ max: 8, scale: 1.02 });
   return (
     <button
       ref={ref}
@@ -396,7 +406,7 @@ function ModuleCard({ icon: Icon, title, description, accent, accentBg, onClick 
         style={{ background: `linear-gradient(90deg, transparent, ${accent}60, transparent)` }} />
     </button>
   );
-}
+});
 
 
 export default function App() {
@@ -559,7 +569,7 @@ export default function App() {
 
       setSelectedEvent(newEvt);
     },
-    [addManualEvent, t, setSelectedEvent, isChildMode]
+    [addManualEvent, setSelectedEvent, isChildMode]
   );
 
   // ── Render ─────────────────────────────────────────────────
@@ -781,11 +791,31 @@ export default function App() {
               </div>
             )}
 
-            {activeTab === 'guidedocs'  && <GuideDocsView onSelectTab={setActiveTab} />}
-            {activeTab === 'aihub'      && <AIHubView />}
-            {activeTab === 'academy'    && <KavachAcademyView />}
-            {activeTab === 'childSafety'&& <ChildSafetyView />}
-            {activeTab === 'analytics'  && <AnalyticsView metrics={metrics} events={events} />}
+            {activeTab === 'guidedocs'  && (
+              <Suspense fallback={<div className="py-20 text-center font-mono text-xs text-cyan-400 animate-pulse">Loading Guide Docs...</div>}>
+                <GuideDocsView onSelectTab={setActiveTab} />
+              </Suspense>
+            )}
+            {activeTab === 'aihub'      && (
+              <Suspense fallback={<div className="py-20 text-center font-mono text-xs text-purple-400 animate-pulse">Loading AI Hub...</div>}>
+                <AIHubView />
+              </Suspense>
+            )}
+            {activeTab === 'academy'    && (
+              <Suspense fallback={<div className="py-20 text-center font-mono text-xs text-emerald-400 animate-pulse">Loading KAVACH Academy...</div>}>
+                <KavachAcademyView />
+              </Suspense>
+            )}
+            {activeTab === 'childSafety'&& (
+              <Suspense fallback={<div className="py-20 text-center font-mono text-xs text-amber-400 animate-pulse">Loading Child Safety Guard...</div>}>
+                <ChildSafetyView />
+              </Suspense>
+            )}
+            {activeTab === 'analytics'  && (
+              <Suspense fallback={<div className="py-20 text-center font-mono text-xs text-blue-400 animate-pulse">Loading Telemetry Analytics...</div>}>
+                <AnalyticsView metrics={metrics} events={events} />
+              </Suspense>
+            )}
           </div>
         </main>
 
@@ -809,7 +839,9 @@ export default function App() {
 
         <AnimatePresence>
           {isAdminOpen && (
-            <AdminPanelModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} events={events} metrics={metrics} />
+            <Suspense fallback={null}>
+              <AdminPanelModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} events={events} metrics={metrics} />
+            </Suspense>
           )}
         </AnimatePresence>
 
@@ -823,9 +855,11 @@ export default function App() {
 
         <AnimatePresence>
           {isThreatMapOpen && (
-            <ErrorBoundary inline title="Threat Map Protected" onReset={() => setIsThreatMapOpen(false)}>
-              <CyberThreatMapModal onClose={() => setIsThreatMapOpen(false)} />
-            </ErrorBoundary>
+            <Suspense fallback={null}>
+              <ErrorBoundary inline title="Threat Map Protected" onReset={() => setIsThreatMapOpen(false)}>
+                <CyberThreatMapModal onClose={() => setIsThreatMapOpen(false)} />
+              </ErrorBoundary>
+            </Suspense>
           )}
         </AnimatePresence>
 
@@ -876,13 +910,15 @@ export default function App() {
 
         <AnimatePresence>
           {isHelplineOpen && (
-            <ErrorBoundary inline title="1930 Helpline Protected" onReset={() => setIsHelplineOpen(false)}>
-              <Helpline1930Modal
-                initialDossier={helplineDossier}
-                onClose={() => setIsHelplineOpen(false)}
-                onOpenBankFreeze={() => setIsEmergencyFreezeOpen(true)}
-              />
-            </ErrorBoundary>
+            <Suspense fallback={null}>
+              <ErrorBoundary inline title="1930 Helpline Protected" onReset={() => setIsHelplineOpen(false)}>
+                <Helpline1930Modal
+                  initialDossier={helplineDossier}
+                  onClose={() => setIsHelplineOpen(false)}
+                  onOpenBankFreeze={() => setIsEmergencyFreezeOpen(true)}
+                />
+              </ErrorBoundary>
+            </Suspense>
           )}
         </AnimatePresence>
 
@@ -901,57 +937,67 @@ export default function App() {
         {/* ── Enterprise & Investor Modals ── */}
         <AnimatePresence>
           {isSimulatorOpen && (
-            <ErrorBoundary inline title="Simulator Protected" onReset={() => setIsSimulatorOpen(false)}>
-              <AttackSimulatorModal
-                onClose={() => setIsSimulatorOpen(false)}
-                onOpenForensicCertificate={(threat) => {
-                  setSelectedForensicThreat(threat);
-                  setIsForensicsOpen(true);
-                }}
-              />
-            </ErrorBoundary>
+            <Suspense fallback={null}>
+              <ErrorBoundary inline title="Simulator Protected" onReset={() => setIsSimulatorOpen(false)}>
+                <AttackSimulatorModal
+                  onClose={() => setIsSimulatorOpen(false)}
+                  onOpenForensicCertificate={(threat) => {
+                    setSelectedForensicThreat(threat);
+                    setIsForensicsOpen(true);
+                  }}
+                />
+              </ErrorBoundary>
+            </Suspense>
           )}
         </AnimatePresence>
 
         <AnimatePresence>
           {isCalculatorOpen && (
-            <ErrorBoundary inline title="ROI Calculator Protected" onReset={() => setIsCalculatorOpen(false)}>
-              <EnterpriseRoiCalculatorModal
-                onClose={() => setIsCalculatorOpen(false)}
-                onOpenEnterprisePartnership={() => setIsPartnerOpen(true)}
-              />
-            </ErrorBoundary>
+            <Suspense fallback={null}>
+              <ErrorBoundary inline title="ROI Calculator Protected" onReset={() => setIsCalculatorOpen(false)}>
+                <EnterpriseRoiCalculatorModal
+                  onClose={() => setIsCalculatorOpen(false)}
+                  onOpenEnterprisePartnership={() => setIsPartnerOpen(true)}
+                />
+              </ErrorBoundary>
+            </Suspense>
           )}
         </AnimatePresence>
 
         <AnimatePresence>
           {isForensicsOpen && (
-            <ErrorBoundary inline title="Forensics Protected" onReset={() => setIsForensicsOpen(false)}>
-              <ForensicReportModal
-                initialThreatData={selectedForensicThreat}
-                onClose={() => setIsForensicsOpen(false)}
-              />
-            </ErrorBoundary>
+            <Suspense fallback={null}>
+              <ErrorBoundary inline title="Forensics Protected" onReset={() => setIsForensicsOpen(false)}>
+                <ForensicReportModal
+                  initialThreatData={selectedForensicThreat}
+                  onClose={() => setIsForensicsOpen(false)}
+                />
+              </ErrorBoundary>
+            </Suspense>
           )}
         </AnimatePresence>
 
         <AnimatePresence>
           {isApiPlaygroundOpen && (
-            <ErrorBoundary inline title="API Playground Protected" onReset={() => setIsApiPlaygroundOpen(false)}>
-              <EnterpriseApiPlaygroundModal onClose={() => setIsApiPlaygroundOpen(false)} />
-            </ErrorBoundary>
+            <Suspense fallback={null}>
+              <ErrorBoundary inline title="API Playground Protected" onReset={() => setIsApiPlaygroundOpen(false)}>
+                <EnterpriseApiPlaygroundModal onClose={() => setIsApiPlaygroundOpen(false)} />
+              </ErrorBoundary>
+            </Suspense>
           )}
         </AnimatePresence>
 
         <AnimatePresence>
           {isInvestorDataRoomOpen && (
-            <ErrorBoundary inline title="Investor Data Room Protected" onReset={() => setIsInvestorDataRoomOpen(false)}>
-              <InvestorDataRoomModal
-                onClose={() => setIsInvestorDataRoomOpen(false)}
-                onOpenCalculator={() => setIsCalculatorOpen(true)}
-                onOpenSimulator={() => setIsSimulatorOpen(true)}
-              />
-            </ErrorBoundary>
+            <Suspense fallback={null}>
+              <ErrorBoundary inline title="Investor Data Room Protected" onReset={() => setIsInvestorDataRoomOpen(false)}>
+                <InvestorDataRoomModal
+                  onClose={() => setIsInvestorDataRoomOpen(false)}
+                  onOpenCalculator={() => setIsCalculatorOpen(true)}
+                  onOpenSimulator={() => setIsSimulatorOpen(true)}
+                />
+              </ErrorBoundary>
+            </Suspense>
           )}
         </AnimatePresence>
 
