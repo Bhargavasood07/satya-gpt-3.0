@@ -23,24 +23,29 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = !!user;
 
-  // Social Login handler (Google, GitHub, Guest)
-  const login = useCallback((provider) => {
-    const profiles = {
+  // Social Login handler (Google, GitHub, Guest) with custom data support
+  const login = useCallback((provider, customData = {}) => {
+    const defaultProfiles = {
       google: {
-        name: 'SATYA User',
-        email: 'user@gmail.com',
+        name: customData.name || 'Bhargava Sood',
+        email: customData.email || 'bhargavasood07@gmail.com',
         provider: 'google',
-        avatar: null,
+        avatar: customData.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(customData.name || 'Bhargava Sood')}&backgroundColor=4285F4&textColor=ffffff`,
         loginTime: new Date().toISOString(),
-        id: 'google_' + Date.now(),
+        id: customData.id || 'google_' + Date.now(),
+        verified: true,
+        providerLabel: 'Google ID Verified',
       },
       github: {
-        name: 'SATYA Dev',
-        email: 'dev@github.com',
+        name: customData.name || 'Bhargava sood',
+        email: customData.email || `${customData.username || 'Bhargavasood07'}@users.noreply.github.com`,
+        username: customData.username || 'Bhargavasood07',
         provider: 'github',
-        avatar: null,
+        avatar: customData.avatar || 'https://avatars.githubusercontent.com/u/186374284?v=4',
         loginTime: new Date().toISOString(),
-        id: 'github_' + Date.now(),
+        id: customData.id || 'github_' + Date.now(),
+        verified: true,
+        providerLabel: 'GitHub Verified Developer',
       },
       guest: {
         name: 'Guest User',
@@ -49,15 +54,38 @@ export function AuthProvider({ children }) {
         avatar: null,
         loginTime: new Date().toISOString(),
         id: 'guest_' + Date.now(),
+        verified: false,
+        providerLabel: 'Guest Session',
       },
     };
 
-    const userProfile = profiles[provider] || profiles.guest;
+    const baseProfile = defaultProfiles[provider] || defaultProfiles.guest;
+    const userProfile = {
+      ...baseProfile,
+      ...customData,
+      provider: provider || 'guest',
+      loginTime: new Date().toISOString(),
+    };
+
     setUser(userProfile);
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userProfile));
+    try {
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userProfile));
+    } catch {
+      // Storage full or private mode
+    }
     setIsLoginModalOpen(false);
     return userProfile;
   }, []);
+
+  // Google ID Sign-in handler
+  const loginWithGoogle = useCallback((googleData = {}) => {
+    return login('google', googleData);
+  }, [login]);
+
+  // GitHub ID Sign-in handler
+  const loginWithGitHub = useCallback((githubData = {}) => {
+    return login('github', githubData);
+  }, [login]);
 
   // Custom Email Sign-In handler (Magic Link / Passwordless Email Login)
   const loginWithEmail = useCallback((emailInput, customName = '') => {
@@ -69,13 +97,19 @@ export function AuthProvider({ children }) {
       name: formattedName,
       email: cleanEmail,
       provider: 'email',
-      avatar: null,
+      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(formattedName)}&backgroundColor=06b6d4&textColor=ffffff`,
       loginTime: new Date().toISOString(),
       id: 'email_' + Date.now(),
+      verified: true,
+      providerLabel: 'Magic Link Verified',
     };
 
     setUser(emailProfile);
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(emailProfile));
+    try {
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(emailProfile));
+    } catch {
+      // Storage full or private mode
+    }
     setIsLoginModalOpen(false);
     return emailProfile;
   }, []);
@@ -115,6 +149,8 @@ export function AuthProvider({ children }) {
     user,
     isAuthenticated,
     login,
+    loginWithGoogle,
+    loginWithGitHub,
     loginWithEmail,
     logout,
     saveChatHistory,

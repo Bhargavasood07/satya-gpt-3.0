@@ -158,18 +158,40 @@ const TopBar = memo(({ onOpenAdmin, onToggleDrawer, onOpenCommandPalette, onOpen
         {/* Account Button */}
         <button
           onClick={openLoginModal}
-          className="btn btn--ghost py-1 px-2 sm:px-3 gap-1 sm:gap-1.5"
-          title="Account"
+          className="btn btn--ghost py-1 px-2 sm:px-3 gap-1.5 sm:gap-2 cursor-pointer"
+          title={isAuthenticated ? `Account: ${user?.name || 'User'} (${user?.email || user?.username || 'Authenticated'})` : 'Sign In'}
           aria-label="Account switcher"
         >
-          <div
-            className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
-            style={{ background: 'var(--success-muted)', border: '1px solid var(--success)' }}
-          >
-            <User size={11} style={{ color: 'var(--success)' }} />
-          </div>
-          <span className="hidden sm:inline text-xs font-semibold max-w-[85px] truncate" style={{ color: 'var(--text-secondary)' }}>
-            {isAuthenticated ? user?.name : t('topbar.guest', 'Guest')}
+          {user?.avatar ? (
+            <div className="relative w-5 h-5 rounded-full shrink-0">
+              <img
+                src={user.avatar}
+                alt={user.name || 'User'}
+                className="w-5 h-5 rounded-full object-cover border border-emerald-400"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              {user.provider === 'google' && (
+                <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-blue-500 border border-slate-900" />
+              )}
+              {user.provider === 'github' && (
+                <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-500 border border-slate-900" />
+              )}
+            </div>
+          ) : (
+            <div
+              className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+              style={{
+                background: isAuthenticated ? 'var(--success-muted)' : 'var(--surface-card)',
+                border: `1px solid ${isAuthenticated ? 'var(--success)' : 'var(--border-subtle)'}`,
+              }}
+            >
+              <User size={11} style={{ color: isAuthenticated ? 'var(--success)' : 'var(--text-muted)' }} />
+            </div>
+          )}
+          <span className="hidden sm:inline text-xs font-semibold max-w-[90px] truncate" style={{ color: 'var(--text-secondary)' }}>
+            {isAuthenticated ? (user?.name || user?.username) : t('topbar.signIn', 'Sign In')}
           </span>
           <ChevronDown size={11} style={{ color: 'var(--text-muted)' }} />
         </button>

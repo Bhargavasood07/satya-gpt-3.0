@@ -27,19 +27,30 @@ const AccountSwitcherModal = memo(({ onClose, onOpenAdmin }) => {
 
         {/* Profile Card Header (Matching YouTube/Google Style) */}
         <div className="flex items-center gap-3.5 border-b border-[#1E2D4A] pb-4">
-          <div className="w-12 h-12 rounded-full bg-purple-600 border-2 border-[var(--accent)] flex items-center justify-center text-white font-extrabold text-lg shadow-lg shrink-0">
-            {userInitial}
+          <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[var(--accent)] flex items-center justify-center text-white font-extrabold text-lg shadow-lg shrink-0 bg-gradient-to-tr from-purple-700 to-cyan-500">
+            {user?.avatar ? (
+              <img
+                src={user.avatar}
+                alt={user.name || 'User'}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            ) : (
+              <span>{userInitial}</span>
+            )}
           </div>
           <div className="flex flex-col min-w-0 flex-1">
             <span className="font-extrabold text-sm text-slate-100 truncate">
               {isAuthenticated ? user?.name : 'Guest User'}
             </span>
             <span className="text-[11px] text-cyan-400 truncate">
-              {isAuthenticated ? user?.email : '@guest-session'}
+              {isAuthenticated ? (user?.email || `@${user?.username}`) : '@guest-session'}
             </span>
             <span className="text-[9px] text-emerald-400 font-bold mt-0.5 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-              <span>{isAuthenticated ? 'Authenticated Account' : 'Guest Account Active'}</span>
+              <span>{isAuthenticated ? (user?.providerLabel || 'Authenticated Account') : 'Guest Account Active'}</span>
             </span>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { LayoutDashboard, ScanLine, BookOpen, Sparkles, GraduationCap, Building2, Baby, BarChart3, ShieldAlert, Share2, ShieldCheck, MapPin, KeyRound, Download, X, Bot, Award, PhoneCall, ExternalLink, Flame, Calculator, Scale, Code2, TrendingUp } from 'lucide-react';
 import { GitHubIcon } from './GitHubIcon';
 import { useChildMode } from '../../context/ChildModeContext';
+import { useAuth } from '../../context/AuthContext';
 
 const SlideOutDrawerSidebar = memo(({
   isOpen,
@@ -30,6 +31,7 @@ const SlideOutDrawerSidebar = memo(({
   const { t, i18n } = useTranslation();
   const isHindi = i18n.language?.startsWith('hi');
   const { isChildMode, toggleChildMode } = useChildMode();
+  const { user, isAuthenticated, openLoginModal } = useAuth();
 
   if (!isOpen) return null;
 
@@ -76,6 +78,45 @@ const SlideOutDrawerSidebar = memo(({
           >
             <X size={18} />
           </button>
+        </div>
+
+        {/* User Account Card */}
+        <div
+          onClick={() => {
+            onClose();
+            openLoginModal();
+          }}
+          className="p-2.5 bg-[#0d1629] hover:bg-[#131f38] border border-[var(--border-subtle)] hover:border-[var(--accent)] rounded-xl flex items-center justify-between transition-all cursor-pointer group shadow-sm"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="relative w-8 h-8 rounded-full overflow-hidden border border-emerald-400/60 bg-emerald-950 flex items-center justify-center shrink-0">
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.name || 'User'}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <span className="font-bold text-emerald-400 text-xs">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : 'G'}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col min-w-0 text-left">
+              <span className="font-bold text-xs text-slate-100 truncate">
+                {isAuthenticated ? (user?.name || user?.username) : (isHindi ? 'अतिथि (लॉगिन करें)' : 'Sign In / Account')}
+              </span>
+              <span className="text-[10px] text-cyan-400 truncate">
+                {isAuthenticated ? (user?.email || `@${user?.username}`) : (isHindi ? 'Google या GitHub से जुड़ें' : 'Google or GitHub ID')}
+              </span>
+            </div>
+          </div>
+          <span className="text-[10px] font-bold text-slate-400 group-hover:text-cyan-300 transition-colors shrink-0">
+            {isAuthenticated ? 'Manage' : 'Login →'}
+          </span>
         </div>
 
         {/* 1. Main Navigation Category */}
