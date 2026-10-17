@@ -160,7 +160,7 @@ export const KNOWN_BRANDS = [
 ];
 
 // Suspicious Top-Level Domains (TLDs) frequently abused by clone copycats
-const HIGH_RISK_TLDS = [
+export const HIGH_RISK_TLDS = [
   '.tk', '.xyz', '.top', '.work', '.click', '.buzz', '.space',
   '.club', '.fit', '.icu', '.cf', '.ga', '.ml', '.gq', '.cc',
   '.rest', '.cam', '.live', '.loan', '.vip', '.monster', '.support',

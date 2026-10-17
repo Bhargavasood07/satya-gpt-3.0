@@ -16,9 +16,22 @@ const CameraFeed = () => {
   const startCamera = async () => {
     try {
       setError(null);
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
-      });
+      let mediaStream;
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' }
+        });
+      } catch (envErr) {
+        try {
+          mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'user' }
+          });
+        } catch (userErr) {
+          mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: true
+          });
+        }
+      }
       setStream(mediaStream);
       setIsActive(true);
       if (videoRef.current) {
@@ -26,7 +39,7 @@ const CameraFeed = () => {
       }
     } catch (err) {
       console.error("Camera access error:", err);
-      setError('Permission denied');
+      setError(err?.name === 'NotAllowedError' ? 'Permission denied' : (err?.message || 'Camera unavailable'));
       setIsActive(false);
     }
   };

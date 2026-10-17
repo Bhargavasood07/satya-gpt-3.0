@@ -138,11 +138,12 @@ export default function BlockTransparencyCard({ event }) {
               <div className="p-2 bg-[#131B2E] rounded border border-[#27395C]">
                 <div className="text-[10px] text-[var(--text-muted)]">Threat Category</div>
                 <div className="text-[11px] font-bold text-rose-400">
-                  {clone?.isClone ? 'Fake Website Copycat Clone' :
+                  {event.inappropriateAnalysis?.category ||
+                   (clone?.isClone ? 'Fake Website Copycat Clone' :
                    ageAd?.isAgeRestricted ? '18+ Minor Safety Violation' :
                    phishAd?.isPhishingAd ? 'Malvertising Phishing Ad' :
                    event.payload.toLowerCase().includes('sbi') || event.payload.toLowerCase().includes('bank') ? 'Banking KYC Phishing Scam' : 
-                   event.payload.toLowerCase().includes('robux') ? 'Gaming Currency Trap' : 'Malicious Web Origin'}
+                   event.payload.toLowerCase().includes('robux') ? 'Gaming Currency Trap' : 'Malicious Web Origin')}
                 </div>
               </div>
               <div className="p-2 bg-[#131B2E] rounded border border-[#27395C]">

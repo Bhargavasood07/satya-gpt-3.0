@@ -67,6 +67,7 @@ import { useSimulatedFeed } from './hooks/useSimulatedFeed';
 import { scanPayloadOffline } from './services/offlineAiEngine';
 import { detectFakeNews } from './services/fakeNewsDetector';
 import { analyzeCloneAndAdThreat } from './services/cloneAndAdDetector';
+import { detectInappropriateContent } from './services/inappropriateContentDetector';
 import { usePwaInstall } from './hooks/usePwaInstall';
 
 // ── Dashboard Section Components ─────────────────────────────
@@ -494,31 +495,35 @@ export default function App() {
 
   const handleScanResult = useCallback(
     (decodedText, source = 'qr', vtReport = null) => {
+      const inappropriateReport = detectInappropriateContent(decodedText, { isChildMode, vtReport });
       const fakeNewsResult = detectFakeNews(decodedText);
       const offlineResult = scanPayloadOffline(decodedText, isChildMode);
       const cloneAndAdReport = analyzeCloneAndAdThreat(decodedText, isChildMode);
-      const lower = decodedText.toLowerCase();
-
-      const isAdultRedirect = lower.includes('adult') || lower.includes('watch') || lower.includes('hot');
-      const isGamingScam = lower.includes('robux') || lower.includes('fire-coins') || lower.includes('free-diamonds');
-      const isPhishing =
-        lower.includes('http://') || lower.includes('.tk') || lower.includes('.xyz') ||
-        lower.includes('sbi-kyc') || lower.includes('bitcoin:') ||
-        lower.includes('pan immediately') || lower.includes('.exe') ||
-        offlineResult.verdict === 'fake';
 
       const isSuspicious =
-        fakeNewsResult.isFakeNews || isAdultRedirect || isGamingScam || isPhishing ||
-        cloneAndAdReport.hasThreat || (vtReport && vtReport.maliciousCount > 0);
+        inappropriateReport.isInappropriate ||
+        inappropriateReport.isMalicious ||
+        fakeNewsResult.isFakeNews ||
+        cloneAndAdReport.hasThreat ||
+        (vtReport && vtReport.maliciousCount > 0) ||
+        offlineResult.verdict === 'fake';
 
       // Determine precise verdict label, severity and indicators
-      let verdictLabel = 'REAL';
-      let riskScore = 4;
-      let severity = 'low';
-      let verdictReason = 'KAVACH AI & VirusTotal v3: Payload verified clean across 90+ engines.';
-      let indicators = ['VirusTotal v3 Clean', 'Official Domain Certificate Verified'];
+      let verdictLabel = inappropriateReport.isInappropriate ? inappropriateReport.badgeLabel : 'REAL';
+      let riskScore = inappropriateReport.riskScore || 4;
+      let severity = inappropriateReport.severity === 'safe' ? 'low' : (inappropriateReport.severity || 'low');
+      let verdictReason = inappropriateReport.reason || 'KAVACH AI & VirusTotal v3: Payload verified clean across 90+ engines.';
+      let indicators = inappropriateReport.indicators?.length > 0
+        ? inappropriateReport.indicators
+        : ['VirusTotal v3 Clean', 'Official Domain Certificate Verified'];
 
-      if (cloneAndAdReport.cloneAnalysis?.isClone) {
+      if (inappropriateReport.isInappropriate) {
+        verdictLabel = inappropriateReport.badgeLabel;
+        riskScore = inappropriateReport.riskScore;
+        severity = inappropriateReport.severity;
+        verdictReason = inappropriateReport.reason;
+        indicators = inappropriateReport.indicators;
+      } else if (cloneAndAdReport.cloneAnalysis?.isClone) {
         verdictLabel = 'WEBSITE CLONE (COPYCAT)';
         riskScore = cloneAndAdReport.cloneAnalysis.riskScore || 99;
         severity = 'critical';
@@ -556,12 +561,13 @@ export default function App() {
         preview: decodedText.length > 50 ? decodedText.substring(0, 50) + '...' : decodedText,
         verdict: isSuspicious ? 'fake' : 'real',
         verdictLabel,
-        confidence: isSuspicious ? 98.6 : 99.2,
+        confidence: inappropriateReport.confidence || (isSuspicious ? 98.6 : 99.2),
         riskScore,
         severity,
         verdictReason,
         vtReport,
         indicators,
+        inappropriateAnalysis: inappropriateReport,
         cloneAnalysis: cloneAndAdReport.cloneAnalysis,
         ageAnalysis: cloneAndAdReport.ageAnalysis,
         adAnalysis: cloneAndAdReport.adAnalysis,
