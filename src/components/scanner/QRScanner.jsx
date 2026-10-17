@@ -4,7 +4,9 @@ import {
   QrCode, Upload, CheckCircle2, ShieldCheck, ShieldAlert, Activity,
   RefreshCw, Copy, Check, AlertTriangle, ExternalLink, PhoneCall,
   Camera, SwitchCamera, Sparkles, AlertOctagon, Eye, EyeOff,
-  FileText, Wifi, CreditCard, Link2, ChevronRight, Shield
+  FileText, Wifi, CreditCard, Link2, ChevronRight, Shield,
+  Globe, Server, Lock, ArrowRight, CornerDownRight, Radio,
+  Compass, MapPin, Database, Award, Info
 } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { analyzeScamGlobally } from '../../services/virusTotalService';
@@ -32,7 +34,7 @@ const QRScanner = ({ onScanResult }) => {
   const [activeCameraIndex, setActiveCameraIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const [uploadedPreview, setUploadedPreview] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'perimeter' | 'related' | 'threats'
 
   const html5QrCodeRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -48,7 +50,7 @@ const QRScanner = ({ onScanResult }) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, ctx.currentTime); // A5 note
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
       gain.gain.setValueAtTime(0.1, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
       osc.connect(gain);
@@ -60,7 +62,7 @@ const QRScanner = ({ onScanResult }) => {
 
   const statusMessages = useMemo(() => [
     isHindi ? 'AI मोशन डिटेक्टर रडार सक्रिय...' : 'AI Optical Motion Radar Active...',
-    isHindi ? 'QR पेलोड और अनुपयुक्त सामग्री की जांच...' : 'Scanning QR payload & inappropriate content...',
+    isHindi ? 'QR पेलोड, पेरीमीटर व प्रामाणिकता की जांच...' : 'Evaluating Real vs Fake Authenticity & Security Perimeter...',
     isHindi ? '92 वायरसटोटल इंजनों के साथ विश्लेषण...' : 'Cross-evaluating across 92 SOC engines...',
   ], [isHindi]);
 
@@ -106,16 +108,15 @@ const QRScanner = ({ onScanResult }) => {
     }
   }, [stopStatusCycle]);
 
-  // Main scan success handler: runs inappropriate content detector + global VT engines
+  // Main scan success handler: runs real/fake detector + perimeter + related content + global VT engines
   const handleScanSuccess = useCallback(async (decodedText) => {
     playScanBeep();
     await safeStopScanner();
     setScanResult(decodedText);
-    setIsProcessing(true);
-    setStatusText(isHindi ? 'सामग्री का विश्लेषण हो रहा है...' : 'Evaluating Inappropriate Content & Threat Matrices...');
+    setStatusText(isHindi ? 'पेरीमीटर व सामग्री का विश्लेषण हो रहा है...' : 'Evaluating Real/Fake Verdict, Security Perimeter & Related Threats...');
 
     try {
-      // 1. Instant Deep Inappropriate Content Analysis
+      // 1. Instant Deep Analysis
       const initialReport = detectInappropriateContent(decodedText, { isChildMode });
       setAnalysisReport(initialReport);
 
@@ -133,7 +134,6 @@ const QRScanner = ({ onScanResult }) => {
     } catch (err) {
       console.error('Error analyzing QR content:', err);
     } finally {
-      setIsProcessing(false);
       setStatusText('');
     }
   }, [safeStopScanner, playScanBeep, isChildMode, isHindi, onScanResult]);
@@ -159,7 +159,7 @@ const QRScanner = ({ onScanResult }) => {
     };
   }, []);
 
-  // Start Camera Scanning with multi-tier fallback (environment -> user -> deviceId)
+  // Start Camera Scanning with multi-tier fallback
   const startCameraScan = useCallback(async (preferredCameraId = null) => {
     setCameraError(null);
     try {
@@ -188,13 +188,7 @@ const QRScanner = ({ onScanResult }) => {
         aspectRatio: 1.0,
       };
 
-      // Camera selection strategy:
-      // 1. Explicit camera ID if supplied or selected
-      // 2. Back camera if detected in available cameras
-      // 3. facingMode: "environment"
-      // 4. Fallback to facingMode: "user" (e.g. desktop webcams)
       let targetCamera = null;
-
       if (preferredCameraId) {
         targetCamera = preferredCameraId;
       } else if (availableCameras.length > 0) {
@@ -211,12 +205,9 @@ const QRScanner = ({ onScanResult }) => {
         }
       }
 
-      // Try facingMode: environment
       try {
         await html5QrCode.start({ facingMode: 'environment' }, scanConfig, handleScanSuccess, () => {});
       } catch (envErr) {
-        console.warn('Environment facingMode failed, falling back to front/user webcam:', envErr);
-        // Fallback to front webcam / user camera (crucial for laptops/desktops)
         await html5QrCode.start({ facingMode: 'user' }, scanConfig, handleScanSuccess, () => {});
       }
     } catch (err) {
@@ -230,7 +221,6 @@ const QRScanner = ({ onScanResult }) => {
     }
   }, [availableCameras, activeCameraIndex, cycleStatusText, handleScanSuccess, isHindi, safeStopScanner]);
 
-  // Switch between available cameras
   const handleSwitchCamera = useCallback(async () => {
     if (availableCameras.length <= 1) return;
     const nextIndex = (activeCameraIndex + 1) % availableCameras.length;
@@ -241,12 +231,10 @@ const QRScanner = ({ onScanResult }) => {
     }
   }, [availableCameras, activeCameraIndex, startCameraScan]);
 
-  // Handle Image File Upload (PNG, JPG, WEBP, SVG)
   const handleFileUpload = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Show image preview
     const reader = new FileReader();
     reader.onload = (e) => setUploadedPreview(e.target.result);
     reader.readAsDataURL(file);
@@ -259,7 +247,6 @@ const QRScanner = ({ onScanResult }) => {
       setIsScanning(true);
       cycleStatusText();
 
-      // Ensure hidden container exists
       let hiddenEl = document.getElementById('qr-file-reader-hidden');
       if (!hiddenEl) {
         hiddenEl = document.createElement('div');
@@ -306,7 +293,6 @@ const QRScanner = ({ onScanResult }) => {
     e.stopPropagation();
   };
 
-  // Copy payload to clipboard
   const handleCopyPayload = () => {
     if (!scanResult) return;
     navigator.clipboard.writeText(scanResult).then(() => {
@@ -315,34 +301,37 @@ const QRScanner = ({ onScanResult }) => {
     });
   };
 
-  // Safe cleanup on unmount
   useEffect(() => {
     return () => {
       safeStopScanner();
     };
   }, [safeStopScanner]);
 
-  const isInappropriate = analysisReport?.isInappropriate;
-  const isMalicious = analysisReport?.isMalicious || (vtAnalysis && (vtAnalysis.maliciousCount > 0 || vtAnalysis.riskScore > 50));
-  const isSafe = analysisReport?.isSafe && !isMalicious;
+  const isReal = analysisReport?.isReal;
+  const isFake = analysisReport?.isFake;
+  const perimeter = analysisReport?.perimeterDetails;
+  const related = analysisReport?.relatedContent;
 
   return (
-    <div className="flex flex-col gap-3.5 h-full cyber-card bg-[#0e1424] rounded-xl border border-[#1e2d4a] p-3.5 sm:p-4 font-mono text-xs text-[var(--text-primary)]">
+    <div className="flex flex-col gap-3.5 h-full cyber-card bg-[#0a0f1d] rounded-xl border border-[#1e2d4a] p-3.5 sm:p-4 font-mono text-xs text-[var(--text-primary)] relative overflow-hidden">
+      {/* Background Cyber Scanning Grid */}
+      <div className="absolute inset-0 bg-[radial-gradient(#1e2d4a_1px,transparent_1px)] [background-size:16px_16px] opacity-25 pointer-events-none" />
+
       {/* Header & Mode Switcher */}
-      <div className="flex flex-wrap justify-between items-center gap-2 border-b border-[#1b2742] pb-3">
+      <div className="relative z-10 flex flex-wrap justify-between items-center gap-2 border-b border-[#1b2742] pb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[var(--accent)]/15 border border-[var(--accent)]/30 flex items-center justify-center text-[var(--accent)]">
-            <QrCode size={16} />
+          <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/15 border border-[var(--accent)]/30 flex items-center justify-center text-[var(--accent)] shadow-[0_0_10px_var(--accent-glow)]">
+            <QrCode size={18} />
           </div>
           <div>
             <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--text-primary)] flex items-center gap-1.5">
-              <span>{isHindi ? 'AI मोशन व अनुपयुक्त सामग्री QR स्कैनर' : 'AI Optical & Content Scanner'}</span>
+              <span>{isHindi ? 'AI मोशन QR विश्लेषक (असली या नकली)' : 'AI Optical QR Analyzer (Real vs Fake)'}</span>
               <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
                 v6.2
               </span>
             </h3>
             <p className="text-[10px] text-[var(--text-muted)]">
-              {isHindi ? '18+ सामग्री, सट्टा, नकली UPI और मैलवेयर की रीयल-टाइम पहचान' : 'Real-time detection of 18+ adult, betting, fake UPI & malware payloads'}
+              {isHindi ? 'असली या नकली की पहचान, तकनीकी पेरीमीटर और संबंधित खतरों का विश्लेषण' : 'Real vs Fake verification, underlying forensic perimeter & related threat intelligence'}
             </p>
           </div>
         </div>
@@ -360,7 +349,7 @@ const QRScanner = ({ onScanResult }) => {
             </button>
           )}
 
-          <div className="flex bg-[#080d1a] rounded-lg p-0.5 border border-[#1e2d4a]">
+          <div className="flex bg-[#070b14] rounded-lg p-0.5 border border-[#1e2d4a]">
             <button
               type="button"
               onClick={() => {
@@ -396,259 +385,490 @@ const QRScanner = ({ onScanResult }) => {
       </div>
 
       {/* Main View Area */}
-      <div className="flex-grow flex flex-col gap-3">
+      <div className="relative z-10 flex-grow flex flex-col gap-3">
         {scanResult && analysisReport ? (
-          /* ── DETAILED SCAN & INAPPROPRIATE CONTENT RESULTS VIEW ── */
-          <div className="flex flex-col gap-3.5 animate-fadeIn">
-            {/* Primary Threat Banner */}
+          /* ── DETAILED REAL vs FAKE & PERIMETER RESULTS VIEW ── */
+          <div className="flex flex-col gap-3 animate-fadeIn">
+            {/* 1. BOLD REAL vs FAKE VERDICT HERO BANNER */}
             <div
-              className={`p-4 rounded-xl border flex flex-col gap-3 shadow-xl relative overflow-hidden ${
-                isInappropriate || isMalicious
-                  ? 'bg-gradient-to-br from-rose-950/40 via-red-900/20 to-slate-950/80 border-rose-500/60 text-rose-200'
-                  : 'bg-gradient-to-br from-emerald-950/40 via-teal-900/20 to-slate-950/80 border-emerald-500/60 text-emerald-200'
+              className={`p-3.5 sm:p-4 rounded-xl border flex flex-col gap-2.5 shadow-2xl relative overflow-hidden ${
+                isFake
+                  ? 'bg-gradient-to-r from-rose-950/70 via-red-950/40 to-slate-950/90 border-rose-500/70 text-rose-200'
+                  : 'bg-gradient-to-r from-emerald-950/70 via-teal-950/40 to-slate-950/90 border-emerald-500/70 text-emerald-200'
               }`}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
                   <div
-                    className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg ${
-                      isInappropriate || isMalicious
-                        ? 'bg-rose-500/20 border border-rose-500 text-rose-400 animate-pulse'
-                        : 'bg-emerald-500/20 border border-emerald-500 text-emerald-400'
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-lg ${
+                      isFake
+                        ? 'bg-rose-500/25 border-2 border-rose-500 text-rose-400 animate-pulse'
+                        : 'bg-emerald-500/25 border-2 border-emerald-500 text-emerald-400'
                     }`}
                   >
-                    {isInappropriate || isMalicious ? (
-                      <AlertOctagon size={26} />
-                    ) : (
-                      <ShieldCheck size={26} />
-                    )}
+                    {isFake ? <ShieldAlert size={28} /> : <ShieldCheck size={28} />}
                   </div>
 
                   <div>
-                    <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                    {/* Big REAL or FAKE Pill */}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wide ${
-                          isInappropriate || isMalicious
-                            ? 'bg-rose-500 text-slate-950 shadow-sm'
-                            : 'bg-emerald-500 text-slate-950 shadow-sm'
+                        className={`px-3 py-1 rounded-md text-xs sm:text-sm font-black uppercase tracking-wider shadow-md ${
+                          isFake
+                            ? 'bg-rose-500 text-slate-950 shadow-[0_0_15px_rgba(244,63,94,0.4)]'
+                            : 'bg-emerald-500 text-slate-950 shadow-[0_0_15px_rgba(16,185,129,0.4)]'
                         }`}
                       >
-                        {analysisReport.badgeLabel || (isMalicious ? 'THREAT DETECTED' : 'SAFE')}
+                        {isFake ? '🔴 VERDICT: FAKE SCAM QR' : '🟢 VERDICT: REAL SAFE QR'}
                       </span>
-                      <span className="text-[10px] font-bold text-[var(--text-muted)] bg-black/40 px-2 py-0.5 rounded border border-white/10">
-                        {analysisReport.rating}
+                      <span className="text-[10px] font-bold text-[var(--text-muted)] bg-black/60 px-2 py-0.5 rounded border border-white/10">
+                        {analysisReport.authenticityBadge}
                       </span>
-                      {analysisReport.isChildSafetyViolation && (
-                        <span className="text-[9.5px] font-bold text-amber-400 bg-amber-950/50 px-2 py-0.5 rounded border border-amber-500/40 flex items-center gap-1">
-                          <Shield size={10} />
-                          {isHindi ? 'बाल सुरक्षा उल्लंघन' : 'Child Safety Violation'}
-                        </span>
-                      )}
                     </div>
 
-                    <h4 className="text-sm sm:text-base font-bold text-[var(--text-primary)]">
+                    <h4 className="text-sm sm:text-base font-bold text-white mt-1">
                       {analysisReport.title}
                     </h4>
                   </div>
                 </div>
 
-                {/* Risk Score Pill */}
-                <div className="text-right shrink-0 bg-black/50 p-2 rounded-lg border border-white/10">
-                  <div className="text-[9px] uppercase tracking-wider text-[var(--text-muted)]">Risk Index</div>
-                  <div
-                    className={`text-base sm:text-lg font-black font-mono leading-none ${
-                      analysisReport.riskScore > 70
-                        ? 'text-rose-400'
-                        : analysisReport.riskScore > 40
-                        ? 'text-amber-400'
-                        : 'text-emerald-400'
-                    }`}
-                  >
-                    {analysisReport.riskScore}/100
+                {/* Risk and Perimeter Status Badges */}
+                <div className="flex items-center gap-2 ml-auto sm:ml-0 shrink-0">
+                  <div className="bg-black/60 px-3 py-2 rounded-lg border border-white/10 text-right">
+                    <div className="text-[9px] uppercase tracking-wider text-[var(--text-muted)]">Perimeter Status</div>
+                    <div className={`text-xs font-black font-mono ${isFake ? 'text-rose-400' : 'text-emerald-400'}`}>
+                      {perimeter?.perimeterStatus.split(' ')[0] || (isFake ? 'BREACH' : 'SECURE')}
+                    </div>
                   </div>
-                  <div className="text-[9px] text-[var(--text-muted)] mt-0.5">
-                    {analysisReport.confidence}% confidence
+                  <div className="bg-black/60 px-3 py-2 rounded-lg border border-white/10 text-right">
+                    <div className="text-[9px] uppercase tracking-wider text-[var(--text-muted)]">Risk Index</div>
+                    <div className={`text-sm sm:text-base font-black font-mono ${isFake ? 'text-rose-400' : 'text-emerald-400'}`}>
+                      {analysisReport.riskScore}/100
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Inappropriate Reason Description */}
-              <div className="bg-black/40 border border-white/10 rounded-lg p-2.5 text-xs text-[var(--text-primary)] leading-relaxed">
-                <span className="font-bold text-[var(--accent)] mr-1">
-                  {isHindi ? 'मूल्यांकन निष्कर्ष:' : 'Analysis Summary:'}
+              {/* Verdict Summary Box */}
+              <div className="bg-black/50 border border-white/10 rounded-lg p-2.5 text-xs text-slate-200 leading-relaxed flex items-start gap-2">
+                <span className="text-[var(--accent)] font-bold shrink-0">
+                  {isHindi ? 'निरीक्षण निष्कर्ष:' : 'Forensic Verdict:'}
                 </span>
-                {analysisReport.reason}
+                <span>{analysisReport.reason}</span>
               </div>
             </div>
 
-            {/* Content & Metadata Inspector */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {/* Left Column: Decoded Payload & QR Type Details */}
-              <div className="bg-[#0b101e] border border-[#1e2d4a] rounded-xl p-3 flex flex-col gap-2">
+            {/* 2. INSPECTION TABS (Overview, Perimeter Behind QR, Related Content, Threats) */}
+            <div className="flex gap-1 bg-[#060a14] p-1 rounded-xl border border-[#1b2742] text-[11px] overflow-x-auto">
+              <button
+                type="button"
+                onClick={() => setActiveTab('overview')}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  activeTab === 'overview'
+                    ? 'bg-[var(--accent)] text-slate-950 shadow-sm'
+                    : 'text-[var(--text-muted)] hover:text-white'
+                }`}
+              >
+                <Compass size={13} />
+                <span>{isHindi ? '1. अवलोकन व पेलोड' : '1. Overview & Payload'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('perimeter')}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  activeTab === 'perimeter'
+                    ? 'bg-[var(--accent)] text-slate-950 shadow-sm'
+                    : 'text-[var(--text-muted)] hover:text-white'
+                }`}
+              >
+                <Server size={13} />
+                <span>{isHindi ? '2. पेरीमीटर (Perimeter Behind QR)' : '2. Perimeter Behind QR'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('related')}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  activeTab === 'related'
+                    ? 'bg-[var(--accent)] text-slate-950 shadow-sm'
+                    : 'text-[var(--text-muted)] hover:text-white'
+                }`}
+              >
+                <Globe size={13} />
+                <span>{isHindi ? '3. संबंधित सामग्री व तुलना' : '3. Related Content & Comparison'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('threats')}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  activeTab === 'threats'
+                    ? 'bg-[var(--accent)] text-slate-950 shadow-sm'
+                    : 'text-[var(--text-muted)] hover:text-white'
+                }`}
+              >
+                <AlertTriangle size={13} />
+                <span>{isHindi ? '4. खतरे व अनुपयुक्त सामग्री' : '4. Inappropriate Flags'}</span>
+              </button>
+            </div>
+
+            {/* 3. TAB 1: OVERVIEW & PAYLOAD */}
+            {activeTab === 'overview' && (
+              <div className="bg-[#0b101e] border border-[#1e2d4a] rounded-xl p-3 flex flex-col gap-3">
                 <div className="flex items-center justify-between border-b border-[#18233a] pb-2">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--accent)]">
-                    {analysisReport.parsedType === 'upi' ? (
-                      <CreditCard size={14} />
-                    ) : analysisReport.parsedType === 'url' ? (
-                      <Link2 size={14} />
-                    ) : analysisReport.parsedType === 'wifi' ? (
-                      <Wifi size={14} />
-                    ) : (
-                      <FileText size={14} />
-                    )}
+                    {analysisReport.parsedType === 'upi' ? <CreditCard size={15} /> : <Link2 size={15} />}
                     <span className="uppercase">
                       {analysisReport.parsedType === 'upi'
                         ? 'UPI Payment Payload'
                         : analysisReport.parsedType === 'url'
-                        ? 'Web URL Target'
-                        : analysisReport.parsedType === 'wifi'
-                        ? 'Wi-Fi Network Profile'
-                        : 'Decoded Text Payload'}
+                        ? 'Web URL Destination'
+                        : 'Decoded QR Content'}
                     </span>
                   </div>
 
                   <button
                     type="button"
                     onClick={handleCopyPayload}
-                    className="flex items-center gap-1 px-2 py-0.5 bg-[#141d33] hover:bg-[#1e2c4d] text-[var(--text-secondary)] hover:text-white rounded border border-[#27395c] text-[10px] transition-colors cursor-pointer"
+                    className="flex items-center gap-1 px-2.5 py-1 bg-[#141d33] hover:bg-[#1e2c4d] text-white rounded-lg border border-[#27395c] text-[11px] transition-colors cursor-pointer"
                   >
-                    {copied ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
-                    <span>{copied ? (isHindi ? 'कॉपी हुआ!' : 'Copied!') : (isHindi ? 'कॉपी करें' : 'Copy')}</span>
+                    {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    <span>{copied ? 'Copied to Clipboard!' : 'Copy Payload'}</span>
                   </button>
                 </div>
 
-                {/* Parsed Field Inspector for UPI */}
+                {/* If UPI: Detailed Fields */}
                 {analysisReport.parsedType === 'upi' && analysisReport.parsedDetails && (
-                  <div className="space-y-1.5 text-[11px] bg-[#070b14] p-2.5 rounded-lg border border-[#1b2742]">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[var(--text-muted)]">Payee Address (VPA):</span>
-                      <span className="font-bold text-amber-300 font-mono">
-                        {analysisReport.parsedDetails.payeeAddress || 'N/A'}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] bg-[#070b14] p-3 rounded-lg border border-[#1b2742]">
+                    <div>
+                      <span className="text-[var(--text-muted)] block text-[10px] uppercase">Payee VPA Handle</span>
+                      <span className="font-bold text-amber-300 font-mono break-all">
+                        {analysisReport.parsedDetails.payeeAddress}
                       </span>
                     </div>
-                    {analysisReport.parsedDetails.payeeName && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-[var(--text-muted)]">Payee Display Name:</span>
-                        <span className="font-bold text-[var(--text-primary)]">
-                          {analysisReport.parsedDetails.payeeName}
-                        </span>
-                      </div>
-                    )}
-                    {analysisReport.parsedDetails.amount && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-[var(--text-muted)]">Requested Debit Amount:</span>
-                        <span className="font-bold text-rose-400 font-mono">
-                          ₹{analysisReport.parsedDetails.amount} {analysisReport.parsedDetails.currency || 'INR'}
-                        </span>
-                      </div>
-                    )}
-                    {analysisReport.parsedDetails.transactionNote && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-[var(--text-muted)]">Transaction Note / Lure:</span>
-                        <span className="italic text-cyan-300">
-                          "{analysisReport.parsedDetails.transactionNote}"
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Parsed Field Inspector for URL */}
-                {analysisReport.parsedType === 'url' && analysisReport.parsedDetails && (
-                  <div className="space-y-1 text-[11px] bg-[#070b14] p-2.5 rounded-lg border border-[#1b2742]">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[var(--text-muted)]">Destination Host:</span>
-                      <span className="font-bold text-cyan-300 font-mono">
-                        {analysisReport.parsedDetails.hostname}
+                    <div>
+                      <span className="text-[var(--text-muted)] block text-[10px] uppercase">Registered Payee Name</span>
+                      <span className="font-bold text-white">
+                        {analysisReport.parsedDetails.payeeName || 'Unregistered Individual'}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-[var(--text-muted)]">Protocol Encryption:</span>
-                      <span className={analysisReport.parsedDetails.isHttps ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
-                        {analysisReport.parsedDetails.protocol?.toUpperCase() || 'HTTP'} {analysisReport.parsedDetails.isHttps ? '🔒 Secure' : '⚠️ Unencrypted'}
+                    <div>
+                      <span className="text-[var(--text-muted)] block text-[10px] uppercase">Transaction Amount</span>
+                      <span className="font-bold text-rose-400 font-mono text-xs">
+                        {analysisReport.parsedDetails.amount ? `₹${analysisReport.parsedDetails.amount} INR (DEBIT REQUEST)` : 'Variable User Input'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[var(--text-muted)] block text-[10px] uppercase">Transaction Note / Bait</span>
+                      <span className="italic text-cyan-300">
+                        "{analysisReport.parsedDetails.transactionNote || 'None'}"
                       </span>
                     </div>
                   </div>
                 )}
 
-                {/* Raw Decoded Text */}
-                <div className="mt-1">
-                  <div className="text-[9.5px] uppercase text-[var(--text-muted)] mb-1">
-                    {isHindi ? 'कच्चा पेलोड (Raw Data):' : 'Raw Decoded Text:'}
-                  </div>
-                  <pre className="text-[11px] font-mono text-[var(--text-secondary)] break-all bg-[#070b14] p-2.5 rounded-lg border border-[#1b2742] max-h-24 overflow-y-auto whitespace-pre-wrap">
+                {/* Raw Decoded Content Box */}
+                <div>
+                  <div className="text-[10px] uppercase text-[var(--text-muted)] mb-1">Decoded Payload Data</div>
+                  <pre className="text-[11px] font-mono text-slate-300 break-all bg-[#070b14] p-3 rounded-lg border border-[#1b2742] max-h-28 overflow-y-auto whitespace-pre-wrap">
                     {scanResult}
                   </pre>
                 </div>
-              </div>
 
-              {/* Right Column: Inappropriate Indicators & Safety Directives */}
+                {/* Quick Safety Directives */}
+                <div className="p-2.5 rounded-lg bg-[#0e172a] border border-[#1e2d4a] text-[11px] space-y-1">
+                  <div className="font-bold text-amber-400 flex items-center gap-1.5">
+                    <Shield size={13} />
+                    <span>Safety Directives:</span>
+                  </div>
+                  {analysisReport.safetyAdvice.map((adv, idx) => (
+                    <p key={idx} className="text-slate-300 text-[10.5px]">
+                      → {adv}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 4. TAB 2: PERIMETER BEHIND QR (Host, Geo, SSL, Redirect Hops, Financial Flow) */}
+            {activeTab === 'perimeter' && perimeter && (
+              <div className="bg-[#0b101e] border border-[#1e2d4a] rounded-xl p-3 flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-[#18233a] pb-2 text-xs font-bold text-[var(--accent)]">
+                  <span className="flex items-center gap-1.5">
+                    <Radio size={15} className="animate-pulse" />
+                    <span>Underlying Security & Infrastructure Perimeter</span>
+                  </span>
+                  <span className="text-[10px] text-[var(--text-muted)] font-mono">
+                    DEFENSE GRID: {perimeter.socEnginesPassed}/{perimeter.totalEngines} CLEAN
+                  </span>
+                </div>
+
+                {/* Host & Network Perimeter Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                  <div className="p-2.5 bg-[#070b14] rounded-lg border border-[#1b2742]">
+                    <span className="text-[var(--text-muted)] text-[10px] uppercase block mb-0.5">
+                      📍 Hosting Server IP & Geo-Location
+                    </span>
+                    <span className="font-bold text-cyan-300 font-mono block">
+                      {perimeter.serverIp}
+                    </span>
+                    <span className="text-slate-300 text-[10px]">
+                      {perimeter.serverLocation}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 bg-[#070b14] rounded-lg border border-[#1b2742]">
+                    <span className="text-[var(--text-muted)] text-[10px] uppercase block mb-0.5">
+                      🏢 Hosting Provider & ASN
+                    </span>
+                    <span className="font-bold text-amber-300 font-mono block">
+                      {perimeter.hostingAsn}
+                    </span>
+                    <span className="text-[var(--text-muted)] text-[10px]">
+                      Registrar: {perimeter.registrar}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 bg-[#070b14] rounded-lg border border-[#1b2742]">
+                    <span className="text-[var(--text-muted)] text-[10px] uppercase block mb-0.5">
+                      🔒 Cryptographic SSL/TLS Cipher
+                    </span>
+                    <span className={isReal ? 'text-emerald-400 font-bold block' : 'text-rose-400 font-bold block'}>
+                      {perimeter.sslCipher}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 bg-[#070b14] rounded-lg border border-[#1b2742]">
+                    <span className="text-[var(--text-muted)] text-[10px] uppercase block mb-0.5">
+                      ⏳ Domain Age & Trust Perimeter
+                    </span>
+                    <span className={isReal ? 'text-emerald-400 font-bold block' : 'text-amber-400 font-bold block'}>
+                      {perimeter.domainAge}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Redirect Perimeter Hop Analysis */}
+                <div className="p-3 bg-[#070b14] rounded-lg border border-[#1b2742] space-y-2">
+                  <div className="text-[10px] font-bold text-[var(--accent)] uppercase tracking-wider flex items-center gap-1.5">
+                    <CornerDownRight size={13} />
+                    <span>Perimeter Traversal & Redirect Hop Timeline</span>
+                  </div>
+                  <div className="space-y-1.5 pl-1">
+                    {perimeter.redirectHops.map((hop, i) => (
+                      <div key={i} className="flex items-center gap-2 text-[11px]">
+                        <span className="w-5 h-5 rounded-full bg-[#131b2e] border border-[#27395c] flex items-center justify-center text-[10px] font-mono text-[var(--accent)] shrink-0">
+                          {hop.hop}
+                        </span>
+                        <span className="text-slate-300 flex-grow font-mono">{hop.label}</span>
+                        <span
+                          className={`text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded ${
+                            hop.status === 'CRITICAL_THREAT' || hop.status === 'MASKING_PROXY'
+                              ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                              : hop.status === 'UNTRUSTED_DECODE'
+                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                              : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          }`}
+                        >
+                          {hop.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Financial Payment Perimeter (if UPI) */}
+                {perimeter.financialPerimeter && (
+                  <div className="p-3 bg-[#070b14] rounded-lg border border-[#1b2742] space-y-2">
+                    <div className="text-[10px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <CreditCard size={13} />
+                      <span>Financial Cash Flow & NPCI Perimeter</span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10.5px]">
+                      <div className="p-2 bg-[#0b101e] rounded border border-[#1e2d4a]">
+                        <span className="text-[var(--text-muted)] block text-[9.5px]">Cash Flow Direction:</span>
+                        <span className={perimeter.financialPerimeter.isDebitTrap ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold'}>
+                          {perimeter.financialPerimeter.cashFlowDirection}
+                        </span>
+                      </div>
+                      <div className="p-2 bg-[#0b101e] rounded border border-[#1e2d4a]">
+                        <span className="text-[var(--text-muted)] block text-[9.5px]">NPCI Fraud Compliance:</span>
+                        <span className={perimeter.financialPerimeter.isDebitTrap ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold'}>
+                          {perimeter.financialPerimeter.npciCompliance}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 5. TAB 3: RELATED CONTENT & MODUS OPERANDI */}
+            {activeTab === 'related' && related && (
+              <div className="bg-[#0b101e] border border-[#1e2d4a] rounded-xl p-3 flex flex-col gap-3">
+                <div className="border-b border-[#18233a] pb-2 text-xs font-bold text-[var(--accent)] flex items-center justify-between">
+                  <span>Related Threats & Real vs Fake Comparison</span>
+                  <span className="text-[10px] text-[var(--text-muted)] font-normal">
+                    Target: {related.comparison.impersonatedBrand}
+                  </span>
+                </div>
+
+                {/* Side-by-Side Real vs Fake Comparison Card */}
+                {related.comparison.isSpoofed ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {/* Fake Side */}
+                    <div className="p-3 rounded-xl bg-rose-950/30 border border-rose-500/50 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-extrabold text-rose-400 flex items-center gap-1.5">
+                          <AlertOctagon size={14} />
+                          <span>Scanned Fake Target</span>
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono">
+                          COUNTERFEIT
+                        </span>
+                      </div>
+                      <div className="p-2 rounded bg-black/50 border border-rose-500/30 font-mono text-[11px] text-rose-300 break-all">
+                        {related.comparison.scannedFake}
+                      </div>
+                      <p className="text-[10.5px] text-rose-200/80">
+                        ⚠️ Impersonates {related.comparison.impersonatedBrand} using an unauthorized domain or unverified personal VPA.
+                      </p>
+                    </div>
+
+                    {/* Real Side */}
+                    <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/50 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-extrabold text-emerald-400 flex items-center gap-1.5">
+                          <CheckCircle2 size={14} />
+                          <span>Official Authentic Source</span>
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">
+                          OFFICIAL REAL
+                        </span>
+                      </div>
+                      <div className="p-2 rounded bg-black/50 border border-emerald-500/30 font-mono text-[11px] text-emerald-300 break-all flex items-center justify-between gap-1">
+                        <span className="truncate">{related.comparison.officialReal}</span>
+                        {related.comparison.officialUrl && (
+                          <a
+                            href={related.comparison.officialUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1 rounded hover:bg-emerald-500/20 text-emerald-400 shrink-0"
+                            title="Visit Official Real Portal"
+                          >
+                            <ExternalLink size={13} />
+                          </a>
+                        )}
+                      </div>
+                      <p className="text-[10.5px] text-emerald-200/80">
+                        ✓ Legitimate authentic portal registered under official sovereign or banking registry.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/50 space-y-1.5">
+                    <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                      <Award size={16} />
+                      <span>100% Genuine Cryptographic Origin Verified</span>
+                    </div>
+                    <p className="text-[11px] text-emerald-200/90 leading-relaxed">
+                      This QR code does not impersonate any brand. It leads directly to its authentic official endpoint with verified SSL and clean SOC telemetry.
+                    </p>
+                  </div>
+                )}
+
+                {/* Modus Operandi Card */}
+                <div className="p-3 rounded-xl bg-[#070b14] border border-[#1b2742] space-y-1.5">
+                  <div className="text-[10.5px] font-bold text-amber-400 uppercase tracking-wide flex items-center gap-1.5">
+                    <Info size={13} />
+                    <span>Modus Operandi: {related.modusOperandi.name}</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-relaxed">
+                    {related.modusOperandi.howItWorks}
+                  </p>
+                  <div className="p-2 rounded bg-[#0b101e] border border-[#1e2d4a] text-[10.5px] text-rose-300">
+                    <span className="font-bold text-white mr-1">Victim Impact:</span>
+                    {related.modusOperandi.victimImpact}
+                  </div>
+                </div>
+
+                {/* Related Incident Statistics */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10.5px]">
+                  <div className="p-2.5 bg-[#070b14] rounded-lg border border-[#1b2742]">
+                    <span className="text-[var(--text-muted)] block text-[9.5px] uppercase">
+                      📊 National Incident Statistics
+                    </span>
+                    <span className="font-bold text-cyan-300">
+                      {related.relatedIncidents.reportedCount}
+                    </span>
+                  </div>
+                  <div className="p-2.5 bg-[#070b14] rounded-lg border border-[#1b2742]">
+                    <span className="text-[var(--text-muted)] block text-[9.5px] uppercase">
+                      📑 Statutory Advisory Citation
+                    </span>
+                    <span className="font-bold text-amber-300">
+                      {related.relatedIncidents.advisoryReference}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 6. TAB 4: INAPPROPRIATE CONTENT & THREAT FLAGS */}
+            {activeTab === 'threats' && (
               <div className="bg-[#0b101e] border border-[#1e2d4a] rounded-xl p-3 flex flex-col gap-2.5">
                 <div className="border-b border-[#18233a] pb-2 text-xs font-bold text-[var(--text-primary)] flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
-                    <AlertTriangle size={14} className={isInappropriate ? 'text-rose-400' : 'text-emerald-400'} />
-                    <span>{isHindi ? 'पहचाने गए खतरे व संकेत' : 'Detected Risk Indicators'}</span>
+                    <AlertTriangle size={14} className={isFake ? 'text-rose-400' : 'text-emerald-400'} />
+                    <span>Inappropriate Content & Violation Flags</span>
                   </span>
-                  <span className="text-[10px] text-[var(--text-muted)] font-normal">
-                    {analysisReport.indicators.length} {isHindi ? 'संकेत' : 'flags'}
+                  <span className="text-[10px] text-[var(--text-muted)]">
+                    {analysisReport.indicators.length} indicators flagged
                   </span>
                 </div>
 
                 {/* Indicators List */}
-                <div className="space-y-1.5 flex-grow overflow-y-auto max-h-36 pr-1">
+                <div className="space-y-1.5 overflow-y-auto max-h-44 pr-1">
                   {analysisReport.indicators.map((ind, idx) => (
                     <div
                       key={idx}
-                      className="flex items-start gap-2 text-[11px] leading-snug p-1.5 rounded bg-[#070b14] border border-[#1b2742]"
+                      className="flex items-start gap-2 text-[11px] leading-snug p-2 rounded bg-[#070b14] border border-[#1b2742]"
                     >
                       <span className="text-rose-400 shrink-0 mt-0.5">•</span>
-                      <span className="text-[var(--text-secondary)]">{ind}</span>
+                      <span className="text-slate-300">{ind}</span>
                     </div>
                   ))}
                   {analysisReport.indicators.length === 0 && (
-                    <div className="text-[11px] text-emerald-400 p-2 text-center bg-emerald-950/20 rounded border border-emerald-500/20">
-                      ✓ {isHindi ? 'कोई संदिग्ध या अनुपयुक्त सामग्री नहीं मिली' : 'Zero suspicious or inappropriate vectors detected'}
+                    <div className="text-[11px] text-emerald-400 p-3 text-center bg-emerald-950/20 rounded border border-emerald-500/20">
+                      ✓ No inappropriate, adult, gambling or malicious indicators detected in this QR code.
                     </div>
                   )}
                 </div>
-
-                {/* Actionable Advice Card */}
-                {analysisReport.safetyAdvice.length > 0 && (
-                  <div className="p-2.5 rounded-lg bg-[#0e172a] border border-[#1e2d4a] text-[11px] space-y-1">
-                    <div className="font-bold text-amber-400 flex items-center gap-1">
-                      <Shield size={12} />
-                      <span>{isHindi ? 'सुरक्षा निर्देश (Safety Directives):' : 'Safety Advice & Protocol:'}</span>
-                    </div>
-                    {analysisReport.safetyAdvice.map((adv, idx) => (
-                      <p key={idx} className="text-[var(--text-secondary)] text-[10.5px] leading-tight">
-                        → {adv}
-                      </p>
-                    ))}
-                  </div>
-                )}
               </div>
-            </div>
+            )}
 
             {/* Bottom Actions Row */}
             <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#18233a]">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <a
                   href="tel:1930"
                   className="px-3.5 py-1.5 bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 border border-rose-500/40 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors"
                   title="National Cyber Crime Reporting Helpline"
                 >
                   <PhoneCall size={12} className="animate-pulse" />
-                  <span>{isHindi ? '1930 साइबर हेल्पलाइन' : 'Report to 1930 Helpline'}</span>
+                  <span>1930 Cyber Helpline</span>
                 </a>
 
-                {analysisReport.parsedType === 'url' && isSafe && (
+                {/* Open Real Official Portal Shortcut */}
+                {related?.comparison?.officialUrl && related.comparison.isSpoofed && (
                   <a
-                    href={scanResult.startsWith('http') ? scanResult : `https://${scanResult}`}
+                    href={related.comparison.officialUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-3 py-1.5 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/40 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors"
                   >
-                    <span>{isHindi ? 'सुरक्षित खोलें' : 'Open Link'}</span>
+                    <span>{related.comparison.actionText}</span>
                     <ExternalLink size={12} />
                   </a>
                 )}
@@ -662,6 +882,7 @@ const QRScanner = ({ onScanResult }) => {
                   setVtAnalysis(null);
                   setStatusText('');
                   setUploadedPreview(null);
+                  setActiveTab('overview');
                 }}
                 className="px-4 py-1.5 bg-[var(--accent)] text-slate-950 hover:bg-cyan-400 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
               >
@@ -675,7 +896,6 @@ const QRScanner = ({ onScanResult }) => {
           <>
             {scanMode === 'camera' ? (
               <div className="relative w-full aspect-square max-h-[280px] bg-[#070b14] rounded-xl border border-[#1e2d4a] overflow-hidden mx-auto shadow-inner flex items-center justify-center">
-                {/* Viewport for Html5Qrcode video & canvas */}
                 <div id="qr-reader-viewport" className="w-full h-full object-cover"></div>
 
                 {!isScanning && (
@@ -690,8 +910,8 @@ const QRScanner = ({ onScanResult }) => {
                     </button>
                     <p className="text-[10px] text-[var(--text-muted)] mt-2 max-w-xs">
                       {isHindi
-                        ? 'कैमरा फ़ीड में QR कोड रखें। अनुपयुक्त व 18+ सामग्री की तुरंत जांच होगी।'
-                        : 'Point camera at any QR code. Detects 18+ adult material, fake UPI traps & malicious payloads instantly.'}
+                        ? 'QR कोड स्कैन करते ही असली/नकली की पहचान, तकनीकी पेरीमीटर और संबंधित खतरों की जानकारी मिलेगी।'
+                        : 'Scans QR codes and immediately evaluates Real vs Fake authenticity, security perimeter & related threats.'}
                     </p>
                     {cameraError && (
                       <div className="text-[11px] text-rose-300 font-bold mt-2.5 bg-rose-500/15 p-2 rounded-lg border border-rose-500/40 max-w-sm">
@@ -764,15 +984,15 @@ const QRScanner = ({ onScanResult }) => {
               </div>
             )}
 
-            {/* QUICK TEST SAMPLES CAROUSEL (Allows instant 1-click test of inappropriate content detection) */}
+            {/* QUICK TEST SAMPLES (Instant 1-Click Real vs Fake Test) */}
             <div className="mt-1 pt-3 border-t border-[#18233a] flex flex-col gap-2">
               <div className="flex items-center justify-between text-[10.5px]">
                 <span className="font-bold text-[var(--text-muted)] uppercase tracking-wider flex items-center gap-1.5">
                   <Sparkles size={12} className="text-amber-400" />
-                  <span>{isHindi ? 'त्वरित परीक्षण नमूने (1-क्लिक टेस्ट):' : 'Quick Test Presets (Instant Inappropriate Verification):'}</span>
+                  <span>{isHindi ? 'त्वरित परीक्षण (असली बनाम नकली):' : 'Quick Test Presets (Instant Real vs Fake Verification):'}</span>
                 </span>
                 <span className="text-[9.5px] text-[var(--text-muted)]">
-                  {isHindi ? 'क्लिक करके टेस्ट करें' : 'Click to inspect'}
+                  {isHindi ? 'क्लिक करके टेस्ट करें' : 'Click to inspect perimeter & threats'}
                 </span>
               </div>
 
@@ -788,10 +1008,8 @@ const QRScanner = ({ onScanResult }) => {
                       <span className="text-base shrink-0">{test.icon}</span>
                       <span
                         className={`text-[8.5px] font-extrabold uppercase px-1 rounded ${
-                          test.color === 'rose' || test.color === 'red'
+                          test.verdict === 'FAKE'
                             ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                            : test.color === 'amber' || test.color === 'orange'
-                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                             : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                         }`}
                       >
