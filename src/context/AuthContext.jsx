@@ -70,6 +70,49 @@ export function AuthProvider({ children }) {
     setUser(userProfile);
     try {
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userProfile));
+
+      // Persist last used account & account history for quick selection
+      if (userProfile.provider === 'github' && (userProfile.username || userProfile.name)) {
+        const uName = userProfile.username || userProfile.name;
+        localStorage.setItem('satya_last_github_username', uName);
+        const existing = JSON.parse(localStorage.getItem('satya_saved_github_accounts') || '[]');
+        const updated = [
+          {
+            login: uName,
+            name: userProfile.name || uName,
+            avatar_url: userProfile.avatar || `https://avatars.githubusercontent.com/${encodeURIComponent(uName)}`,
+            bio: userProfile.bio || 'Verified GitHub Developer',
+            public_repos: userProfile.public_repos ?? 0,
+            lastLogin: new Date().toISOString(),
+          },
+          ...existing.filter(a => a.login?.toLowerCase() !== uName.toLowerCase()),
+        ].slice(0, 5);
+        localStorage.setItem('satya_saved_github_accounts', JSON.stringify(updated));
+      } else if (userProfile.provider === 'google' && userProfile.email) {
+        localStorage.setItem('satya_last_google_email', userProfile.email);
+        localStorage.setItem('satya_last_google_name', userProfile.name || 'User');
+        const existing = JSON.parse(localStorage.getItem('satya_saved_google_accounts') || '[]');
+        const updated = [
+          {
+            email: userProfile.email,
+            name: userProfile.name || 'User',
+            avatar: userProfile.avatar,
+            lastLogin: new Date().toISOString(),
+          },
+          ...existing.filter(a => a.email?.toLowerCase() !== userProfile.email.toLowerCase()),
+        ].slice(0, 5);
+        localStorage.setItem('satya_saved_google_accounts', JSON.stringify(updated));
+      }
+
+      // Save global last used session
+      localStorage.setItem('satya_last_used_account', JSON.stringify({
+        provider: userProfile.provider,
+        name: userProfile.name,
+        email: userProfile.email,
+        username: userProfile.username,
+        avatar: userProfile.avatar,
+        lastLogin: new Date().toISOString(),
+      }));
     } catch {
       // Storage full or private mode
     }
